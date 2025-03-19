@@ -13,6 +13,7 @@
 }
 .app-container {
   display: flex;
+  align-items: start;
   flex-direction: column;
 
   min-height: 100vh;
@@ -151,14 +152,14 @@
 }
 .time-bar {
   position: absolute;
-  top: 0;
+  // top: 0;
   left: 0;
-  // bottom: 0;
+  bottom: 0;
   z-index: 1;
 
   width: 100%;
-  height: 100%;
-  // height: 5px;
+  // height: 100%;
+  height: 5px;
   background: #95ff8f;
 }
 
