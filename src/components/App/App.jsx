@@ -75,6 +75,7 @@ export default function App() {
       //   type: "completed",
       // },
     ],
+    notification: { text: "Task saved!" },
   }));
   const [newTodo, setNewTodo] = useState(() => ({
     text: null,
@@ -83,9 +84,14 @@ export default function App() {
     status: { isFinished: false, isCompleted: false },
     type: null,
     id: counter(),
+    notification: {
+      text: `Time remaining to complete
+            the project: 5h 1m 32s`,
+      isOpen: false,
+      isCooldown: false,
+      position: { x: null, y: null },
+    },
   }));
-
-  const notificationText = `Time remaining to complete the project: 5h 1m 32s`;
 
   const switchTab = (e) => {
     setContent((prev) => {
@@ -105,7 +111,8 @@ export default function App() {
     width,
     index,
     completeTodoListener,
-    deleteTodo
+    deleteTodo,
+    hoverOnNotification
   ) => {
     return (
       <div
@@ -117,7 +124,10 @@ export default function App() {
         id={task.id}
       >
         {task.type == "actual" && (
-          <div className="notification">
+          <div
+            className="notification"
+            onMouseOver={(e) => hoverOnNotification(e)}
+          >
             <Notification></Notification>
           </div>
         )}
@@ -254,6 +264,68 @@ export default function App() {
     });
   };
 
+  const hoverOnNotification = (e) => {
+    const target = e.target;
+
+    if (target.closest("svg")) {
+      const coordinates = target.closest('svg').getBoundingClientRect();
+
+      if (newTodo.notification.isCooldown) {
+        return;
+      } else {
+        showNotification(coordinates);
+        // setNewTodo((prev) => {
+        //   return {
+        //     ...prev,
+        //     notification: { ...prev.notification, isCooldown: true },
+        //   };
+        // });
+        // setTimeout(
+        //   () =>
+        //     setNewTodo((prev) => {
+        //       return {
+        //         ...prev,
+        //         notification: { ...prev.notification, isCooldown: false },
+        //       };
+        //     }),
+        //   1500
+        // );
+      }
+    } else {
+      hideNotification()
+    }
+  };
+
+  const showNotification = (position) => {
+    setNewTodo((prev) => {
+      const newTodo = {
+        ...prev,
+        notification: {
+          ...prev.notification,
+          isOpen: true,
+          position: { x: position.x - 30, y: position.y + 31 },
+        },
+      };
+
+      return newTodo;
+    });
+
+    // setTimeout(() => {
+    //   setNewTodo((prev) => {
+    //     return {
+    //       ...prev,
+    //       notification: { ...prev.notification, isOpen: false },
+    //     };
+    //   });
+    // }, 1000);
+  };
+
+  const hideNotification = () => {
+    setNewTodo((prev) => {
+      return {...prev, notification: {...prev.notification, isOpen: false}}
+    })
+  }
+
   return (
     <>
       <div className="app">
@@ -332,7 +404,8 @@ export default function App() {
                     width,
                     index,
                     completeTodo,
-                    deleteTodo
+                    deleteTodo,
+                    hoverOnNotification
                   );
                 })
               ) : (
@@ -346,7 +419,8 @@ export default function App() {
                     100,
                     index,
                     completeTodo,
-                    deleteTodo
+                    deleteTodo,
+                    hoverOnNotification
                   );
                 })
               ) : (
@@ -366,7 +440,8 @@ export default function App() {
                     width,
                     index,
                     completeTodo,
-                    deleteTodo
+                    deleteTodo,
+                    hoverOnNotification
                   );
                 })
               ) : (
@@ -375,6 +450,22 @@ export default function App() {
             {content.isActiveTab == "empty" && <p className="empty">Empty</p>}
           </div>
         </div>
+        {newTodo.notification.isOpen && (
+          <div
+            className="modal notification"
+            style={{
+              position: "absolute",
+              left: `${newTodo.notification.position.x}px`,
+              top: `${newTodo.notification.position.y}px`,
+              zIndex: 2,
+            }}
+          >
+            <div className="content">
+              <p className="text">{newTodo.notification.text}</p>
+            </div>
+          </div>
+        )}
+
         {/* <div className="modal settings">
           <div className="content">
             <div className="line">
