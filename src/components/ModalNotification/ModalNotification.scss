@@ -1,0 +1,29 @@
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    min-width: 180px;
+    min-height: 80px;
+    max-width: 280px;
+  
+    padding: 20px 30px;
+    background: white;
+    border-radius: 15px;
+  
+    color: #000;
+  
+    .content {
+      display: flex;
+      flex-direction: column;
+  
+      gap: 10px;
+    }
+    p {
+      font-size: 16px;
+    }
+  }

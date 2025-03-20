@@ -51,9 +51,6 @@
 
   color: rgba(0, 0, 0, 0.35);
 
-  .empty {
-    margin-top: 104px;
-  }
   .notification {
     position: absolute;
     left: -30px;
@@ -72,97 +69,6 @@
     width: 16px;
     height: 16px;
   }
-}
-.todo {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  width: 820px;
-  height: 60px;
-
-  border-radius: 15px;
-
-  color: black;
-  background: white;
-
-  .todo-content {
-    position: relative;
-
-    display: flex;
-    justify-content: space-between;
-
-    width: 100%;
-    height: 100%;
-
-    padding: 18px 30px;
-
-    border-radius: 15px;
-    overflow: hidden;
-  }
-  input {
-    position: relative;
-    z-index: 2;
-
-    flex: 0 0 80%;
-  }
-  .text {
-    position: relative;
-    z-index: 2;
-
-    flex: 0 0 80%;
-  }
-  .todo-settings {
-    position: relative;
-    z-index: 2;
-
-    display: flex;
-    gap: 10px;
-
-    opacity: 0;
-    transition: 0.2s ease-in-out;
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      width: 28px;
-      height: 28px;
-    }
-    .btn svg {
-      width: 16px;
-      height: 16px;
-    }
-  }
-}
-.todo:hover .notification {
-  opacity: 1;
-}
-.todo:hover .todo-settings {
-  opacity: 1;
-}
-.todo-new {
-}
-.todo-actual {
-}
-.todo-wasted {
-}
-.todo-completed {
-}
-.time-bar {
-  position: absolute;
-  // top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 1;
-
-  width: 100%;
-  // height: 100%;
-  height: 5px;
-  background: #95ff8f;
 }
 
 .modal {

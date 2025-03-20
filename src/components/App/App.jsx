@@ -2,6 +2,10 @@ import "./App.scss";
 import { Checkmark, Time, Close, Notification } from "../SVG";
 import { useState } from "react";
 import { counter } from "../../assets/utils";
+import ModalNotification from "../ModalNotification";
+import Empty from "../Empty";
+import Task from "../Task";
+import Button from "../Button";
 
 export default function App() {
   const [content, setContent] = useState(() => ({
@@ -77,7 +81,7 @@ export default function App() {
     ],
     notification: { text: "Task saved!" },
   }));
-  const [newTodo, setNewTodo] = useState(() => ({
+  const [newTask, setNewTask] = useState(() => ({
     text: null,
     remainingTime: null,
     totalTime: null,
@@ -106,64 +110,7 @@ export default function App() {
     return (remaining * 100) / total;
   };
 
-  const TodoComponent = (
-    task,
-    width,
-    index,
-    completeTodoListener,
-    deleteTodo,
-    hoverOnNotification
-  ) => {
-    return (
-      <div
-        className={`todo todo-${task.type}`}
-        key={index}
-        onClick={(e) => {
-          completeTodoListener(e);
-        }}
-        id={task.id}
-      >
-        {task.type == "actual" && (
-          <div
-            className="notification"
-            onMouseOver={(e) => hoverOnNotification(e)}
-          >
-            <Notification></Notification>
-          </div>
-        )}
-        <div className="todo-content">
-          <div className="text">{task.text}</div>
-          <div className="todo-settings">
-            {task.type == "actual" && (
-              <button className="btn" name="complete">
-                <Checkmark></Checkmark>
-              </button>
-            )}
-            {/* <button className="btn">
-              <Time fill={"#95FF8F"}></Time>
-            </button> */}
-            <button
-              className="btn"
-              name="remove"
-              onClick={(e) => deleteTodo(e)}
-            >
-              <Close></Close>
-            </button>
-          </div>
-          <div
-            className="time-bar"
-            style={{
-              width: width + "%",
-              background:
-                width == 100 ? "#95FF8F" : width == 50 ? "#F2FF8F" : "#F9C68F",
-            }}
-          ></div>
-        </div>
-      </div>
-    );
-  };
-
-  const completeTodo = (e) => {
+  const completeTask = (e) => {
     const target = e.target;
     const currentTarget = e.currentTarget;
     const taskId = currentTarget.id;
@@ -187,7 +134,7 @@ export default function App() {
     }
   };
 
-  const saveNewTodo = (e) => {
+  const saveNewTask = (e) => {
     const target = e.target;
     const currentTarget = e.currentTarget;
 
@@ -199,30 +146,28 @@ export default function App() {
         return;
       }
 
-      newTodo.text = inputValue;
-      newTodo.remainingTime = 3600; // Set time
-      newTodo.totalTime = 3600;
-      newTodo.status = { isFinished: false, isCompleted: false };
-      newTodo.type = "actual";
+      newTask.text = inputValue;
+      newTask.remainingTime = 3600; // Set time
+      newTask.totalTime = 3600;
+      newTask.status = { isFinished: false, isCompleted: false };
+      newTask.type = "actual";
 
       if (
-        newTodo.text &&
-        newTodo.remainingTime &&
-        newTodo.totalTime &&
-        newTodo.status &&
-        newTodo.type
+        newTask.text &&
+        newTask.remainingTime &&
+        newTask.totalTime &&
+        newTask.status &&
+        newTask.type
       ) {
-        localStorage.setItem("newTodo", JSON.stringify(content.actualTasks));
-
         setContent((prev) => {
-          return { ...prev, actualTasks: [...prev.actualTasks, newTodo] };
+          return { ...prev, actualTasks: [...prev.actualTasks, newTask] };
         });
 
-        setNewTodo((prev) => {
+        setNewTask((prev) => {
           return { ...prev, text: null, id: counter() };
         });
 
-        return newTodo;
+        return newTask;
       }
 
       console.log("Cannot save this Todo");
@@ -235,21 +180,22 @@ export default function App() {
 
     if (target.closest('[name="remove"]')) {
       target.closest(".todo").querySelector("input").value = "";
-      setNewTodo((prev) => {
+
+      setNewTask((prev) => {
         return { ...prev, text: null };
       });
     }
   };
 
   const typeText = (e) => {
-    setNewTodo((prev) => {
-      const newTodo = { ...prev, text: e.target.value };
+    setNewTask((prev) => {
+      const newTask = { ...prev, text: e.target.value };
 
-      return newTodo;
+      return newTask;
     });
   };
 
-  const deleteTodo = (e) => {
+  const deleteTask = (e) => {
     const target = e.target;
 
     const taskId = target.closest(".todo").id;
@@ -270,11 +216,11 @@ export default function App() {
     if (target.closest("svg")) {
       const coordinates = target.closest("svg").getBoundingClientRect();
 
-      if (newTodo.notification.isCooldown) {
+      if (newTask.notification.isCooldown) {
         return;
       } else {
         showNotification(coordinates);
-        // setNewTodo((prev) => {
+        // setNewTask((prev) => {
         //   return {
         //     ...prev,
         //     notification: { ...prev.notification, isCooldown: true },
@@ -282,7 +228,7 @@ export default function App() {
         // });
         // setTimeout(
         //   () =>
-        //     setNewTodo((prev) => {
+        //     setNewTask((prev) => {
         //       return {
         //         ...prev,
         //         notification: { ...prev.notification, isCooldown: false },
@@ -297,8 +243,8 @@ export default function App() {
   };
 
   const showNotification = (position) => {
-    setNewTodo((prev) => {
-      const newTodo = {
+    setNewTask((prev) => {
+      const newTask = {
         ...prev,
         notification: {
           ...prev.notification,
@@ -307,11 +253,11 @@ export default function App() {
         },
       };
 
-      return newTodo;
+      return newTask;
     });
 
     // setTimeout(() => {
-    //   setNewTodo((prev) => {
+    //   setNewTask((prev) => {
     //     return {
     //       ...prev,
     //       notification: { ...prev.notification, isOpen: false },
@@ -321,10 +267,61 @@ export default function App() {
   };
 
   const hideNotification = () => {
-    setNewTodo((prev) => {
+    setNewTask((prev) => {
       return { ...prev, notification: { ...prev.notification, isOpen: false } };
     });
   };
+
+  const actualTasksList = content.actualTasks.map((task) => {
+    const width = computePercentOfTime(
+      task.totalTime,
+      task.remainingTime,
+      task.status
+    );
+
+    return (
+      <Task
+        task={task}
+        width={width}
+        completeTaskListener={completeTask}
+        deleteTask={deleteTask}
+        hoverOnNotification={hoverOnNotification}
+        key={task.id}
+      ></Task>
+    );
+  });
+
+  const wastedTasksList = content.wastedTasks.map((task) => {
+    return (
+      <Task
+        task={task}
+        width={100}
+        completeTaskListener={completeTask}
+        deleteTask={deleteTask}
+        hoverOnNotification={hoverOnNotification}
+        key={task.id}
+      ></Task>
+    );
+  });
+
+  const completedTasksList = content.completedTasks.map((task) => {
+    const width = computePercentOfTime(
+      task.totalTime,
+      task.remainingTime,
+      task.status
+    );
+
+    return (
+      <Task
+        task={task}
+        width={width}
+        completeTaskListener={completeTask}
+        deleteTask={deleteTask}
+        hoverOnNotification={hoverOnNotification}
+        key={task.id}
+      ></Task>
+    );
+  });
 
   return (
     <>
@@ -364,106 +361,51 @@ export default function App() {
           </div>
           <div className="box">
             {content.isActiveTab == "new" && (
-              <div className="todo todo-new" onClick={(e) => saveNewTodo(e)}>
+              <div className="todo todo-new" onClick={(e) => saveNewTask(e)}>
                 <div className="todo-content">
                   <input
                     type="text"
                     placeholder="Enter the text..."
-                    value={newTodo.text != null ? newTodo.text : ""}
+                    value={newTask.text != null ? newTask.text : ""}
                     onInput={(e) => typeText(e)}
                   />
                   <div className="todo-settings">
-                    <button className="btn" name="save">
+                    <Button name="save">
                       <Checkmark></Checkmark>
-                    </button>
-                    <button className="btn" name="time">
+                    </Button>
+                    {/* <button className="btn" name="time">
                       <Time fill={"#95FF8F"}></Time>
-                    </button>
-                    <button
-                      className="btn"
-                      name="remove"
-                      onClick={(e) => clearInputText(e)}
-                    >
+                    </button> */}
+                    <Button name="remove" onClick={clearInputText}>
                       <Close></Close>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
             )}
             {content.isActiveTab == "actual" &&
               (content.actualTasks.length > 0 ? (
-                content.actualTasks.map((task, index) => {
-                  const width = computePercentOfTime(
-                    task.totalTime,
-                    task.remainingTime,
-                    task.status
-                  );
-
-                  return TodoComponent(
-                    task,
-                    width,
-                    index,
-                    completeTodo,
-                    deleteTodo,
-                    hoverOnNotification
-                  );
-                })
+                actualTasksList
               ) : (
-                <p className="empty">Empty</p>
+                <Empty>Empty</Empty>
               ))}
             {content.isActiveTab == "wasted" &&
               (content.wastedTasks.length > 0 ? (
-                content.wastedTasks.map((task, index) => {
-                  return TodoComponent(
-                    task,
-                    100,
-                    index,
-                    completeTodo,
-                    deleteTodo,
-                    hoverOnNotification
-                  );
-                })
+                wastedTasksList
               ) : (
-                <p className="empty">Empty</p>
+                <Empty>Empty</Empty>
               ))}
             {content.isActiveTab == "completed" &&
               (content.completedTasks.length > 0 ? (
-                content.completedTasks.map((task, index) => {
-                  const width = computePercentOfTime(
-                    task.totalTime,
-                    task.remainingTime,
-                    task.status
-                  );
-
-                  return TodoComponent(
-                    task,
-                    width,
-                    index,
-                    completeTodo,
-                    deleteTodo,
-                    hoverOnNotification
-                  );
-                })
+                completedTasksList
               ) : (
-                <p className="empty">Empty</p>
+                <Empty>Empty</Empty>
               ))}
-            {content.isActiveTab == "empty" && <p className="empty">Empty</p>}
+            {content.isActiveTab == "empty" && <Empty>Empty</Empty>}
           </div>
         </div>
-        {newTodo.notification.isOpen && (
-          <div
-            className="modal notification"
-            style={{
-              position: "absolute",
-              left: `${newTodo.notification.position.x}px`,
-              top: `${newTodo.notification.position.y}px`,
-              zIndex: 2,
-            }}
-          >
-            <div className="content">
-              <p className="text">{newTodo.notification.text}</p>
-            </div>
-          </div>
+        {newTask.notification.isOpen && (
+          <ModalNotification newTask={newTask}></ModalNotification>
         )}
         {/* <div className="modal settings">
           <div className="content">
