@@ -11,18 +11,21 @@ export default function App() {
         remainingTime: 3600,
         totalTime: 3600,
         status: { isFinished: false, isCompleted: false },
+        type: "actual",
       },
       {
         text: "Create project for client",
         remainingTime: 1800,
         totalTime: 3600,
         status: { isFinished: false, isCompleted: false },
+        type: "actual",
       },
       {
         text: "Create project for client",
         remainingTime: 900,
         totalTime: 3600,
         status: { isFinished: false, isCompleted: false },
+        type: "actual",
       },
     ],
     wastedTasks: [
@@ -31,18 +34,21 @@ export default function App() {
         remainingTime: 0,
         totalTime: 3600,
         status: { isFinished: true, isCompleted: false },
+        type: "wasted",
       },
       {
         text: "Create project for client",
         remainingTime: 0,
         totalTime: 3600,
         status: { isFinished: true, isCompleted: false },
+        type: "wasted",
       },
       {
         text: "Create project for client",
         remainingTime: 0,
         totalTime: 3600,
         status: { isFinished: true, isCompleted: false },
+        type: "wasted",
       },
     ],
     completedTasks: [
@@ -51,21 +57,25 @@ export default function App() {
         remainingTime: 0,
         totalTime: 3600,
         status: { isFinished: true, isCompleted: true },
+        type: "completed",
       },
       {
         text: "Create project for client",
         remainingTime: 0,
         totalTime: 3600,
         status: { isFinished: true, isCompleted: true },
+        type: "completed",
       },
       {
         text: "Create project for client",
         remainingTime: 0,
         totalTime: 3600,
         status: { isFinished: true, isCompleted: true },
+        type: "completed",
       },
     ],
   }));
+
   const notificationText = `Time remaining to complete the project: 5h 1m 32s`;
 
   const switchTab = (e) => {
@@ -76,9 +86,110 @@ export default function App() {
 
   const computePercentOfTime = (total, remaining, status) => {
     if (status.isCompleted) {
-      return 100
+      return 100;
     }
     return (remaining * 100) / total;
+  };
+
+  const TodoComponent = (task, width, index, completeTodoListener) => {
+    return (
+      <div
+        className={`todo todo-${task.type}`}
+        key={index}
+        onClick={(e) => {
+          completeTodoListener(e);
+        }}
+      >
+        {task.type == "actual" && (
+          <div className="notification">
+            <Notification></Notification>
+          </div>
+        )}
+        <div className="todo-content">
+          <div className="text">{task.text}</div>
+          <div className="todo-settings">
+            {task.type == "actual" && (
+              <button className="btn" name="complete">
+                <Checkmark></Checkmark>
+              </button>
+            )}
+            {/* <button className="btn">
+              <Time fill={"#95FF8F"}></Time>
+            </button> */}
+            <button className="btn" name="remove">
+              <Close></Close>
+            </button>
+          </div>
+          <div
+            className="time-bar"
+            style={{
+              width: width + "%",
+              background:
+                width == 100 ? "#95FF8F" : width == 50 ? "#F2FF8F" : "#F9C68F",
+            }}
+          ></div>
+        </div>
+      </div>
+    );
+  };
+
+  const completeTodo = (e) => {
+    const target = e.target;
+    const currentTarget = e.currentTarget;
+    const todoText = currentTarget.querySelector(".text").textContent;
+
+    if (target.closest('[name="complete"]')) {
+      setContent((prev) => {
+        return {
+          ...prev,
+          actualTasks: prev.actualTasks.filter((task) => task.text != todoText),
+          completedTasks: [
+            ...prev.completedTasks,
+            ...prev.actualTasks.filter((task) => task.text == todoText),
+          ],
+        };
+      });
+    }
+  };
+
+  const saveNewTodo = (e) => {
+    const target = e.target;
+    const currentTarget = e.currentTarget;
+
+    if (target.closest('[name="save"]')) {
+      const input = currentTarget.querySelector("input");
+      const inputValue = input.value;
+
+      const newTodo = { text: null, remainingTime: null, totalTime: null };
+
+      if (!inputValue) {
+        return;
+      }
+
+      newTodo.text = inputValue;
+      newTodo.remainingTime = 3600; // Set time
+      newTodo.totalTime = 3600;
+      (newTodo.status = { isFinished: false, isCompleted: false }),
+        (newTodo.type = "actual");
+
+      if (
+        newTodo.text &&
+        newTodo.remainingTime &&
+        newTodo.totalTime &&
+        newTodo.status &&
+        newTodo.type
+      ) {
+
+        setContent((prev) => {
+          return { ...prev, actualTasks: [...prev.actualTasks, newTodo] };
+        });
+
+        return newTodo;
+      }
+
+      console.log("Cannot save this Todo");
+      return false;
+    }
   };
 
   return (
@@ -119,17 +230,17 @@ export default function App() {
           </div>
           <div className="box">
             {content.isActiveTab == "new" && (
-              <div className="todo todo-new">
+              <div className="todo todo-new" onClick={(e) => saveNewTodo(e)}>
                 <div className="todo-content">
                   <input type="text" placeholder="Enter the text..." />
                   <div className="todo-settings">
-                    <button className="btn">
+                    <button className="btn" name="save">
                       <Checkmark></Checkmark>
                     </button>
-                    <button className="btn">
+                    <button className="btn" name="time">
                       <Time fill={"#95FF8F"}></Time>
                     </button>
-                    <button className="btn">
+                    <button className="btn" name="remove">
                       <Close></Close>
                     </button>
                   </div>
@@ -144,55 +255,11 @@ export default function App() {
                   task.status
                 );
 
-                return (
-                  <div className="todo todo-actual" key={index}>
-                    <div className="notification">
-                      <Notification></Notification>
-                    </div>
-                    <div className="todo-content">
-                      <div className="text">{task.text}</div>
-                      <div className="todo-settings">
-                        <button className="btn">
-                          <Checkmark></Checkmark>
-                        </button>
-                        <button className="btn">
-                          <Close></Close>
-                        </button>
-                      </div>
-                      <div
-                        className="time-bar"
-                        style={{
-                          width: width + "%",
-                          background:
-                            width == 100
-                              ? "#95FF8F"
-                              : width == 50
-                              ? "#F2FF8F"
-                              : "#F9C68F",
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                );
+                return TodoComponent(task, width, index, completeTodo);
               })}
             {content.isActiveTab == "wasted" &&
               content.wastedTasks.map((task, index) => {
-                return (
-                  <div className="todo todo-wasted" key={index}>
-                    <div className="todo-content">
-                      <div className="text">{task.text}</div>
-                      <div className="todo-settings">
-                        <button className="btn">
-                          <Close></Close>
-                        </button>
-                      </div>
-                      <div
-                        className="time-bar"
-                        style={{ background: "#FF8F8F" }}
-                      ></div>
-                    </div>
-                  </div>
-                );
+                return TodoComponent(task, 100, index, completeTodo);
               })}
             {content.isActiveTab == "completed" &&
               content.completedTasks.map((task, index) => {
@@ -202,30 +269,7 @@ export default function App() {
                   task.status
                 );
 
-                return (
-                  <div className="todo todo-completed" key={index}>
-                    <div className="todo-content">
-                      <div className="text">{task.text}</div>
-                      <div className="todo-settings">
-                        <button className="btn">
-                          <Close></Close>
-                        </button>
-                      </div>
-                      <div
-                        className="time-bar"
-                        style={{
-                          width: width + "%",
-                          background:
-                            width == 100
-                              ? "#95FF8F"
-                              : width == 50
-                              ? "#F2FF8F"
-                              : "#F9C68F",
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                );
+                return TodoComponent(task, width, index, completeTodo);
               })}
             {content.isActiveTab == "empty" && <p className="empty">Empty</p>}
           </div>
