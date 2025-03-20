@@ -75,6 +75,13 @@ export default function App() {
       },
     ],
   }));
+  const [newTodo, setNewTodo] = useState(() => ({
+    text: null,
+    remainingTime: null,
+    totalTime: null,
+    status: { isFinished: false, isCompleted: false },
+    type: null,
+  }));
 
   const notificationText = `Time remaining to complete the project: 5h 1m 32s`;
 
@@ -160,8 +167,6 @@ export default function App() {
       const input = currentTarget.querySelector("input");
       const inputValue = input.value;
 
-      const newTodo = { text: null, remainingTime: null, totalTime: null };
-
       if (!inputValue) {
         return;
       }
@@ -179,10 +184,13 @@ export default function App() {
         newTodo.status &&
         newTodo.type
       ) {
-
         setContent((prev) => {
           return { ...prev, actualTasks: [...prev.actualTasks, newTodo] };
         });
+
+        setNewTodo((prev) => {
+          return {...prev, text: null}
+        })
 
         return newTodo;
       }
@@ -190,6 +198,25 @@ export default function App() {
       console.log("Cannot save this Todo");
       return false;
     }
+  };
+
+  const clearInputText = (e) => {
+    const target = e.target;
+
+    if (target.closest('[name="remove"]')) {
+      target.closest(".todo").querySelector("input").value = "";
+      setNewTodo((prev) => {
+        return { ...prev, text: null };
+      });
+    }
+  };
+
+  const typeText = (e) => {
+    setNewTodo((prev) => {
+      const newTodo = { ...prev, text: e.target.value };
+
+      return newTodo;
+    });
   };
 
   return (
@@ -232,7 +259,12 @@ export default function App() {
             {content.isActiveTab == "new" && (
               <div className="todo todo-new" onClick={(e) => saveNewTodo(e)}>
                 <div className="todo-content">
-                  <input type="text" placeholder="Enter the text..." />
+                  <input
+                    type="text"
+                    placeholder="Enter the text..."
+                    value={newTodo.text != null ? newTodo.text : ''}
+                    onInput={(e) => typeText(e)}
+                  />
                   <div className="todo-settings">
                     <button className="btn" name="save">
                       <Checkmark></Checkmark>
@@ -240,7 +272,11 @@ export default function App() {
                     <button className="btn" name="time">
                       <Time fill={"#95FF8F"}></Time>
                     </button>
-                    <button className="btn" name="remove">
+                    <button
+                      className="btn"
+                      name="remove"
+                      onClick={(e) => clearInputText(e)}
+                    >
                       <Close></Close>
                     </button>
                   </div>
