@@ -202,8 +202,8 @@ export default function App() {
       newTodo.text = inputValue;
       newTodo.remainingTime = 3600; // Set time
       newTodo.totalTime = 3600;
-      (newTodo.status = { isFinished: false, isCompleted: false }),
-        (newTodo.type = "actual");
+      newTodo.status = { isFinished: false, isCompleted: false };
+      newTodo.type = "actual";
 
       if (
         newTodo.text &&
@@ -268,7 +268,7 @@ export default function App() {
     const target = e.target;
 
     if (target.closest("svg")) {
-      const coordinates = target.closest('svg').getBoundingClientRect();
+      const coordinates = target.closest("svg").getBoundingClientRect();
 
       if (newTodo.notification.isCooldown) {
         return;
@@ -292,7 +292,7 @@ export default function App() {
         // );
       }
     } else {
-      hideNotification()
+      hideNotification();
     }
   };
 
@@ -322,9 +322,9 @@ export default function App() {
 
   const hideNotification = () => {
     setNewTodo((prev) => {
-      return {...prev, notification: {...prev.notification, isOpen: false}}
-    })
-  }
+      return { ...prev, notification: { ...prev.notification, isOpen: false } };
+    });
+  };
 
   return (
     <>
@@ -465,7 +465,6 @@ export default function App() {
             </div>
           </div>
         )}
-
         {/* <div className="modal settings">
           <div className="content">
             <div className="line">
