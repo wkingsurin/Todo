@@ -1,6 +1,7 @@
 import "./App.scss";
 import { Checkmark, Time, Close, Notification } from "../SVG";
 import { useState } from "react";
+import { counter } from "../../assets/utils";
 
 export default function App() {
   const [content, setContent] = useState(() => ({
@@ -81,6 +82,7 @@ export default function App() {
     totalTime: null,
     status: { isFinished: false, isCompleted: false },
     type: null,
+    id: counter(),
   }));
 
   const notificationText = `Time remaining to complete the project: 5h 1m 32s`;
@@ -98,7 +100,13 @@ export default function App() {
     return (remaining * 100) / total;
   };
 
-  const TodoComponent = (task, width, index, completeTodoListener) => {
+  const TodoComponent = (
+    task,
+    width,
+    index,
+    completeTodoListener,
+    deleteTodo
+  ) => {
     return (
       <div
         className={`todo todo-${task.type}`}
@@ -106,6 +114,7 @@ export default function App() {
         onClick={(e) => {
           completeTodoListener(e);
         }}
+        id={task.id}
       >
         {task.type == "actual" && (
           <div className="notification">
@@ -123,7 +132,11 @@ export default function App() {
             {/* <button className="btn">
               <Time fill={"#95FF8F"}></Time>
             </button> */}
-            <button className="btn" name="remove">
+            <button
+              className="btn"
+              name="remove"
+              onClick={(e) => deleteTodo(e)}
+            >
               <Close></Close>
             </button>
           </div>
@@ -143,16 +156,21 @@ export default function App() {
   const completeTodo = (e) => {
     const target = e.target;
     const currentTarget = e.currentTarget;
-    const todoText = currentTarget.querySelector(".text").textContent;
+    const taskId = currentTarget.id;
 
     if (target.closest('[name="complete"]')) {
       setContent((prev) => {
         return {
           ...prev,
-          actualTasks: prev.actualTasks.filter((task) => task.text != todoText),
+          actualTasks: prev.actualTasks.filter((task) => task.id != taskId),
           completedTasks: [
             ...prev.completedTasks,
-            ...prev.actualTasks.filter((task) => task.text == todoText),
+            ...prev.actualTasks
+              .filter((task) => task.id == taskId)
+              .map((task) => ({
+                ...task,
+                type: "completed",
+              })),
           ],
         };
       });
@@ -191,7 +209,7 @@ export default function App() {
         });
 
         setNewTodo((prev) => {
-          return { ...prev, text: null };
+          return { ...prev, text: null, id: counter() };
         });
 
         return newTodo;
@@ -218,6 +236,21 @@ export default function App() {
       const newTodo = { ...prev, text: e.target.value };
 
       return newTodo;
+    });
+  };
+
+  const deleteTodo = (e) => {
+    const target = e.target;
+
+    const taskId = target.closest(".todo").id;
+
+    setContent((prev) => {
+      return {
+        ...prev,
+        actualTasks: prev.actualTasks.filter((task) => task.id != taskId),
+        wastedTasks: prev.wastedTasks.filter((task) => task.id != taskId),
+        completedTasks: prev.completedTasks.filter((task) => task.id != taskId),
+      };
     });
   };
 
@@ -294,7 +327,13 @@ export default function App() {
                     task.status
                   );
 
-                  return TodoComponent(task, width, index, completeTodo);
+                  return TodoComponent(
+                    task,
+                    width,
+                    index,
+                    completeTodo,
+                    deleteTodo
+                  );
                 })
               ) : (
                 <p className="empty">Empty</p>
@@ -302,7 +341,13 @@ export default function App() {
             {content.isActiveTab == "wasted" &&
               (content.wastedTasks.length > 0 ? (
                 content.wastedTasks.map((task, index) => {
-                  return TodoComponent(task, 100, index, completeTodo);
+                  return TodoComponent(
+                    task,
+                    100,
+                    index,
+                    completeTodo,
+                    deleteTodo
+                  );
                 })
               ) : (
                 <p className="empty">Empty</p>
@@ -316,7 +361,13 @@ export default function App() {
                     task.status
                   );
 
-                  return TodoComponent(task, width, index, completeTodo);
+                  return TodoComponent(
+                    task,
+                    width,
+                    index,
+                    completeTodo,
+                    deleteTodo
+                  );
                 })
               ) : (
                 <p className="empty">Empty</p>
