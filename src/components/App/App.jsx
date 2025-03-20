@@ -6,73 +6,73 @@ export default function App() {
   const [content, setContent] = useState(() => ({
     isActiveTab: "new",
     actualTasks: [
-      {
-        text: "Create project for client",
-        remainingTime: 3600,
-        totalTime: 3600,
-        status: { isFinished: false, isCompleted: false },
-        type: "actual",
-      },
-      {
-        text: "Create project for client",
-        remainingTime: 1800,
-        totalTime: 3600,
-        status: { isFinished: false, isCompleted: false },
-        type: "actual",
-      },
-      {
-        text: "Create project for client",
-        remainingTime: 900,
-        totalTime: 3600,
-        status: { isFinished: false, isCompleted: false },
-        type: "actual",
-      },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 3600,
+      //   totalTime: 3600,
+      //   status: { isFinished: false, isCompleted: false },
+      //   type: "actual",
+      // },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 1800,
+      //   totalTime: 3600,
+      //   status: { isFinished: false, isCompleted: false },
+      //   type: "actual",
+      // },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 900,
+      //   totalTime: 3600,
+      //   status: { isFinished: false, isCompleted: false },
+      //   type: "actual",
+      // },
     ],
     wastedTasks: [
-      {
-        text: "Create project for client",
-        remainingTime: 0,
-        totalTime: 3600,
-        status: { isFinished: true, isCompleted: false },
-        type: "wasted",
-      },
-      {
-        text: "Create project for client",
-        remainingTime: 0,
-        totalTime: 3600,
-        status: { isFinished: true, isCompleted: false },
-        type: "wasted",
-      },
-      {
-        text: "Create project for client",
-        remainingTime: 0,
-        totalTime: 3600,
-        status: { isFinished: true, isCompleted: false },
-        type: "wasted",
-      },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 0,
+      //   totalTime: 3600,
+      //   status: { isFinished: true, isCompleted: false },
+      //   type: "wasted",
+      // },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 0,
+      //   totalTime: 3600,
+      //   status: { isFinished: true, isCompleted: false },
+      //   type: "wasted",
+      // },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 0,
+      //   totalTime: 3600,
+      //   status: { isFinished: true, isCompleted: false },
+      //   type: "wasted",
+      // },
     ],
     completedTasks: [
-      {
-        text: "Create project for client",
-        remainingTime: 0,
-        totalTime: 3600,
-        status: { isFinished: true, isCompleted: true },
-        type: "completed",
-      },
-      {
-        text: "Create project for client",
-        remainingTime: 0,
-        totalTime: 3600,
-        status: { isFinished: true, isCompleted: true },
-        type: "completed",
-      },
-      {
-        text: "Create project for client",
-        remainingTime: 0,
-        totalTime: 3600,
-        status: { isFinished: true, isCompleted: true },
-        type: "completed",
-      },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 0,
+      //   totalTime: 3600,
+      //   status: { isFinished: true, isCompleted: true },
+      //   type: "completed",
+      // },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 0,
+      //   totalTime: 3600,
+      //   status: { isFinished: true, isCompleted: true },
+      //   type: "completed",
+      // },
+      // {
+      //   text: "Create project for client",
+      //   remainingTime: 0,
+      //   totalTime: 3600,
+      //   status: { isFinished: true, isCompleted: true },
+      //   type: "completed",
+      // },
     ],
   }));
   const [newTodo, setNewTodo] = useState(() => ({
@@ -184,13 +184,15 @@ export default function App() {
         newTodo.status &&
         newTodo.type
       ) {
+        localStorage.setItem("newTodo", JSON.stringify(content.actualTasks));
+
         setContent((prev) => {
           return { ...prev, actualTasks: [...prev.actualTasks, newTodo] };
         });
 
         setNewTodo((prev) => {
-          return {...prev, text: null}
-        })
+          return { ...prev, text: null };
+        });
 
         return newTodo;
       }
@@ -262,7 +264,7 @@ export default function App() {
                   <input
                     type="text"
                     placeholder="Enter the text..."
-                    value={newTodo.text != null ? newTodo.text : ''}
+                    value={newTodo.text != null ? newTodo.text : ""}
                     onInput={(e) => typeText(e)}
                   />
                   <div className="todo-settings">
@@ -284,29 +286,41 @@ export default function App() {
               </div>
             )}
             {content.isActiveTab == "actual" &&
-              content.actualTasks.map((task, index) => {
-                const width = computePercentOfTime(
-                  task.totalTime,
-                  task.remainingTime,
-                  task.status
-                );
+              (content.actualTasks.length > 0 ? (
+                content.actualTasks.map((task, index) => {
+                  const width = computePercentOfTime(
+                    task.totalTime,
+                    task.remainingTime,
+                    task.status
+                  );
 
-                return TodoComponent(task, width, index, completeTodo);
-              })}
+                  return TodoComponent(task, width, index, completeTodo);
+                })
+              ) : (
+                <p className="empty">Empty</p>
+              ))}
             {content.isActiveTab == "wasted" &&
-              content.wastedTasks.map((task, index) => {
-                return TodoComponent(task, 100, index, completeTodo);
-              })}
+              (content.wastedTasks.length > 0 ? (
+                content.wastedTasks.map((task, index) => {
+                  return TodoComponent(task, 100, index, completeTodo);
+                })
+              ) : (
+                <p className="empty">Empty</p>
+              ))}
             {content.isActiveTab == "completed" &&
-              content.completedTasks.map((task, index) => {
-                const width = computePercentOfTime(
-                  task.totalTime,
-                  task.remainingTime,
-                  task.status
-                );
+              (content.completedTasks.length > 0 ? (
+                content.completedTasks.map((task, index) => {
+                  const width = computePercentOfTime(
+                    task.totalTime,
+                    task.remainingTime,
+                    task.status
+                  );
 
-                return TodoComponent(task, width, index, completeTodo);
-              })}
+                  return TodoComponent(task, width, index, completeTodo);
+                })
+              ) : (
+                <p className="empty">Empty</p>
+              ))}
             {content.isActiveTab == "empty" && <p className="empty">Empty</p>}
           </div>
         </div>
