@@ -10,53 +10,9 @@ import Button from "../Button";
 export default function App() {
   const [content, setContent] = useState(() => ({
     isActiveTab: "new",
-    actualTasks: getActualTasks(),
-    wastedTasks: [
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 0,
-      //   totalTime: 3600,
-      //   status: { isFinished: true, isCompleted: false },
-      //   type: "wasted",
-      // },
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 0,
-      //   totalTime: 3600,
-      //   status: { isFinished: true, isCompleted: false },
-      //   type: "wasted",
-      // },
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 0,
-      //   totalTime: 3600,
-      //   status: { isFinished: true, isCompleted: false },
-      //   type: "wasted",
-      // },
-    ],
-    completedTasks: [
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 0,
-      //   totalTime: 3600,
-      //   status: { isFinished: true, isCompleted: true },
-      //   type: "completed",
-      // },
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 0,
-      //   totalTime: 3600,
-      //   status: { isFinished: true, isCompleted: true },
-      //   type: "completed",
-      // },
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 0,
-      //   totalTime: 3600,
-      //   status: { isFinished: true, isCompleted: true },
-      //   type: "completed",
-      // },
-    ],
+    actualTasks: getTasks('actualTasks'),
+    wastedTasks: getTasks('wastedTasks'),
+    completedTasks: getTasks('completedTasks'),
     notification: { text: "Task saved!" },
   }));
   const [newTask, setNewTask] = useState(() => ({
@@ -152,7 +108,7 @@ export default function App() {
           return { ...prev, actualTasks: [...prev.actualTasks, newTask] };
         });
 
-        saveActualTask(newTask)
+        saveTask(newTask, newTask.type)
 
         return newTask;
       }
@@ -259,21 +215,21 @@ export default function App() {
     });
   };
 
-  function getActualTasks() {
-    if (isActualTasksExists()) {
-      return jsonParse(localStorage.getItem("actualTasks"));
+  function getTasks(type) {
+    if (isExistsTasks(type)) {
+      return jsonParse(localStorage.getItem(type));
     }
 
     return []
   }
 
-  function isActualTasksExists() {
-    return localStorage.getItem("actualTasks") ? true : false;
+  function isExistsTasks(type) {
+    return localStorage.getItem(type) ? true : false;
   }
 
-  function saveActualTask(task) {
-    const actualTasks = getActualTasks();
-    actualTasks.push(task)
+  function saveTask(task, type) {
+    const tasksList = getTasks(type);
+    tasksList.push(task)
 
     // const tasks = [
     //   {
@@ -325,7 +281,7 @@ export default function App() {
 
     // localStorage.setItem("actualTasks", jsonStringify(tasks));
 
-    localStorage.setItem('actualTasks', jsonStringify(actualTasks))
+    localStorage.setItem(type, jsonStringify(tasksList))
   }
 
   // saveActualTask(newTask);
