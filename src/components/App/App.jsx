@@ -10,9 +10,9 @@ import Button from "../Button";
 export default function App() {
   const [content, setContent] = useState(() => ({
     isActiveTab: "new",
-    actualTasks: getTasks('actualTasks'),
-    wastedTasks: getTasks('wastedTasks'),
-    completedTasks: getTasks('completedTasks'),
+    actualTasks: getTasks("actual"),
+    wastedTasks: getTasks("wasted"),
+    completedTasks: getTasks("completed"),
     notification: { text: "Task saved!" },
   }));
   const [newTask, setNewTask] = useState(() => ({
@@ -57,6 +57,14 @@ export default function App() {
     const taskId = currentTarget.id;
 
     if (target.closest('[name="complete"]')) {
+      const currentTask = content.actualTasks.filter(
+        (task) => task.id == taskId
+      )[0];
+      currentTask.type = "completed";
+      currentTask.status.isCompleted = true
+      saveTask(currentTask, "completed");
+      removeTask(currentTarget, "actual");
+
       setContent((prev) => {
         return {
           ...prev,
@@ -68,6 +76,7 @@ export default function App() {
               .map((task) => ({
                 ...task,
                 type: "completed",
+                status: {...task.status, isCompleted: true}
               })),
           ],
         };
@@ -108,7 +117,7 @@ export default function App() {
           return { ...prev, actualTasks: [...prev.actualTasks, newTask] };
         });
 
-        saveTask(newTask, newTask.type)
+        saveTask(newTask, newTask.type);
 
         return newTask;
       }
@@ -216,11 +225,15 @@ export default function App() {
   };
 
   function getTasks(type) {
-    if (isExistsTasks(type)) {
-      return jsonParse(localStorage.getItem(type));
+    const correctType = type + "Tasks";
+    if (isExistsTasks(correctType)) {
+      return jsonParse(localStorage.getItem(correctType));
     }
 
-    return []
+    console.log(isExistsTasks(correctType));
+    console.log(`correctType:`, correctType);
+
+    return [];
   }
 
   function isExistsTasks(type) {
@@ -229,62 +242,75 @@ export default function App() {
 
   function saveTask(task, type) {
     const tasksList = getTasks(type);
-    tasksList.push(task)
+    console.log(`tasksList:`, tasksList);
 
-    // const tasks = [
-    //   {
-    //     text: "Go to walk",
-    //     remainingTime: 3600,
-    //     totalTime: 3600,
-    //     status: { isFinished: false, isCompleted: false },
-    //     type: "actual",
-    //     id: counter(),
-    //     notification: {
-    //       text: `Time remaining to complete
-    //             the project: 5h 1m 32s`,
-    //       isOpen: false,
-    //       isCooldown: false,
-    //       position: { x: null, y: null },
-    //     },
-    //   },
-    //   {
-    //     text: "Finish the project",
-    //     remainingTime: 1800,
-    //     totalTime: 3600,
-    //     status: { isFinished: false, isCompleted: false },
-    //     type: "actual",
-    //     id: counter(),
-    //     notification: {
-    //       text: `Time remaining to complete
-    //             the project: 5h 1m 32s`,
-    //       isOpen: false,
-    //       isCooldown: false,
-    //       position: { x: null, y: null },
-    //     },
-    //   },
-    //   {
-    //     text: "Watch the movie after work",
-    //     remainingTime: 900,
-    //     totalTime: 3600,
-    //     status: { isFinished: false, isCompleted: false },
-    //     type: "actual",
-    //     id: counter(),
-    //     notification: {
-    //       text: `Time remaining to complete
-    //             the project: 5h 1m 32s`,
-    //       isOpen: false,
-    //       isCooldown: false,
-    //       position: { x: null, y: null },
-    //     },
-    //   },
-    // ];
+    if (task) {
+      tasksList.push(task);
+    }
+
+    const tasks = [
+      {
+        text: "Go to walk",
+        remainingTime: 3600,
+        totalTime: 3600,
+        status: { isFinished: false, isCompleted: false },
+        type: "actual",
+        id: counter(),
+        notification: {
+          text: `Time remaining to complete
+                the project: 5h 1m 32s`,
+          isOpen: false,
+          isCooldown: false,
+          position: { x: null, y: null },
+        },
+      },
+      {
+        text: "Finish the project",
+        remainingTime: 1800,
+        totalTime: 3600,
+        status: { isFinished: false, isCompleted: false },
+        type: "actual",
+        id: counter(),
+        notification: {
+          text: `Time remaining to complete
+                the project: 5h 1m 32s`,
+          isOpen: false,
+          isCooldown: false,
+          position: { x: null, y: null },
+        },
+      },
+      {
+        text: "Watch the movie after work",
+        remainingTime: 900,
+        totalTime: 3600,
+        status: { isFinished: false, isCompleted: false },
+        type: "actual",
+        id: counter(),
+        notification: {
+          text: `Time remaining to complete
+                the project: 5h 1m 32s`,
+          isOpen: false,
+          isCooldown: false,
+          position: { x: null, y: null },
+        },
+      },
+    ];
 
     // localStorage.setItem("actualTasks", jsonStringify(tasks));
 
-    localStorage.setItem(type, jsonStringify(tasksList))
+    localStorage.setItem(type + "Tasks", jsonStringify(tasksList));
   }
 
-  // saveActualTask(newTask);
+  // saveTask(newTask, 'actual');
+
+  function removeTask(task, type) {
+    const tasksList = getTasks(type);
+    const newTasksList = tasksList.filter(
+      (currentTask) => currentTask.id != task.id
+    );
+
+    localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
+  }
 
   const actualTasksList = content.actualTasks.map((task) => {
     const width = computePercentOfTime(
