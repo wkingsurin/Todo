@@ -1,5 +1,5 @@
 import "./App.scss";
-import { Checkmark, Time, Close, Notification } from "../SVG";
+import { Checkmark, Close } from "../SVG";
 import { useState } from "react";
 import { counter } from "../../assets/utils";
 import ModalNotification from "../ModalNotification";
@@ -10,29 +10,7 @@ import Button from "../Button";
 export default function App() {
   const [content, setContent] = useState(() => ({
     isActiveTab: "new",
-    actualTasks: [
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 3600,
-      //   totalTime: 3600,
-      //   status: { isFinished: false, isCompleted: false },
-      //   type: "actual",
-      // },
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 1800,
-      //   totalTime: 3600,
-      //   status: { isFinished: false, isCompleted: false },
-      //   type: "actual",
-      // },
-      // {
-      //   text: "Create project for client",
-      //   remainingTime: 900,
-      //   totalTime: 3600,
-      //   status: { isFinished: false, isCompleted: false },
-      //   type: "actual",
-      // },
-    ],
+    actualTasks: getActualTasks(),
     wastedTasks: [
       // {
       //   text: "Create project for client",
@@ -97,6 +75,13 @@ export default function App() {
     },
   }));
 
+  function jsonParse(json) {
+    return JSON.parse(json);
+  }
+  function jsonStringify(json) {
+    return JSON.stringify(json);
+  }
+
   const switchTab = (e) => {
     setContent((prev) => {
       return { ...prev, isActiveTab: e.target.name };
@@ -159,13 +144,15 @@ export default function App() {
         newTask.status &&
         newTask.type
       ) {
+        setNewTask((prev) => {
+          return { ...prev, text: null, id: counter() };
+        });
+
         setContent((prev) => {
           return { ...prev, actualTasks: [...prev.actualTasks, newTask] };
         });
 
-        setNewTask((prev) => {
-          return { ...prev, text: null, id: counter() };
-        });
+        saveActualTask(newTask)
 
         return newTask;
       }
@@ -271,6 +258,77 @@ export default function App() {
       return { ...prev, notification: { ...prev.notification, isOpen: false } };
     });
   };
+
+  function getActualTasks() {
+    if (isActualTasksExists()) {
+      return jsonParse(localStorage.getItem("actualTasks"));
+    }
+
+    return []
+  }
+
+  function isActualTasksExists() {
+    return localStorage.getItem("actualTasks") ? true : false;
+  }
+
+  function saveActualTask(task) {
+    const actualTasks = getActualTasks();
+    actualTasks.push(task)
+
+    // const tasks = [
+    //   {
+    //     text: "Go to walk",
+    //     remainingTime: 3600,
+    //     totalTime: 3600,
+    //     status: { isFinished: false, isCompleted: false },
+    //     type: "actual",
+    //     id: counter(),
+    //     notification: {
+    //       text: `Time remaining to complete
+    //             the project: 5h 1m 32s`,
+    //       isOpen: false,
+    //       isCooldown: false,
+    //       position: { x: null, y: null },
+    //     },
+    //   },
+    //   {
+    //     text: "Finish the project",
+    //     remainingTime: 1800,
+    //     totalTime: 3600,
+    //     status: { isFinished: false, isCompleted: false },
+    //     type: "actual",
+    //     id: counter(),
+    //     notification: {
+    //       text: `Time remaining to complete
+    //             the project: 5h 1m 32s`,
+    //       isOpen: false,
+    //       isCooldown: false,
+    //       position: { x: null, y: null },
+    //     },
+    //   },
+    //   {
+    //     text: "Watch the movie after work",
+    //     remainingTime: 900,
+    //     totalTime: 3600,
+    //     status: { isFinished: false, isCompleted: false },
+    //     type: "actual",
+    //     id: counter(),
+    //     notification: {
+    //       text: `Time remaining to complete
+    //             the project: 5h 1m 32s`,
+    //       isOpen: false,
+    //       isCooldown: false,
+    //       position: { x: null, y: null },
+    //     },
+    //   },
+    // ];
+
+    // localStorage.setItem("actualTasks", jsonStringify(tasks));
+
+    localStorage.setItem('actualTasks', jsonStringify(actualTasks))
+  }
+
+  // saveActualTask(newTask);
 
   const actualTasksList = content.actualTasks.map((task) => {
     const width = computePercentOfTime(
