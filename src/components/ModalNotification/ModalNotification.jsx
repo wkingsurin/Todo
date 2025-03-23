@@ -11,6 +11,7 @@ export default function ModalNotification(props) {
         left: `${newTask.notification.position.x}px`,
         top: `${newTask.notification.position.y}px`,
         zIndex: 2,
+        border: '1px solid black'
       }}
     >
       <div className="content">

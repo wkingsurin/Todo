@@ -1,8 +1,9 @@
 import "./App.scss";
-import { Checkmark, Close } from "../SVG";
+import { Checkmark, Time, Close } from "../SVG";
 import { useState } from "react";
 import { counter } from "../../assets/utils";
 import ModalNotification from "../ModalNotification";
+import ModalSettings from "../ModalSettings";
 import Empty from "../Empty";
 import Task from "../Task";
 import Button from "../Button";
@@ -29,6 +30,12 @@ export default function App() {
       isCooldown: false,
       position: { x: null, y: null },
     },
+    timeModal: {
+      isOpen: false,
+      date: null,
+      time: null,
+      position: { x: null, y: null },
+    },
   }));
 
   function jsonParse(json) {
@@ -36,6 +43,10 @@ export default function App() {
   }
   function jsonStringify(json) {
     return JSON.stringify(json);
+  }
+
+  function getTypeFromClassName(elem) {
+    return elem.classList[1].split("-")[1];
   }
 
   const switchTab = (e) => {
@@ -61,7 +72,7 @@ export default function App() {
         (task) => task.id == taskId
       )[0];
       currentTask.type = "completed";
-      currentTask.status.isCompleted = true
+      currentTask.status.isCompleted = true;
       saveTask(currentTask, "completed");
       removeTask(currentTarget, "actual");
 
@@ -76,7 +87,7 @@ export default function App() {
               .map((task) => ({
                 ...task,
                 type: "completed",
-                status: {...task.status, isCompleted: true}
+                status: { ...task.status, isCompleted: true },
               })),
           ],
         };
@@ -149,8 +160,16 @@ export default function App() {
 
   const deleteTask = (e) => {
     const target = e.target;
-
+    const taskTarget = target.closest(".todo");
     const taskId = target.closest(".todo").id;
+    const targetType = getTypeFromClassName(taskTarget);
+
+    if (targetType == "new") return;
+
+    const currentTask = content[targetType + "Tasks"].filter(
+      (task) => task.id == taskId
+    )[0];
+    removeTask(currentTask, targetType);
 
     setContent((prev) => {
       return {
@@ -312,6 +331,70 @@ export default function App() {
     localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
   }
 
+  function interactOnTodo(e) {
+    const target = e.target;
+    const targetBtn = target.closest("button");
+
+    if (targetBtn) {
+      switch (targetBtn.name) {
+        case "save":
+          saveNewTask(e);
+          break;
+
+        case "time":
+          showTimeModal(e);
+          break;
+
+        case "complete":
+          completeTask(e);
+          break;
+
+        case "remove":
+          deleteTask(e);
+          break;
+
+        default:
+          console.log("There is no such action");
+      }
+    }
+  }
+
+  function showTimeModal(e) {
+    const target = e.target;
+    const targetBtn = target.closest("button");
+    const targetSvg = targetBtn.querySelector("svg");
+
+    const coordinates = targetSvg.getBoundingClientRect();
+    const position = { x: coordinates.x - 30, y: coordinates.y + 30 };
+
+    newTask.timeModal.isOpen ? closeTimeModal() : openTimeModal(position);
+  }
+
+  function openTimeModal(position) {
+    setNewTask((prev) => {
+      return {
+        ...prev,
+        timeModal: {
+          ...prev.timeModal,
+          isOpen: true,
+          position: { ...position },
+        },
+      };
+    });
+  }
+
+  function closeTimeModal() {
+    setNewTask((prev) => {
+      return {
+        ...prev,
+        timeModal: {
+          ...prev.timeModal,
+          isOpen: false,
+        },
+      };
+    });
+  }
+
   const actualTasksList = content.actualTasks.map((task) => {
     const width = computePercentOfTime(
       task.totalTime,
@@ -401,7 +484,8 @@ export default function App() {
           </div>
           <div className="box">
             {content.isActiveTab == "new" && (
-              <div className="todo todo-new" onClick={(e) => saveNewTask(e)}>
+              <div className="todo todo-new" onClick={(e) => interactOnTodo(e)}>
+                {/* <div className="todo todo-new" onClick={(e) => saveNewTask(e)}> */}
                 <div className="todo-content">
                   <input
                     type="text"
@@ -413,9 +497,9 @@ export default function App() {
                     <Button name="save">
                       <Checkmark></Checkmark>
                     </Button>
-                    {/* <button className="btn" name="time">
+                    <button className="btn" name="time">
                       <Time fill={"#95FF8F"}></Time>
-                    </button> */}
+                    </button>
                     <Button name="remove" onClick={clearInputText}>
                       <Close></Close>
                     </Button>
@@ -447,18 +531,9 @@ export default function App() {
         {newTask.notification.isOpen && (
           <ModalNotification newTask={newTask}></ModalNotification>
         )}
-        {/* <div className="modal settings">
-          <div className="content">
-            <div className="line">
-              <p className="property">Date:</p>
-              <p className="value">19.03.25</p>
-            </div>
-            <div className="line">
-              <p className="property">Time:</p>
-              <p className="value">19:00</p>
-            </div>
-          </div>
-        </div> */}
+        {newTask.timeModal.isOpen && (
+          <ModalSettings data={newTask.timeModal}></ModalSettings>
+        )}
         {/* <div className="modal notification">
           <div className="content">
             <p className="text">{notificationText}</p>
