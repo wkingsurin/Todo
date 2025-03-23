@@ -8,34 +8,37 @@ import Empty from "../Empty";
 import Task from "../Task";
 import Button from "../Button";
 
+const START_TIME = new Date(2025, 2, 23, 18);
+const taskTemplate = {
+  text: null,
+  remainingTime: START_TIME,
+  totalTime: START_TIME,
+  status: { isFinished: false, isCompleted: false },
+  type: null,
+  id: null,
+  notification: {
+    text: `Time remaining to complete
+          the project: 5h 1m 32s`,
+    isOpen: false,
+    isCooldown: false,
+    position: { x: null, y: null },
+  },
+  timeModal: {
+    isOpen: false,
+    date: null,
+    time: null,
+    position: { x: null, y: null },
+  },
+};
+
 export default function App() {
   const [content, setContent] = useState(() => ({
     isActiveTab: "new",
+    newTask: taskTemplate,
     actualTasks: getTasks("actual"),
     wastedTasks: getTasks("wasted"),
     completedTasks: getTasks("completed"),
     notification: { text: "Task saved!" },
-  }));
-  const [newTask, setNewTask] = useState(() => ({
-    text: null,
-    remainingTime: null,
-    totalTime: null,
-    status: { isFinished: false, isCompleted: false },
-    type: null,
-    id: counter(),
-    notification: {
-      text: `Time remaining to complete
-            the project: 5h 1m 32s`,
-      isOpen: false,
-      isCooldown: false,
-      position: { x: null, y: null },
-    },
-    timeModal: {
-      isOpen: false,
-      date: null,
-      time: null,
-      position: { x: null, y: null },
-    },
   }));
 
   function jsonParse(json) {
@@ -97,45 +100,37 @@ export default function App() {
 
   const saveNewTask = (e) => {
     const target = e.target;
-    const currentTarget = e.currentTarget;
 
     if (target.closest('[name="save"]')) {
-      const input = currentTarget.querySelector("input");
-      const inputValue = input.value;
-
-      if (!inputValue) {
+      if (
+        !content.newTask.text ||
+        !content.newTask.remainingTime ||
+        !content.newTask.totalTime
+      ) {
+        console.log("Невозможно сохранить задачу");
         return;
       }
 
-      newTask.text = inputValue;
-      newTask.remainingTime = 3600; // Set time
-      newTask.totalTime = 3600;
-      newTask.status = { isFinished: false, isCompleted: false };
-      newTask.type = "actual";
+      console.log(`saveNewTask [counter]`, counter());
 
-      if (
-        newTask.text &&
-        newTask.remainingTime &&
-        newTask.totalTime &&
-        newTask.status &&
-        newTask.type
-      ) {
-        setNewTask((prev) => {
-          return { ...prev, text: null, id: counter() };
-        });
+      const newTask = { ...content.newTask, id: counter(), type: "actual" };
 
-        setContent((prev) => {
-          return { ...prev, actualTasks: [...prev.actualTasks, newTask] };
-        });
+      const newContent = {
+        ...content,
+        actualTasks: [...content.actualTasks, newTask],
+        newTask: { ...taskTemplate },
+      };
 
-        saveTask(newTask, newTask.type);
+      setContent(() => {
+        return newContent;
+      });
+      saveTask(newTask, "actual");
 
-        return newTask;
-      }
-
-      console.log("Cannot save this Todo");
-      return false;
+      return true;
     }
+
+    console.log("Cannot save this Todo");
+    return false;
   };
 
   const clearInputText = (e) => {
@@ -144,17 +139,15 @@ export default function App() {
     if (target.closest('[name="remove"]')) {
       target.closest(".todo").querySelector("input").value = "";
 
-      setNewTask((prev) => {
-        return { ...prev, text: null };
+      setContent((prev) => {
+        return { ...prev, newTask: { ...prev.newTask, text: null } };
       });
     }
   };
 
   const typeText = (e) => {
-    setNewTask((prev) => {
-      const newTask = { ...prev, text: e.target.value };
-
-      return newTask;
+    setContent((prev) => {
+      return { ...prev, newTask: { ...prev.newTask, text: e.target.value } };
     });
   };
 
@@ -187,7 +180,7 @@ export default function App() {
     if (target.closest("svg")) {
       const coordinates = target.closest("svg").getBoundingClientRect();
 
-      if (newTask.notification.isCooldown) {
+      if (content.newTask.notification.isCooldown) {
         return;
       } else {
         showNotification(coordinates);
@@ -214,32 +207,30 @@ export default function App() {
   };
 
   const showNotification = (position) => {
-    setNewTask((prev) => {
-      const newTask = {
+    setContent((prev) => {
+      return {
         ...prev,
-        notification: {
-          ...prev.notification,
-          isOpen: true,
-          position: { x: position.x - 30, y: position.y + 31 },
+        newTask: {
+          ...prev.newTask,
+          notification: {
+            ...prev.newTask.notification,
+            isOpen: true,
+            position: { x: position.x - 30, y: position.y + 31 },
+          },
         },
       };
-
-      return newTask;
     });
-
-    // setTimeout(() => {
-    //   setNewTask((prev) => {
-    //     return {
-    //       ...prev,
-    //       notification: { ...prev.notification, isOpen: false },
-    //     };
-    //   });
-    // }, 1000);
   };
 
   const hideNotification = () => {
-    setNewTask((prev) => {
-      return { ...prev, notification: { ...prev.notification, isOpen: false } };
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          notification: { ...prev.newTask.notification, isOpen: false },
+        },
+      };
     });
   };
 
@@ -249,8 +240,8 @@ export default function App() {
       return jsonParse(localStorage.getItem(correctType));
     }
 
-    console.log(isExistsTasks(correctType));
-    console.log(`correctType:`, correctType);
+    // console.log(isExistsTasks(correctType));
+    // console.log(`correctType:`, correctType);
 
     return [];
   }
@@ -261,7 +252,6 @@ export default function App() {
 
   function saveTask(task, type) {
     const tasksList = getTasks(type);
-    console.log(`tasksList:`, tasksList);
 
     if (task) {
       tasksList.push(task);
@@ -318,6 +308,7 @@ export default function App() {
     // localStorage.setItem("actualTasks", jsonStringify(tasks));
 
     localStorage.setItem(type + "Tasks", jsonStringify(tasksList));
+    console.log(`tasksList:`, tasksList);
   }
 
   // saveTask(newTask, 'actual');
@@ -367,29 +358,34 @@ export default function App() {
     const coordinates = targetSvg.getBoundingClientRect();
     const position = { x: coordinates.x - 30, y: coordinates.y + 30 };
 
-    newTask.timeModal.isOpen ? closeTimeModal() : openTimeModal(position);
+    content.newTask.timeModal.isOpen
+      ? closeTimeModal()
+      : openTimeModal(position);
   }
 
   function openTimeModal(position) {
-    setNewTask((prev) => {
+    setContent((prev) => {
       return {
         ...prev,
-        timeModal: {
-          ...prev.timeModal,
-          isOpen: true,
-          position: { ...position },
+        newTask: {
+          ...prev.newTask,
+          timeModal: {
+            ...prev.newTask.timeModal,
+            isOpen: true,
+            position: { ...position },
+          },
         },
       };
     });
   }
 
   function closeTimeModal() {
-    setNewTask((prev) => {
+    setContent((prev) => {
       return {
         ...prev,
-        timeModal: {
-          ...prev.timeModal,
-          isOpen: false,
+        newTask: {
+          ...prev.newTask,
+          timeModal: { ...prev.newTask.timeModal, isOpen: false },
         },
       };
     });
@@ -490,7 +486,9 @@ export default function App() {
                   <input
                     type="text"
                     placeholder="Enter the text..."
-                    value={newTask.text != null ? newTask.text : ""}
+                    value={
+                      content.newTask.text != null ? content.newTask.text : ""
+                    }
                     onInput={(e) => typeText(e)}
                   />
                   <div className="todo-settings">
@@ -498,7 +496,7 @@ export default function App() {
                       <Checkmark></Checkmark>
                     </Button>
                     <button className="btn" name="time">
-                      <Time fill={"#95FF8F"}></Time>
+                      <Time></Time>
                     </button>
                     <Button name="remove" onClick={clearInputText}>
                       <Close></Close>
@@ -528,11 +526,11 @@ export default function App() {
             {content.isActiveTab == "empty" && <Empty>Empty</Empty>}
           </div>
         </div>
-        {newTask.notification.isOpen && (
-          <ModalNotification newTask={newTask}></ModalNotification>
+        {content.newTask.notification.isOpen && (
+          <ModalNotification newTask={content.newTask}></ModalNotification>
         )}
-        {newTask.timeModal.isOpen && (
-          <ModalSettings data={newTask.timeModal}></ModalSettings>
+        {content.newTask.timeModal.isOpen && (
+          <ModalSettings data={content.newTask.timeModal}></ModalSettings>
         )}
         {/* <div className="modal notification">
           <div className="content">

@@ -1,4 +1,4 @@
-export function Checkmark(props) {
+export function Checkmark() {
   return (
     <svg
       version="1.0"
@@ -10,7 +10,7 @@ export function Checkmark(props) {
     >
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill={props.fill}
+        fill="#000000"
         stroke="none"
       >
         <path
@@ -25,7 +25,7 @@ export function Checkmark(props) {
   );
 }
 
-export function Time(props) {
+export function Time() {
   return (
     <svg
       version="1.0"
@@ -37,7 +37,7 @@ export function Time(props) {
     >
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill={props.fill}
+        fill="#000000"
         stroke="none"
       >
         <path
@@ -64,7 +64,7 @@ export function Time(props) {
   );
 }
 
-export function Close(props) {
+export function Close() {
   return (
     <svg
       version="1.0"
@@ -76,7 +76,7 @@ export function Close(props) {
     >
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill={props.fill}
+        fill="#000000"
         stroke="none"
       >
         <path
