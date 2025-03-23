@@ -90,19 +90,28 @@
 
   color: #000;
 
+  font-size: 16px;
+
+  p {
+    font-size: 16px;
+  }
+
   .content {
     display: flex;
     flex-direction: column;
 
+    width: 100%;
+
     gap: 10px;
-  }
-  p {
-    font-size: 16px;
   }
   .line {
     display: flex;
     justify-content: space-between;
     gap: 12px;
+
+    & > * {
+      flex: 0 1 50%;
+    }
 
     .property {
     }
