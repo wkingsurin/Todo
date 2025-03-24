@@ -1,5 +1,5 @@
 import "./App.scss";
-import { Checkmark, Time, Close } from "../SVG";
+import { Checkmark, Time, Close, Chevron } from "../SVG";
 import { useState } from "react";
 import { counter } from "../../assets/utils";
 import ModalNotification from "../ModalNotification";
@@ -538,6 +538,119 @@ export default function App() {
             <p className="text">{notificationText}</p>
           </div>
         </div> */}
+        <div
+          className="modal settings extended-modal"
+          style={{ border: "1px solid #e2e2e2" }}
+        >
+          <div className="content">
+            <div className="block date-block">
+              <div className="line">
+                <p className="property">Date:</p>
+                <div className="value-block">
+                  <input className="value" placeholder="__.__.__" />
+                </div>
+                <div className="btn">
+                  <Chevron rotate={180}></Chevron>
+                </div>
+              </div>
+              <div className="block-menu">
+                <div className="period" name="month">
+                  <div className="btn">
+                    <Chevron rotate={-90}></Chevron>
+                  </div>
+                  <p className="text">Март</p>
+                  <div className="btn">
+                    <Chevron rotate={90}></Chevron>
+                  </div>
+                </div>
+                <div className="period" name="year">
+                  <div className="btn">
+                    <Chevron rotate={-90}></Chevron>
+                  </div>
+                  <p className="text">2025</p>
+                  <div className="btn">
+                    <Chevron rotate={90}></Chevron>
+                  </div>
+                </div>
+                <table className="days">
+                  <tbody>
+                    <tr className="table-row">
+                      <th className="table-heading">Пн</th>
+                      <th className="table-heading">Вт</th>
+                      <th className="table-heading">Ср</th>
+                      <th className="table-heading">Чт</th>
+                      <th className="table-heading">Пт</th>
+                      <th className="table-heading">Сб</th>
+                      <th className="table-heading">Вс</th>
+                    </tr>
+                    <tr className="table-row">
+                      <td className="table-data">1</td>
+                      <td className="table-data">2</td>
+                      <td className="table-data">3</td>
+                      <td className="table-data">4</td>
+                      <td className="table-data">5</td>
+                      <td className="table-data">6</td>
+                      <td className="table-data">7</td>
+                    </tr>
+                    <tr className="table-row">
+                      <td className="table-data">8</td>
+                      <td className="table-data">9</td>
+                      <td className="table-data">10</td>
+                      <td className="table-data">11</td>
+                      <td className="table-data">12</td>
+                      <td className="table-data">13</td>
+                      <td className="table-data">14</td>
+                    </tr>
+                    <tr className="table-row">
+                      <td className="table-data">15</td>
+                      <td className="table-data">16</td>
+                      <td className="table-data">17</td>
+                      <td className="table-data">18</td>
+                      <td className="table-data">19</td>
+                      <td className="table-data">20</td>
+                      <td className="table-data">21</td>
+                    </tr>
+                    <tr className="table-row">
+                      <td className="table-data">22</td>
+                      <td className="table-data">23</td>
+                      <td className="table-data">24</td>
+                      <td className="table-data">25</td>
+                      <td className="table-data">26</td>
+                      <td className="table-data">27</td>
+                      <td className="table-data">28</td>
+                    </tr>
+                    <tr className="table-row">
+                      <td className="table-data">29</td>
+                      <td className="table-data">30</td>
+                      <td className="table-data">31</td>
+                      <td className="table-data">1</td>
+                      <td className="table-data">2</td>
+                      <td className="table-data">3</td>
+                      <td className="table-data">4</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="block time-block">
+              <div className="line">
+                <p className="property">Time:</p>
+                <div className="value-block">
+                  <input className="value" placeholder="--:--" />
+                </div>
+                <div className="btn">
+                  <Chevron rotate={180}></Chevron>
+                </div>
+              </div>
+              <div className="block-menu block-menu_second">
+                <div className="item time">10:00</div>
+                <div className="item time">11:00</div>
+                <div className="item time">12:00</div>
+                <div className="item time">13:00</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

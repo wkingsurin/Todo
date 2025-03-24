@@ -134,3 +134,29 @@ export function Notification(props) {
     </svg>
   );
 }
+
+export function Chevron({ rotate }) {
+  return (
+    <svg
+      version="1.0"
+      xmlns="http://www.w3.org/2000/svg"
+      width="512.000000pt"
+      height="512.000000pt"
+      viewBox="0 0 512.000000 512.000000"
+      preserveAspectRatio="xMidYMid meet"
+      transform={`rotate(${rotate})`}
+    >
+      <g
+        transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+        fill="#000000"
+        stroke="none"
+      >
+        <path
+          d="M2495 3666 c-16 -8 -402 -387 -857 -843 -733 -735 -827 -832 -833
+-865 -15 -80 23 -156 92 -184 48 -21 3278 -21 3326 0 69 28 107 104 92 183 -6
+34 -100 131 -833 867 -481 482 -840 834 -859 842 -40 17 -89 17 -128 0z"
+        />
+      </g>
+    </svg>
+  );
+}
