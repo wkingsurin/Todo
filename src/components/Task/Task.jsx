@@ -41,7 +41,7 @@ export default function Task(props) {
           style={{
             width: width + "%",
             background:
-              width == 100 ? "#95FF8F" : width == 50 ? "#F2FF8F" : "#F9C68F",
+              width > 50 ? "#95FF8F" : width > 25 ? "#F2FF8F" : "#F9C68F",
           }}
         ></div>
       </div>

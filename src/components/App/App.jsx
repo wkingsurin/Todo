@@ -62,6 +62,9 @@ export default function App() {
     if (status.isCompleted) {
       return 100;
     }
+    if (status.isFinished && !status.isCompleted) {
+      return 0;
+    }
     return (remaining * 100) / total;
   };
 
@@ -111,7 +114,11 @@ export default function App() {
         return;
       }
 
-      const newTask = { ...content.newTask, id: counter(setContent), type: "actual" };
+      const newTask = {
+        ...content.newTask,
+        id: counter(setContent),
+        type: "actual",
+      };
 
       const newContent = {
         ...content,
@@ -387,8 +394,8 @@ export default function App() {
 
   const actualTasksList = content.actualTasks.map((task) => {
     const width = computePercentOfTime(
-      task.totalTime,
-      task.remainingTime,
+      new Date(task.totalTime),
+      new Date(task.remainingTime),
       task.status
     );
 
