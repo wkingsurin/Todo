@@ -111,9 +111,7 @@ export default function App() {
         return;
       }
 
-      console.log(`saveNewTask [counter]`, counter());
-
-      const newTask = { ...content.newTask, id: counter(), type: "actual" };
+      const newTask = { ...content.newTask, id: counter(setContent), type: "actual" };
 
       const newContent = {
         ...content,
@@ -239,10 +237,6 @@ export default function App() {
     if (isExistsTasks(correctType)) {
       return jsonParse(localStorage.getItem(correctType));
     }
-
-    // console.log(isExistsTasks(correctType));
-    // console.log(`correctType:`, correctType);
-
     return [];
   }
 
@@ -257,53 +251,53 @@ export default function App() {
       tasksList.push(task);
     }
 
-    const tasks = [
-      {
-        text: "Go to walk",
-        remainingTime: 3600,
-        totalTime: 3600,
-        status: { isFinished: false, isCompleted: false },
-        type: "actual",
-        id: counter(),
-        notification: {
-          text: `Time remaining to complete
-                the project: 5h 1m 32s`,
-          isOpen: false,
-          isCooldown: false,
-          position: { x: null, y: null },
-        },
-      },
-      {
-        text: "Finish the project",
-        remainingTime: 1800,
-        totalTime: 3600,
-        status: { isFinished: false, isCompleted: false },
-        type: "actual",
-        id: counter(),
-        notification: {
-          text: `Time remaining to complete
-                the project: 5h 1m 32s`,
-          isOpen: false,
-          isCooldown: false,
-          position: { x: null, y: null },
-        },
-      },
-      {
-        text: "Watch the movie after work",
-        remainingTime: 900,
-        totalTime: 3600,
-        status: { isFinished: false, isCompleted: false },
-        type: "actual",
-        id: counter(),
-        notification: {
-          text: `Time remaining to complete
-                the project: 5h 1m 32s`,
-          isOpen: false,
-          isCooldown: false,
-          position: { x: null, y: null },
-        },
-      },
-    ];
+    // const tasks = [
+    //   {
+    //     text: "Go to walk",
+    //     remainingTime: 3600,
+    //     totalTime: 3600,
+    //     status: { isFinished: false, isCompleted: false },
+    //     type: "actual",
+    //     id: counter(setContent),
+    //     notification: {
+    //       text: `Time remaining to complete
+    //             the project: 5h 1m 32s`,
+    //       isOpen: false,
+    //       isCooldown: false,
+    //       position: { x: null, y: null },
+    //     },
+    //   },
+    //   {
+    //     text: "Finish the project",
+    //     remainingTime: 1800,
+    //     totalTime: 3600,
+    //     status: { isFinished: false, isCompleted: false },
+    //     type: "actual",
+    //     id: counter(setContent),
+    //     notification: {
+    //       text: `Time remaining to complete
+    //             the project: 5h 1m 32s`,
+    //       isOpen: false,
+    //       isCooldown: false,
+    //       position: { x: null, y: null },
+    //     },
+    //   },
+    //   {
+    //     text: "Watch the movie after work",
+    //     remainingTime: 900,
+    //     totalTime: 3600,
+    //     status: { isFinished: false, isCompleted: false },
+    //     type: "actual",
+    //     id: counter(setContent),
+    //     notification: {
+    //       text: `Time remaining to complete
+    //             the project: 5h 1m 32s`,
+    //       isOpen: false,
+    //       isCooldown: false,
+    //       position: { x: null, y: null },
+    //     },
+    //   },
+    // ];
 
     // localStorage.setItem("actualTasks", jsonStringify(tasks));
 

@@ -1,14 +1,15 @@
-function makeCounter() {
+export function counter(setState) {
   if (!isExistsCount()) {
     localStorage.setItem("count", 0);
-    return getCount;
+    return getCount();
   }
 
   let newCount = getCount() + 1;
 
+  setState((prev) => ({ ...prev, newTask: { ...prev.newTask, id: newCount } }));
   saveCount(newCount);
 
-  return getCount;
+  return getCount();
 }
 
 function isExistsCount() {
@@ -23,13 +24,8 @@ function getCount() {
 }
 
 function saveCount(count) {
-  console.log(`Сохраняем count в localStorage`);
-  //   console.log(`saveCount [count]`, count);
-
   if (count) {
     localStorage.setItem("count", count);
   }
   return false;
 }
-
-export let counter = makeCounter();
