@@ -134,9 +134,36 @@ export default function ModalSettings(props) {
     });
   }
 
+  function prevYear(e) {
+    const date = task.dateModal.date;
+    const now = Date.now()
+
+    if (date < now) {
+      console.log(`Невозможно установить прошедшую дату`);
+      return;
+    }
+
+    date.setFullYear(date.getFullYear() - 1);
+
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          dateModal: {
+            ...prev.newTask.dateModal,
+            date,
+            data: { ...prev.newTask.dateModal.data, year: date.getFullYear() },
+            dateInput: correctDate(date),
+          },
+        },
+      };
+    });
+  }
+
   function nextYear(e) {
     const date = task.dateModal.date;
-    
+
     date.setFullYear(date.getFullYear() + 1);
 
     setContent((prev) => {
@@ -202,7 +229,7 @@ export default function ModalSettings(props) {
             </button>
           </div>
           <div className="period">
-            <button className="btn">
+            <button className="btn" onClick={(e) => prevYear(e)}>
               <Chevron rotate={-90}></Chevron>
             </button>
             <p className="text">{dateData.year}</p>
