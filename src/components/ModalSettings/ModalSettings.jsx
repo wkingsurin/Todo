@@ -136,14 +136,20 @@ export default function ModalSettings(props) {
 
   function prevYear(e) {
     const date = task.dateModal.date;
-    const now = Date.now()
+    const currentDate = new Date()
+    const currentYear = currentDate.getFullYear()
+    const currentMonth = currentDate.getMonth()
 
-    if (date < now) {
+    if (date.getFullYear() <= currentYear) {
       console.log(`Невозможно установить прошедшую дату`);
       return;
     }
 
     date.setFullYear(date.getFullYear() - 1);
+
+    if (date.getMonth() < currentMonth) {
+      date.setMonth(currentMonth)
+    }
 
     setContent((prev) => {
       return {
@@ -153,7 +159,11 @@ export default function ModalSettings(props) {
           dateModal: {
             ...prev.newTask.dateModal,
             date,
-            data: { ...prev.newTask.dateModal.data, year: date.getFullYear() },
+            data: {
+              ...prev.newTask.dateModal.data,
+              year: date.getFullYear(),
+              month: date.getMonth(),
+            },
             dateInput: correctDate(date),
           },
         },
