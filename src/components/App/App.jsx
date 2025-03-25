@@ -23,11 +23,18 @@ const taskTemplate = {
     isCooldown: false,
     position: { x: null, y: null },
   },
-  timeModal: {
+  dateModal: {
     isOpen: false,
-    date: null,
     time: null,
     position: { x: null, y: null },
+    date: null,
+    data: {
+      hours: null,
+      minutes: null,
+      day: null,
+      month: null,
+      year: null,
+    },
   },
 };
 
@@ -334,7 +341,7 @@ export default function App() {
           break;
 
         case "time":
-          showTimeModal(e);
+          showDateModal(e);
           break;
 
         case "complete":
@@ -351,7 +358,7 @@ export default function App() {
     }
   }
 
-  function showTimeModal(e) {
+  function showDateModal(e) {
     const target = e.target;
     const targetBtn = target.closest("button");
     const targetSvg = targetBtn.querySelector("svg");
@@ -360,19 +367,19 @@ export default function App() {
     console.log(`coordinates`, coordinates);
     const position = { x: coordinates.right - 254, y: coordinates.bottom + 30 };
 
-    content.newTask.timeModal.isOpen
-      ? closeTimeModal()
-      : openTimeModal(position);
+    content.newTask.dateModal.isOpen
+      ? closeDateModal()
+      : openDateModal(position);
   }
 
-  function openTimeModal(position) {
+  function openDateModal(position) {
     setContent((prev) => {
       return {
         ...prev,
         newTask: {
           ...prev.newTask,
-          timeModal: {
-            ...prev.newTask.timeModal,
+          dateModal: {
+            ...prev.newTask.dateModal,
             isOpen: true,
             position: { ...position },
           },
@@ -381,13 +388,13 @@ export default function App() {
     });
   }
 
-  function closeTimeModal() {
+  function closeDateModal() {
     setContent((prev) => {
       return {
         ...prev,
         newTask: {
           ...prev.newTask,
-          timeModal: { ...prev.newTask.timeModal, isOpen: false },
+          dateModal: { ...prev.newTask.dateModal, isOpen: false },
         },
       };
     });
@@ -531,7 +538,7 @@ export default function App() {
         {content.newTask.notification.isOpen && (
           <ModalNotification newTask={content.newTask}></ModalNotification>
         )}
-        {content.newTask.timeModal.isOpen && (
+        {content.newTask.dateModal.isOpen && (
           <ModalSettings
             task={content.newTask}
             Chevron={Chevron}

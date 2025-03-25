@@ -6,8 +6,8 @@ export default function ModalSettings(props) {
       className="modal settings extended-modal"
       style={{
         position: "absolute",
-        left: `${task.timeModal.position.x}px`,
-        top: `${task.timeModal.position.y}px`,
+        left: `${task.dateModal.position.x}px`,
+        top: `${task.dateModal.position.y}px`,
         zIndex: 2,
         border: "1px solid #e2e2e2",
       }}
