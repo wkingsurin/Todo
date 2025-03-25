@@ -134,6 +134,27 @@ export default function ModalSettings(props) {
     });
   }
 
+  function nextYear(e) {
+    const date = task.dateModal.date;
+    
+    date.setFullYear(date.getFullYear() + 1);
+
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          dateModal: {
+            ...prev.newTask.dateModal,
+            date,
+            data: { ...prev.newTask.dateModal.data, year: date.getFullYear() },
+            dateInput: correctDate(date),
+          },
+        },
+      };
+    });
+  }
+
   function saveDate(e) {
     if (
       !Number.isFinite(dateData.minutes) ||
@@ -185,7 +206,7 @@ export default function ModalSettings(props) {
               <Chevron rotate={-90}></Chevron>
             </button>
             <p className="text">{dateData.year}</p>
-            <button className="btn">
+            <button className="btn" onClick={(e) => nextYear(e)}>
               <Chevron rotate={90}></Chevron>
             </button>
           </div>
