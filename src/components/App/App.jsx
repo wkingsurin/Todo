@@ -1,7 +1,7 @@
 import "./App.scss";
 import { Checkmark, Time, Close, Chevron } from "../SVG";
 import { useState } from "react";
-import { counter } from "../../assets/utils";
+import { counter, correctDate } from "../../assets/utils";
 import ModalNotification from "../ModalNotification";
 import ModalSettings from "../ModalSettings";
 import Empty from "../Empty";
@@ -24,6 +24,8 @@ const taskTemplate = {
     position: { x: null, y: null },
   },
   dateModal: {
+    dateInput: null,
+    timeInput: null,
     isOpen: false,
     time: null,
     position: { x: null, y: null },
@@ -373,6 +375,8 @@ export default function App() {
   }
 
   function openDateModal(position) {
+    setCurrentDate();
+
     setContent((prev) => {
       return {
         ...prev,
@@ -450,6 +454,33 @@ export default function App() {
       ></Task>
     );
   });
+
+  function setCurrentDate() {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          dateModal: {
+            ...prev.newTask.dateModal,
+            dateInput: correctDate(currentDate),
+            date: currentDate,
+            data: {
+              ...prev.newTask.dateModal.data,
+              year: currentYear,
+              month: currentMonth,
+              day: currentDay,
+            },
+          },
+        },
+      };
+    });
+  }
 
   return (
     <>
@@ -541,6 +572,8 @@ export default function App() {
         {content.newTask.dateModal.isOpen && (
           <ModalSettings
             task={content.newTask}
+            setContent={setContent}
+            closeDateModal={closeDateModal}
             Chevron={Chevron}
           ></ModalSettings>
         )}

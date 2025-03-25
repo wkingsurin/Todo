@@ -1,5 +1,106 @@
+import { correctDate } from "../../assets/utils";
+
 export default function ModalSettings(props) {
-  const { task, Chevron } = props;
+  const { task, setContent, closeDateModal, Chevron } = props;
+  const dateData = task.dateModal.data;
+
+  function typeDate(e) {
+    const text = e.target.value;
+
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          dateModal: {
+            ...prev.newTask.dateModal,
+            dateInput: text,
+          },
+        },
+      };
+    });
+  }
+
+  function typeTime(e) {
+    const text = e.target.value;
+    let hours;
+    let minutes;
+
+    if (text.length == 5) {
+      [hours, minutes] = text.split(":");
+    }
+
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          dateModal: {
+            ...prev.newTask.dateModal,
+            timeInput: text,
+            data: {
+              ...prev.newTask.dateModal.data,
+              hours: Number(hours),
+              minutes: Number(minutes),
+            },
+          },
+        },
+      };
+    });
+  }
+
+  function selectDay(e) {
+    if (!e.target.closest("td")) {
+      return;
+    }
+
+    const dayElement = e.target.closest("td");
+
+    setContent((prev) => {
+      const date = task.dateModal.date;
+      date.setDate(Number(dayElement.textContent));
+
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          dateModal: {
+            ...prev.newTask.dateModal,
+            date,
+            dateInput: correctDate(date),
+            data: {
+              ...prev.newTask.dateModal.data,
+              day: Number(dayElement.textContent),
+            },
+          },
+        },
+      };
+    });
+  }
+
+  function saveDate(e) {
+    if (
+      !Number.isFinite(dateData.minutes) ||
+      !Number.isFinite(dateData.hours) ||
+      !Number.isFinite(dateData.day) ||
+      !Number.isFinite(dateData.month) ||
+      !Number.isFinite(dateData.year)
+    ) {
+      // console.log(
+      //   `minutes: ${Number.isFinite(
+      //     dateData.minutes
+      //   )}\nhours: ${Number.isFinite(dateData.hours)}\nday: ${Number.isFinite(
+      //     dateData.day
+      //   )}\nmonth: ${Number.isFinite(dateData.month)}\nyear: ${Number.isFinite(
+      //     dateData.year
+      //   )}`
+      // );
+      console.log(`Невозможно сохранить, вы указали не все данные!`);
+      return;
+    }
+
+    closeDateModal();
+  }
 
   return (
     <div
@@ -18,7 +119,7 @@ export default function ModalSettings(props) {
             <button className="btn">
               <Chevron rotate={-90}></Chevron>
             </button>
-            <p className="text">Март</p>
+            <p className="text">{dateData.month}</p>
             <button className="btn">
               <Chevron rotate={90}></Chevron>
             </button>
@@ -27,12 +128,12 @@ export default function ModalSettings(props) {
             <button className="btn">
               <Chevron rotate={-90}></Chevron>
             </button>
-            <p className="text">2025</p>
+            <p className="text">{dateData.year}</p>
             <button className="btn">
               <Chevron rotate={90}></Chevron>
             </button>
           </div>
-          <table className="calendar-table">
+          <table className="calendar-table" onClick={(e) => selectDay(e)}>
             <tbody>
               <tr className="table-row">
                 <th className="table-heading">Пн</th>
@@ -101,6 +202,8 @@ export default function ModalSettings(props) {
               id="date"
               className="data-value"
               placeholder="__.__.__"
+              onChange={(e) => typeDate(e)}
+              value={task.dateModal.dateInput}
             />
           </div>
           <div className="data-row">
@@ -111,11 +214,15 @@ export default function ModalSettings(props) {
               type="text"
               id="time"
               className="data-value"
-              placeholder="00:00"
+              placeholder="--:--"
+              onChange={(e) => typeTime(e)}
+              // value={task.dateModal.timeInput}
             />
           </div>
         </div>
-        <button className="btn save-btn">Save</button>
+        <button className="btn save-btn" onClick={(e) => saveDate(e)}>
+          Save
+        </button>
       </div>
     </div>
   );
