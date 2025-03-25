@@ -1,4 +1,4 @@
-import { correctDate } from "../../assets/utils";
+import { correctDate, months } from "../../assets/utils";
 
 export default function ModalSettings(props) {
   const { task, setContent, closeDateModal, Chevron } = props;
@@ -78,6 +78,62 @@ export default function ModalSettings(props) {
     });
   }
 
+  function prevMonth(e) {
+    const date = task.dateModal.date;
+    const now = Date.now();
+
+    if (date < now) {
+      console.log(`Невозможно установить прошедшую дату`);
+      return;
+    }
+
+    date.setMonth(date.getMonth() - 1);
+
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          dateModal: {
+            ...prev.newTask.dateModal,
+            date,
+            data: {
+              ...prev.newTask.dateModal.data,
+              month: date.getMonth(),
+              year: date.getFullYear(),
+            },
+            dateInput: correctDate(date),
+          },
+        },
+      };
+    });
+  }
+
+  function nextMonth(e) {
+    const date = task.dateModal.date;
+
+    date.setMonth(date.getMonth() + 1);
+
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: {
+          ...prev.newTask,
+          dateModal: {
+            ...prev.newTask.dateModal,
+            date,
+            data: {
+              ...prev.newTask.dateModal.data,
+              month: date.getMonth(),
+              year: date.getFullYear(),
+            },
+            dateInput: correctDate(date),
+          },
+        },
+      };
+    });
+  }
+
   function saveDate(e) {
     if (
       !Number.isFinite(dateData.minutes) ||
@@ -116,11 +172,11 @@ export default function ModalSettings(props) {
       <div className="content">
         <div className="block calendar">
           <div className="period">
-            <button className="btn">
+            <button className="btn" onClick={(e) => prevMonth(e)}>
               <Chevron rotate={-90}></Chevron>
             </button>
-            <p className="text">{dateData.month}</p>
-            <button className="btn">
+            <p className="text">{months[dateData.month]}</p>
+            <button className="btn" onClick={(e) => nextMonth(e)}>
               <Chevron rotate={90}></Chevron>
             </button>
           </div>

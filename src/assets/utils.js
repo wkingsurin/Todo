@@ -33,7 +33,22 @@ function saveCount(count) {
 export function correctDate(date) {
   const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
   const month =
-    date.getMonth() < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+    date.getMonth() < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
 
   return `${day}.${month}.${date.getFullYear()}`;
 }
+
+export const months = {
+  0: "Январь",
+  1: "Февраль",
+  2: "Март",
+  3: "Апрель",
+  4: "Май",
+  5: "Июнь",
+  6: "Июль",
+  7: "Август",
+  8: "Сентябрь",
+  9: "Октябрь",
+  10: "Ноябрь",
+  11: "Декабрь",
+};
