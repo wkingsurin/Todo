@@ -7,6 +7,7 @@ import ModalSettings from "../ModalSettings";
 import Empty from "../Empty";
 import Task from "../Task";
 import Button from "../Button";
+import Modal from "../Modal";
 
 const START_TIME = new Date(2025, 2, 23, 18);
 const taskTemplate = {
@@ -36,6 +37,13 @@ const taskTemplate = {
       day: null,
       month: null,
       year: null,
+    },
+  },
+  statusModal: {
+    isOpen: false,
+    position: {
+      x: null,
+      y: null,
     },
   },
 };
@@ -139,6 +147,8 @@ export default function App() {
         return newContent;
       });
       saveTask(newTask, "actual");
+      showModal(e);
+      setTimeout(() => hideModal(), 1500);
 
       return true;
     }
@@ -482,6 +492,33 @@ export default function App() {
     });
   }
 
+  function showModal(e) {
+    setContent((prev) => ({
+      ...prev,
+      newTask: {
+        ...prev.newTask,
+        statusModal: {
+          ...prev.newTask.statusModal,
+          isOpen: true,
+          position: {
+            x: window.innerWidth / 2 - 180 / 2,
+            y: window.innerHeight / 2 - 80 / 2,
+          },
+        },
+      },
+    }));
+  }
+
+  function hideModal() {
+    setContent((prev) => ({
+      ...prev,
+      newTask: {
+        ...prev.newTask,
+        statusModal: { ...prev.newTask.statusModal, isOpen: false },
+      },
+    }));
+  }
+
   return (
     <>
       <div className="app">
@@ -577,11 +614,9 @@ export default function App() {
             Chevron={Chevron}
           ></ModalSettings>
         )}
-        {/* <div className="modal notification">
-          <div className="content">
-            <p className="text">{notificationText}</p>
-          </div>
-        </div> */}
+        {content.newTask.statusModal.isOpen && (
+          <Modal position={content.newTask.statusModal.position}></Modal>
+        )}
       </div>
     </>
   );
