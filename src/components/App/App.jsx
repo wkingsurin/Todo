@@ -124,8 +124,11 @@ export default function App() {
     if (target.closest('[name="save"]')) {
       if (
         !content.newTask.text ||
-        !content.newTask.remainingTime ||
-        !content.newTask.totalTime
+        !content.newTask.dateModal.data.hours ||
+        !Number.isFinite(content.newTask.dateModal.data.minutes) ||
+        !content.newTask.dateModal.data.day ||
+        !content.newTask.dateModal.data.month ||
+        !content.newTask.dateModal.data.year
       ) {
         console.log("Невозможно сохранить задачу");
         return;
