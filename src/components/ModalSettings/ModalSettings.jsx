@@ -36,8 +36,8 @@ export default function ModalSettings(props) {
       if (hours && minutes) {
         date.setHours(Number(hours));
         date.setMinutes(Number(minutes));
-        date.setSeconds(0)
-        date.setMilliseconds(0)
+        date.setSeconds(0);
+        date.setMilliseconds(0);
       }
 
       return {
@@ -223,6 +223,12 @@ export default function ModalSettings(props) {
       return;
     }
 
+    setContent((prev) => {
+      return {
+        ...prev,
+        newTask: { ...prev.newTask, totalTime: task.dateModal.date },
+      };
+    });
     closeDateModal();
   }
 
