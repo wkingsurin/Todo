@@ -12,8 +12,8 @@ import Modal from "../Modal";
 const START_TIME = new Date(2025, 2, 23, 18);
 const taskTemplate = {
   text: null,
-  remainingTime: START_TIME,
-  totalTime: START_TIME,
+  remainingTime: null,
+  totalTime: null,
   creationDate: null,
   status: { isFinished: false, isCompleted: false },
   type: null,
@@ -139,6 +139,7 @@ export default function App() {
         ...content.newTask,
         id: counter(setContent),
         type: "actual",
+        creationDate: new Date(),
       };
 
       const newContent = {
@@ -529,12 +530,12 @@ export default function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const finishedTIme = new Date(
-        content.newTask.creationDate + content.newTask.totalTime
-      );
-      const remainingTime = finishedTIme - new Date();
-
       const updatedActualTasks = getTasks("actual").map((task) => {
+        const finishedTIme = new Date(
+          new Date(task.creationDate).getTime() + task.totalTime
+        );
+        const remainingTime = finishedTIme - new Date();
+
         return { ...task, remainingTime };
       });
 
