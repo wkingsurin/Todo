@@ -1,6 +1,6 @@
 import "./App.scss";
 import { Checkmark, Time, Close, Chevron } from "../SVG";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { counter, correctDate } from "../../assets/utils";
 import ModalNotification from "../ModalNotification";
 import ModalSettings from "../ModalSettings";
@@ -522,6 +522,28 @@ export default function App() {
       },
     }));
   }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const finishedTIme = new Date(
+        content.newTask.creationDate + content.newTask.totalTime
+      );
+      const remainingTime = finishedTIme - new Date();
+
+      const updatedActualTasks = content.actualTasks.map((task) => {
+        return { ...task, remainingTime };
+      });
+
+      setContent((prev) => {
+        return {
+          ...prev,
+          actualTasks: updatedActualTasks,
+        };
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
