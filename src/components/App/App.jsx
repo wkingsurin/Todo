@@ -14,6 +14,7 @@ const taskTemplate = {
   text: null,
   remainingTime: START_TIME,
   totalTime: START_TIME,
+  creationDate: null,
   status: { isFinished: false, isCompleted: false },
   type: null,
   id: null,
