@@ -523,6 +523,10 @@ export default function App() {
     }));
   }
 
+  function updateTasks(tasks) {
+    localStorage.setItem("actualTasks", jsonStringify(tasks));
+  }
+
   useEffect(() => {
     const interval = setInterval(() => {
       const finishedTIme = new Date(
@@ -530,7 +534,7 @@ export default function App() {
       );
       const remainingTime = finishedTIme - new Date();
 
-      const updatedActualTasks = content.actualTasks.map((task) => {
+      const updatedActualTasks = getTasks("actual").map((task) => {
         return { ...task, remainingTime };
       });
 
@@ -540,6 +544,7 @@ export default function App() {
           actualTasks: updatedActualTasks,
         };
       });
+      updateTasks(updatedActualTasks);
     }, 1000);
 
     return () => clearInterval(interval);
