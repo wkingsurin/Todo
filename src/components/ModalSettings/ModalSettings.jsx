@@ -210,23 +210,20 @@ export default function ModalSettings(props) {
       !Number.isFinite(dateData.month) ||
       !Number.isFinite(dateData.year)
     ) {
-      // console.log(
-      //   `minutes: ${Number.isFinite(
-      //     dateData.minutes
-      //   )}\nhours: ${Number.isFinite(dateData.hours)}\nday: ${Number.isFinite(
-      //     dateData.day
-      //   )}\nmonth: ${Number.isFinite(dateData.month)}\nyear: ${Number.isFinite(
-      //     dateData.year
-      //   )}`
-      // );
       console.log(`Невозможно сохранить, вы указали не все данные!`);
       return;
     }
 
+    let time = task.dateModal.date - new Date();
+
     setContent((prev) => {
       return {
         ...prev,
-        newTask: { ...prev.newTask, totalTime: task.dateModal.date },
+        newTask: {
+          ...prev.newTask,
+          totalTime: time,
+          remainingTime: time,
+        },
       };
     });
     closeDateModal();
