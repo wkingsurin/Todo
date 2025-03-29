@@ -40,8 +40,14 @@ export default function Task(props) {
           className="time-bar"
           style={{
             width: width + "%",
-            background:
-              width > 50 ? "#95FF8F" : width > 25 ? "#F2FF8F" : "#F9C68F",
+            // background:
+            //   width > 50 ? "#95FF8F" : width > 25 ? "#F2FF8F" : "#F9C68F",
+            animation:
+              width == 100
+                ? ""
+                : `animatedBackground ${Math.floor(
+                    task.remainingTime / 1000
+                  )}s linear`,
           }}
         ></div>
       </div>
