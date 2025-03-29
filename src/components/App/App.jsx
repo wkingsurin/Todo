@@ -524,8 +524,8 @@ export default function App() {
     }));
   }
 
-  function updateTasks(tasks) {
-    localStorage.setItem("actualTasks", jsonStringify(tasks));
+  function updateTasks(tasks, type) {
+    localStorage.setItem(`${type}Tasks`, jsonStringify(tasks));
   }
 
   useEffect(() => {
@@ -534,18 +534,35 @@ export default function App() {
         const finishedTIme = new Date(
           new Date(task.creationDate).getTime() + task.totalTime
         );
-        const remainingTime = finishedTIme - new Date();
+        const remainingTime =
+          finishedTIme - new Date() > 0 ? finishedTIme - new Date() : null;
 
-        return { ...task, remainingTime };
+        const status = {
+          ...task.status,
+          isFinished: remainingTime == null ? true : false,
+        };
+
+        const type =
+          status.isFinished && !status.isCompleted
+            ? "wasted"
+            : status.isCompleted
+            ? "completed"
+            : "actual";
+
+        return { ...task, remainingTime, status, type };
       });
+
+      const activeTasks = updatedActualTasks.filter(
+        (task) => task.type == "actual"
+      );
 
       setContent((prev) => {
         return {
           ...prev,
-          actualTasks: updatedActualTasks,
+          actualTasks: activeTasks,
         };
       });
-      updateTasks(updatedActualTasks);
+      updateTasks(activeTasks, "actual");
     }, 1000);
 
     return () => clearInterval(interval);
