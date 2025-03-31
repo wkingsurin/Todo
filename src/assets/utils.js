@@ -113,13 +113,24 @@ export function isExistsTasks(type) {
 
 export function saveTask(task, type) {
 	const tasksList = getTasks(type);
+	const hasTask = getTasks(type).filter(
+		(currentTask) => currentTask.id == task.id
+	)[0]
+		? true
+		: false;
+	const updatedTask = getTasks(type).filter((currentTask) => currentTask.remainingTime == task.remainingTime ? false : true)
+	let newTasksList = [...tasksList];
 
-	if (task) {
-		tasksList.push(task);
+	if (task && !hasTask) {
+		newTasksList.push(task);
+	}
+	if (updatedTask && hasTask) {
+		newTasksList = newTasksList.filter((currentTask) => currentTask.id != task.id)
+		newTasksList.push(task)	
 	}
 
-	localStorage.setItem(type + "Tasks", jsonStringify(tasksList));
-	console.log(`tasksList:`, tasksList);
+	localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
+	console.log(`tasksList:`, newTasksList);
 }
 
 export function removeTask(task, type) {

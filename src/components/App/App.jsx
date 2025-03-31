@@ -1,6 +1,6 @@
 import "./App.scss";
 import { Chevron } from "../SVG";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
 	counter,
 	correctDate,
@@ -281,6 +281,8 @@ export default function App() {
 				deleteTask={deleteTask}
 				hoverOnNotification={hoverOnNotification}
 				key={task.id}
+				content={content}
+				setContent={setContent}
 			></Task>
 		);
 	});
@@ -294,6 +296,8 @@ export default function App() {
 				deleteTask={deleteTask}
 				hoverOnNotification={hoverOnNotification}
 				key={task.id}
+				content={content}
+				setContent={setContent}
 			></Task>
 		);
 	});
@@ -313,6 +317,8 @@ export default function App() {
 				deleteTask={deleteTask}
 				hoverOnNotification={hoverOnNotification}
 				key={task.id}
+				content={content}
+				setContent={setContent}
 			></Task>
 		);
 	});
@@ -370,46 +376,6 @@ export default function App() {
 			},
 		}));
 	}
-
-	// useEffect(() => {
-	// 	const interval = setInterval(() => {
-	// 		const updatedActualTasks = getTasks("actual").map((task) => {
-	// 			const finishedTIme = new Date(
-	// 				new Date(task.creationDate).getTime() + task.totalTime
-	// 			);
-	// 			const remainingTime =
-	// 				finishedTIme - new Date() > 0 ? finishedTIme - new Date() : null;
-
-	// 			const status = {
-	// 				...task.status,
-	// 				isFinished: remainingTime == null ? true : false,
-	// 			};
-
-	// 			const type =
-	// 				status.isFinished && !status.isCompleted
-	// 					? "wasted"
-	// 					: status.isCompleted
-	// 					? "completed"
-	// 					: "actual";
-
-	// 			return { ...task, remainingTime, status, type };
-	// 		});
-
-	// 		const activeTasks = updatedActualTasks.filter(
-	// 			(task) => task.type == "actual"
-	// 		);
-
-	// 		setContent((prev) => {
-	// 			return {
-	// 				...prev,
-	// 				actualTasks: activeTasks,
-	// 			};
-	// 		});
-	// 		updateTasks(activeTasks, "actual");
-	// 	}, 1000);
-
-	// 	return () => clearInterval(interval);
-	// }, []);
 
 	return (
 		<>
