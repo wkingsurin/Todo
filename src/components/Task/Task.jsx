@@ -9,7 +9,7 @@ export default function Task(props) {
 	const { alert, setAlert } = useAlert();
 
 	useEffect(() => {
-		const interval = setInterval(() => {
+		const taskUpdateInterval = setInterval(() => {
 			if (task.type !== "actual") return;
 
 			const updatedTasks = tasks.map((currentTask) => {
@@ -38,6 +38,17 @@ export default function Task(props) {
 				(currentTask) => currentTask.id == task.id
 			);
 
+			setAlert((prev) => {
+				return {
+					...prev,
+					text: `Time remaining to complete
+					the project: ${correctRemainingTime(
+						updatedTask.remainingTime,
+						updatedTask.totalTime
+					)}`,
+				};
+			});
+
 			if (updatedTask.type == "actual" && updatedTask.remainingTime) {
 				saveTask(updatedTask, "actual");
 			} else {
@@ -49,18 +60,11 @@ export default function Task(props) {
 			if (updatedTask.type == "completed") {
 				saveTask(updatedTask, "completed");
 			}
-
-			// setContent((prev) => {
-			// 	return {
-			// 		...prev,
-			// 		actualTasks: getTasks("actual"),
-			// 		wastedTasks: getTasks("wasted"),
-			// 		completedTasks: getTasks("completed"),
-			// 	};
-			// });
 		}, 1000);
 
-		return () => clearInterval(interval);
+		return () => {
+			clearInterval(taskUpdateInterval);
+		};
 	}, []);
 
 	const correctRemainingTime = (remainingTime, totalTime) => {
@@ -99,16 +103,7 @@ export default function Task(props) {
 			{task.type == "actual" && (
 				<div
 					className="notification"
-					onMouseOver={(e) => {
-						setAlert((prev) => {
-							return {
-								...prev,
-								text: `Time remaining to complete
-								the project: ${correctRemainingTime(task.remainingTime, task.totalTime)}`,
-							};
-						});
-						hoverOnAlert(e, alert, setAlert);
-					}}
+					onMouseOver={(e) => hoverOnAlert(e, alert, setAlert)}
 				>
 					<Alert></Alert>
 				</div>
