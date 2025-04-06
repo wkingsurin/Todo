@@ -66,6 +66,9 @@
 }
 .todo-completed {
 }
+[class^="todo"] {
+	position: relative;
+}
 .time-bar {
 	position: absolute;
 	// top: 0;

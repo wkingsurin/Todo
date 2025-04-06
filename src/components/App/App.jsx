@@ -3,16 +3,20 @@ import { useState, useEffect } from "react";
 
 import { useTasks } from "../../hooks/useTasks";
 
-import { TaskProvider } from "../../features/newTask/TaskContext";
-import { DateModalProvider } from "../../features/dateModal/DateModalContext";
+import Providers from "../Providers";
 
-import { correctDate, taskTemplate, computePercentOfTime } from "../../utils/utils";
+import {
+	correctDate,
+	taskTemplate,
+	computePercentOfTime,
+} from "../../utils/utils";
 
 import AppContainer from "../AppContainer";
 import NewTask from "../NewTask";
 import Task from "../Task";
 import Empty from "../Empty";
 import Button from "../Button";
+import { useAlert } from "../../features/alert/useAlert";
 
 export default function App() {
 	const {
@@ -29,6 +33,7 @@ export default function App() {
 		newTask: taskTemplate,
 		notification: { text: "Task saved!" },
 	}));
+	const {alert, setAlert} = useAlert()
 
 	const switchTab = (e) => {
 		setContent((prev) => {
@@ -138,66 +143,6 @@ export default function App() {
 	// 	});
 	// };
 
-	const hoverOnNotification = (e) => {
-		const target = e.target;
-
-		if (target.closest("svg")) {
-			const coordinates = target.closest("svg").getBoundingClientRect();
-
-			if (content.newTask.notification.isCooldown) {
-				return;
-			} else {
-				showNotification(coordinates);
-				// setNewTask((prev) => {
-				//   return {
-				//     ...prev,
-				//     notification: { ...prev.notification, isCooldown: true },
-				//   };
-				// });
-				// setTimeout(
-				//   () =>
-				//     setNewTask((prev) => {
-				//       return {
-				//         ...prev,
-				//         notification: { ...prev.notification, isCooldown: false },
-				//       };
-				//     }),
-				//   1500
-				// );
-			}
-		} else {
-			hideNotification();
-		}
-	};
-
-	const showNotification = (position) => {
-		setContent((prev) => {
-			return {
-				...prev,
-				newTask: {
-					...prev.newTask,
-					notification: {
-						...prev.newTask.notification,
-						isOpen: true,
-						position: { x: position.x - 30, y: position.y + 31 },
-					},
-				},
-			};
-		});
-	};
-
-	const hideNotification = () => {
-		setContent((prev) => {
-			return {
-				...prev,
-				newTask: {
-					...prev.newTask,
-					notification: { ...prev.newTask.notification, isOpen: false },
-				},
-			};
-		});
-	};
-
 	// function interactOnTodo(e) {
 	// 	const target = e.target;
 	// 	const targetBtn = target.closest("button");
@@ -254,7 +199,6 @@ export default function App() {
 				width={width}
 				completeTaskListener={completeTask}
 				deleteTask={deleteTask}
-				hoverOnNotification={hoverOnNotification}
 				key={task.id}
 				content={content}
 				setContent={setContent}
@@ -270,7 +214,6 @@ export default function App() {
 				width={100}
 				completeTaskListener={completeTask}
 				deleteTask={deleteTask}
-				hoverOnNotification={hoverOnNotification}
 				key={task.id}
 				content={content}
 				setContent={setContent}
@@ -292,7 +235,6 @@ export default function App() {
 				width={width}
 				completeTaskListener={completeTask}
 				deleteTask={deleteTask}
-				hoverOnNotification={hoverOnNotification}
 				key={task.id}
 				content={content}
 				setContent={setContent}
@@ -372,83 +314,73 @@ export default function App() {
 	// }, []);
 
 	return (
-		<>
+		<Providers>
 			<div className="app">
-				<DateModalProvider>
-					<TaskProvider>
-						<AppContainer>
-							<div className="tabs">
-								<button
-									className={`btn ${
-										content.isActiveTab == "new" ? "active" : ""
-									}`}
-									name="new"
-									onClick={(e) => switchTab(e)}
-								>
-									New
-								</button>
-								<button
-									className={`btn ${
-										content.isActiveTab == "actual" ? "active" : ""
-									}`}
-									name="actual"
-									onClick={(e) => switchTab(e)}
-								>
-									Actual
-								</button>
-								<button
-									className={`btn ${
-										content.isActiveTab == "wasted" ? "active" : ""
-									}`}
-									name="wasted"
-									onClick={(e) => switchTab(e)}
-								>
-									Wasted
-								</button>
-								<button
-									className={`btn ${
-										content.isActiveTab == "completed" ? "active" : ""
-									}`}
-									name="completed"
-									onClick={(e) => switchTab(e)}
-								>
-									Completed
-								</button>
-							</div>
-							<div className="box">
-								{content.isActiveTab == "new" && (
-									<NewTask
-										addTask={addTask}
-										setContent={setContent}
-										content={content}
-									></NewTask>
-								)}
-								{content.isActiveTab == "actual" &&
-									(tasks.length > 0 ? actualTasksList : <Empty>Empty</Empty>)}
-								{content.isActiveTab == "wasted" &&
-									(wastedTasks.length > 0 ? (
-										wastedTasksList
-									) : (
-										<Empty>Empty</Empty>
-									))}
-								{content.isActiveTab == "completed" &&
-									(completedTasks.length > 0 ? (
-										completedTasksList
-									) : (
-										<Empty>Empty</Empty>
-									))}
-								{content.isActiveTab == "empty" && <Empty>Empty</Empty>}
-							</div>
-							{/* {tasks[0].isOpen && (
+				<AppContainer>
+					<div className="tabs">
+						<button
+							className={`btn ${content.isActiveTab == "new" ? "active" : ""}`}
+							name="new"
+							onClick={(e) => switchTab(e)}
+						>
+							New
+						</button>
+						<button
+							className={`btn ${
+								content.isActiveTab == "actual" ? "active" : ""
+							}`}
+							name="actual"
+							onClick={(e) => switchTab(e)}
+						>
+							Actual
+						</button>
+						<button
+							className={`btn ${
+								content.isActiveTab == "wasted" ? "active" : ""
+							}`}
+							name="wasted"
+							onClick={(e) => switchTab(e)}
+						>
+							Wasted
+						</button>
+						<button
+							className={`btn ${
+								content.isActiveTab == "completed" ? "active" : ""
+							}`}
+							name="completed"
+							onClick={(e) => switchTab(e)}
+						>
+							Completed
+						</button>
+					</div>
+					<div className="box">
+						{content.isActiveTab == "new" && (
+							<NewTask
+								addTask={addTask}
+								setContent={setContent}
+								content={content}
+							></NewTask>
+						)}
+						{content.isActiveTab == "actual" &&
+							(tasks.length > 0 ? actualTasksList : <Empty>Empty</Empty>)}
+						{content.isActiveTab == "wasted" &&
+							(wastedTasks.length > 0 ? wastedTasksList : <Empty>Empty</Empty>)}
+						{content.isActiveTab == "completed" &&
+							(completedTasks.length > 0 ? (
+								completedTasksList
+							) : (
+								<Empty>Empty</Empty>
+							))}
+						{content.isActiveTab == "empty" && <Empty>Empty</Empty>}
+					</div>
+					{/* {tasks[0].isOpen && (
 					<ModalAlert newTask={content.newTask}></ModalAlert>
 				)} */}
-							{/* {content.newTask.statusModal.isOpen && (
+					{/* {content.newTask.statusModal.isOpen && (
 					<Modal position={content.newTask.statusModal.position}></Modal>
 				)} */}
-						</AppContainer>
-					</TaskProvider>
-				</DateModalProvider>
+				</AppContainer>
 			</div>
-		</>
+		</Providers>
 	);
 }

@@ -93,7 +93,7 @@ export function saveTask(task, type) {
 	}
 
 	localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
-	console.log(`tasksList:`, newTasksList);
+	// console.log(`tasksList:`, newTasksList);
 }
 
 export function removeTask(task, type) {
@@ -145,9 +145,41 @@ export function validateDate(object) {
 	return false;
 }
 
+export function hoverOnAlert(e, alert, setAlert) {
+	const target = e.target;
+
+	if (target.closest("svg")) {
+		const coordinates = target.closest("svg").getBoundingClientRect();
+
+		if (alert.isCooldown) {
+			return;
+		} else {
+			showAlert(coordinates, setAlert);
+		}
+	} else {
+		hideAlert(setAlert);
+	}
+}
+
+export function showAlert(position, setAlert) {
+	setAlert((prev) => {
+		return {
+			...prev,
+			position: { x: position.x - 30, y: position.y + 31 },
+			isOpen: true,
+		};
+	});
+}
+
+export function hideAlert(setAlert) {
+	setAlert((prev) => {
+		return { ...prev, isOpen: false };
+	});
+}
+
 export const taskTemplate = {
 	text: "",
-	remainingTime: 1000000,
+	remainingTime: 1500000,
 	totalTime: 1500000,
 	creationDate: new Date(),
 	status: { isFinished: false, isCompleted: false },

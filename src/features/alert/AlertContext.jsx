@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import { alertTemplate } from "../../utils/utils";
 
 export const AlertContext = createContext(alertTemplate);

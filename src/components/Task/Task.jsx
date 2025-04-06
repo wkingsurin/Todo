@@ -1,17 +1,12 @@
 import "./Task.scss";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Checkmark, Time, Close, Alert } from "../SVG";
-import { getTasks, saveTask, removeTask } from "../../utils/utils";
+import { saveTask, removeTask, hoverOnAlert } from "../../utils/utils";
+import { useAlert } from "../../features/alert/useAlert";
 
 export default function Task(props) {
-	const {
-		tasks,
-		task,
-		width,
-		completeTaskListener,
-		deleteTask,
-		hoverOnNotification,
-	} = props;
+	const { tasks, task, width, completeTaskListener, deleteTask } = props;
+	const { alert, setAlert } = useAlert();
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -68,12 +63,52 @@ export default function Task(props) {
 		return () => clearInterval(interval);
 	}, []);
 
+	const correctRemainingTime = (remainingTime, totalTime) => {
+		const finishedDate = new Date(Date.now() + remainingTime);
+
+		let string = "";
+
+		let years = Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 / 12);
+		let months =
+			Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30) ||
+			Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 - years * 12);
+		let days =
+			Math.trunc(remainingTime / 1000 / 60 / 60 / 24) ||
+			Math.trunc(remainingTime / 1000 / 60 / 60 / 24 - months * 30);
+		let hours =
+			Math.trunc(remainingTime / 1000 / 60 / 60) ||
+			Math.trunc(remainingTime / 1000 / 60 / 60 - days * 24);
+		let minutes =
+			Math.trunc(remainingTime / 1000 / 60) ||
+			Math.trunc(remainingTime / 1000 / 60 - hours * 60);
+		let seconds = Math.trunc(remainingTime / 1000 - minutes * 60);
+
+		if (years) string += years + "y ";
+		if (months) string += months + "m ";
+		if (days) string += days + "d ";
+		if (hours) string += hours + "h ";
+		if (minutes) string += minutes + "m ";
+		if (seconds) string += seconds + "s ";
+
+		console.log(string);
+		return string;
+	};
+
 	return (
 		<div className={`todo todo-${task.type}`} id={task.id}>
 			{task.type == "actual" && (
 				<div
 					className="notification"
-					onMouseOver={(e) => hoverOnNotification(e)}
+					onMouseOver={(e) => {
+						setAlert((prev) => {
+							return {
+								...prev,
+								text: `Time remaining to complete
+								the project: ${correctRemainingTime(task.remainingTime, task.totalTime)}`,
+							};
+						});
+						hoverOnAlert(e, alert, setAlert);
+					}}
 				>
 					<Alert></Alert>
 				</div>
@@ -85,7 +120,7 @@ export default function Task(props) {
 						<button
 							className="btn"
 							name="complete"
-							onClick={(e) => {
+							onClick={() => {
 								completeTaskListener(task.id);
 							}}
 						>
@@ -98,7 +133,7 @@ export default function Task(props) {
 					<button
 						className="btn"
 						name="remove"
-						onClick={(e) => deleteTask(tasks, task.type, task.id)}
+						onClick={() => deleteTask(tasks, task.type, task.id)}
 					>
 						<Close></Close>
 					</button>

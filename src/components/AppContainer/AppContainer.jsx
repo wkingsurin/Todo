@@ -1,11 +1,17 @@
 import { useDateModal } from "../../features/dateModal/useDateModal";
 import ModalSettings from "../ModalSettings";
 import { useTask } from "../../features/newTask/TaskContext";
+import { useAlert } from "../../features/alert/useAlert";
+import ModalAlert from "../ModalAlert";
 
 export default function AppContainer({ children }) {
 	const { dateInput, timeInput } = useTask();
-	const { dateModal, handlers: dateModalHandlers, dateModalDispatch } = useDateModal();
-
+	const {
+		dateModal,
+		handlers: dateModalHandlers,
+		dateModalDispatch,
+	} = useDateModal();
+	const { alert } = useAlert();
 	// console.log(`[AppContainer] useDateModal()`, useDateModal())
 	// console.log(`[AppContainer] dateModal`, dateModal)
 
@@ -26,6 +32,7 @@ export default function AppContainer({ children }) {
 					saveDate={dateModalHandlers.saveDate}
 				></ModalSettings>
 			)}
+			{alert.isOpen && <ModalAlert></ModalAlert>}
 		</div>
 	);
 }
