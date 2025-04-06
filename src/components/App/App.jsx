@@ -6,7 +6,7 @@ import { useTasks } from "../../hooks/useTasks";
 import { TaskProvider } from "../../features/newTask/TaskContext";
 import { DateModalProvider } from "../../features/dateModal/DateModalContext";
 
-import { correctDate, taskTemplate } from "../../utils/utils";
+import { correctDate, taskTemplate, computePercentOfTime } from "../../utils/utils";
 
 import AppContainer from "../AppContainer";
 import NewTask from "../NewTask";
