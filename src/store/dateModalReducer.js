@@ -134,8 +134,6 @@ export function dateModalReducer(state, action) {
 		}
 
 		case "SAVE_DATE": {
-			let timeToSet = "";
-
 			if (action.time.length < 5) {
 				console.log(`Выбрано некорректное время`);
 				return state;
@@ -143,9 +141,16 @@ export function dateModalReducer(state, action) {
 
 			const data = {
 				...state.data,
-				hours: Number(timeToSet.slice(0, 2)) || 0,
-				minutes: Number(timeToSet.slice(3)) || 0,
+				hours: Number(action.time.slice(0, 2)) || 0,
+				minutes: Number(action.time.slice(3)) || 0,
 			};
+			const date = new Date(
+				state.data.year,
+				state.data.month,
+				state.data.day,
+				data.hours,
+				data.minutes
+			);
 
 			if (
 				!Number.isFinite(data.minutes) ||
@@ -162,6 +167,7 @@ export function dateModalReducer(state, action) {
 				...state,
 				isOpen: false,
 				data,
+				date,
 			};
 		}
 

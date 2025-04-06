@@ -2,13 +2,16 @@ import { Checkmark, Time, Close } from "../SVG";
 import Button from "../Button";
 import TextInput from "../TextInput";
 import { useNewTask } from "../../features/newTask/useNewTask";
-import { useDateModal } from '../../features/dateModal/useDateModal'
-import { correctDate } from "../../utils/utils";
+import { useDateModal } from "../../features/dateModal/useDateModal";
+import { correctDate, validateDate } from "../../utils/utils";
 
 export default function NewTask({ addTask }) {
 	const { newTask, input, dateInput, timeInput } = useNewTask();
-	const { dispatch: dateModalDispatch, handlers: dateModalHandlers } =
-		useDateModal();
+	const {
+		dateModal,
+		dispatch: dateModalDispatch,
+		handlers: dateModalHandlers,
+	} = useDateModal();
 
 	return (
 		<div className="todo todo-new">
@@ -19,6 +22,7 @@ export default function NewTask({ addTask }) {
 						name="save"
 						disabled={newTask.text ? false : true}
 						onClick={() => {
+							if (!validateDate(dateModal)) return
 							addTask(newTask);
 							input.clear();
 						}}

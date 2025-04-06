@@ -127,6 +127,24 @@ export function objectClone(object) {
 	return JSON.parse(JSON.stringify(object));
 }
 
+export function validateDate(object) {
+	const { data, date } = object;
+
+	const hasDate = date !== null;
+	const hasYear = Number.isFinite(data.year);
+	const hasMonth = Number.isFinite(data.month);
+	const hasDay = Number.isFinite(data.day);
+	const hasHours = Number.isFinite(data.hours);
+	const hasMinutes = Number.isFinite(data.minutes);
+
+	if (hasDate && hasYear && hasMonth && hasDay && hasHours && hasMinutes) {
+		return true;
+	}
+
+	console.log(`Некорректная дата...`);
+	return false;
+}
+
 export const taskTemplate = {
 	text: "",
 	remainingTime: 1000000,
