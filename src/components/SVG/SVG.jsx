@@ -94,7 +94,7 @@ export function Close() {
   );
 }
 
-export function Notification(props) {
+export function Alert(props) {
   return (
     <svg
       version="1.0"

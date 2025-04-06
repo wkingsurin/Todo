@@ -1,43 +1,40 @@
 import { Checkmark, Time, Close } from "../SVG";
 import Button from "../Button";
 import TextInput from "../TextInput";
+import { useNewTask } from "../../features/newTask/useNewTask";
+import { useDateModal } from '../../features/dateModal/useDateModal'
+import { correctDate } from "../../utils/utils";
 
-export default function NewTask(props) {
-	const { interactOnTodo, setContent, content } = props;
-
-	const typeText = (e) => {
-		// Костыль - убрать, когда вынесу стейт в компоненты
-		setContent((prev) => {
-			const task = { ...prev.newTask, text: e.target.value };
-
-			return { ...prev, newTask: task };
-		});
-	};
-
-	const clearInputText = (e) => {
-		const target = e.target;
-
-		if (target.closest('[name="remove"]')) {
-			target.closest(".todo").querySelector("input").value = "";
-
-			setContent((prev) => {
-				return { ...prev, newTask: { ...prev.newTask, text: null } };
-			});
-		}
-	};
+export default function NewTask({ addTask }) {
+	const { newTask, input, dateInput, timeInput } = useNewTask();
+	const { dispatch: dateModalDispatch, handlers: dateModalHandlers } =
+		useDateModal();
 
 	return (
-		<div className="todo todo-new" onClick={(e) => interactOnTodo(e)}>
+		<div className="todo todo-new">
 			<div className="todo-content">
-				<TextInput value={content.newTask.text} typeText={typeText}></TextInput>
+				<TextInput {...input.bind}></TextInput>
 				<div className="todo-settings">
-					<Button name="save">
+					<Button
+						name="save"
+						disabled={newTask.text ? false : true}
+						onClick={() => {
+							addTask(newTask);
+							input.clear();
+						}}
+					>
 						<Checkmark></Checkmark>
 					</Button>
-					<button className="btn" name="time">
+					<Button
+						name="time"
+						onClick={(e) => {
+							dateInput.setInput(correctDate(new Date()));
+							dateModalHandlers.showDateModal(e.currentTarget);
+						}}
+					>
 						<Time></Time>
-					</button>
-					<Button name="remove" onClick={clearInputText}>
+					</Button>
+					<Button name="remove" onClick={input.clear}>
 						<Close></Close>
 					</Button>
 				</div>

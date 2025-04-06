@@ -1,6 +1,6 @@
-import "./ModalNotification.scss";
+import "./ModalAlert.scss";
 
-export default function ModalNotification(props) {
+export default function ModalAlert(props) {
   const { newTask } = props;
 
   return (
@@ -8,14 +8,14 @@ export default function ModalNotification(props) {
       className="modal notification"
       style={{
         position: "absolute",
-        left: `${newTask.notification.position.x}px`,
-        top: `${newTask.notification.position.y}px`,
+        left: `${newTask.alert.position.x}px`,
+        top: `${newTask.alert.position.y}px`,
         zIndex: 2,
         border: '1px solid black'
       }}
     >
       <div className="content">
-        <p className="text">{newTask.notification.text}</p>
+        <p className="text">{newTask.alert.text}</p>
       </div>
     </div>
   );

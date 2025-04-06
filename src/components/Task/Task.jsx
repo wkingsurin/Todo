@@ -1,30 +1,23 @@
 import "./Task.scss";
-import { useEffect } from "react";
-import { Checkmark, Time, Close, Notification } from "../SVG";
-import {
-	getTasks,
-	saveTask,
-	removeTask,
-} from "../../assets/utils";
+import { useEffect, useState } from "react";
+import { Checkmark, Time, Close, Alert } from "../SVG";
+import { getTasks, saveTask, removeTask } from "../../utils/utils";
 
 export default function Task(props) {
 	const {
+		tasks,
 		task,
 		width,
 		completeTaskListener,
 		deleteTask,
 		hoverOnNotification,
-		content,
-		setContent,
 	} = props;
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			if (content.isActiveTab != "actual") return;
+			if (task.type !== "actual") return;
 
-			const activeTasks = getTasks("actual");
-
-			const updatedTasks = activeTasks.map((currentTask) => {
+			const updatedTasks = tasks.map((currentTask) => {
 				const finishedTIme = new Date(
 					new Date(task.creationDate).getTime() + task.totalTime
 				);
@@ -46,11 +39,11 @@ export default function Task(props) {
 				return { ...currentTask, remainingTime, status, type };
 			});
 
-			const updatedTask = updatedTasks.filter(
+			const updatedTask = updatedTasks.find(
 				(currentTask) => currentTask.id == task.id
-			)[0];
+			);
 
-      if (updatedTask.type == "actual" && updatedTask.remainingTime) {
+			if (updatedTask.type == "actual" && updatedTask.remainingTime) {
 				saveTask(updatedTask, "actual");
 			} else {
 				removeTask(updatedTask, "actual");
@@ -62,47 +55,51 @@ export default function Task(props) {
 				saveTask(updatedTask, "completed");
 			}
 
-			setContent((prev) => {
-				return {
-					...prev,
-					actualTasks: getTasks("actual"),
-					wastedTasks: getTasks("wasted"),
-					completedTasks: getTasks("completed"),
-				};
-			});
+			// setContent((prev) => {
+			// 	return {
+			// 		...prev,
+			// 		actualTasks: getTasks("actual"),
+			// 		wastedTasks: getTasks("wasted"),
+			// 		completedTasks: getTasks("completed"),
+			// 	};
+			// });
 		}, 1000);
 
 		return () => clearInterval(interval);
 	}, []);
 
 	return (
-		<div
-			className={`todo todo-${task.type}`}
-			onClick={(e) => {
-				completeTaskListener(e);
-			}}
-			id={task.id}
-		>
+		<div className={`todo todo-${task.type}`} id={task.id}>
 			{task.type == "actual" && (
 				<div
 					className="notification"
 					onMouseOver={(e) => hoverOnNotification(e)}
 				>
-					<Notification></Notification>
+					<Alert></Alert>
 				</div>
 			)}
 			<div className="todo-content">
 				<div className="text">{task.text}</div>
 				<div className="todo-settings">
 					{task.type == "actual" && (
-						<button className="btn" name="complete">
+						<button
+							className="btn"
+							name="complete"
+							onClick={(e) => {
+								completeTaskListener(task.id);
+							}}
+						>
 							<Checkmark></Checkmark>
 						</button>
 					)}
 					{/* <button className="btn">
                 <Time fill={"#95FF8F"}></Time>
               </button> */}
-					<button className="btn" name="remove" onClick={(e) => deleteTask(e)}>
+					<button
+						className="btn"
+						name="remove"
+						onClick={(e) => deleteTask(tasks, task.type, task.id)}
+					>
 						<Close></Close>
 					</button>
 				</div>

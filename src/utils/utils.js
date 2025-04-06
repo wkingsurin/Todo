@@ -1,12 +1,10 @@
-export function counter(setState) {
+export function counter() {
 	if (!isExistsCount()) {
 		localStorage.setItem("count", 0);
 		return getCount();
 	}
 
 	let newCount = getCount() + 1;
-
-	setState((prev) => ({ ...prev, newTask: { ...prev.newTask, id: newCount } }));
 	saveCount(newCount);
 
 	return getCount();
@@ -53,45 +51,6 @@ export const months = {
 	11: "Декабрь",
 };
 
-export const taskTemplate = {
-	text: null,
-	remainingTime: null,
-	totalTime: null,
-	creationDate: null,
-	status: { isFinished: false, isCompleted: false },
-	type: null,
-	id: null,
-	notification: {
-		text: `Time remaining to complete
-          the project: 5h 1m 32s`,
-		isOpen: false,
-		isCooldown: false,
-		position: { x: null, y: null },
-	},
-	dateModal: {
-		dateInput: null,
-		timeInput: null,
-		isOpen: false,
-		time: null,
-		position: { x: null, y: null },
-		date: null,
-		data: {
-			hours: null,
-			minutes: null,
-			day: null,
-			month: null,
-			year: null,
-		},
-	},
-	statusModal: {
-		isOpen: false,
-		position: {
-			x: null,
-			y: null,
-		},
-	},
-};
-
 export function jsonParse(json) {
 	return JSON.parse(json);
 }
@@ -118,15 +77,19 @@ export function saveTask(task, type) {
 	)[0]
 		? true
 		: false;
-	const updatedTask = getTasks(type).filter((currentTask) => currentTask.remainingTime == task.remainingTime ? false : true)
+	const updatedTask = getTasks(type).filter((currentTask) =>
+		currentTask.remainingTime == task.remainingTime ? false : true
+	);
 	let newTasksList = [...tasksList];
 
 	if (task && !hasTask) {
 		newTasksList.push(task);
 	}
 	if (updatedTask && hasTask) {
-		newTasksList = newTasksList.filter((currentTask) => currentTask.id != task.id)
-		newTasksList.push(task)	
+		newTasksList = newTasksList.filter(
+			(currentTask) => currentTask.id != task.id
+		);
+		newTasksList.push(task);
 	}
 
 	localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
@@ -159,3 +122,46 @@ export function computePercentOfTime(total, remaining, status) {
 	}
 	return (remaining * 100) / total;
 }
+
+export function objectClone(object) {
+	return JSON.parse(JSON.stringify(object));
+}
+
+export const taskTemplate = {
+	text: "",
+	remainingTime: 1000000,
+	totalTime: 1500000,
+	creationDate: new Date(),
+	status: { isFinished: false, isCompleted: false },
+	type: "actual",
+	id: null,
+};
+export const alertTemplate = {
+	text: `Time remaining to complete
+	the project: 5h 1m 32s`,
+	isOpen: false,
+	isCooldown: false,
+	position: { x: null, y: null },
+};
+export const dateModalTemplate = {
+	dateInput: null,
+	timeInput: null,
+	isOpen: false,
+	time: null,
+	position: { x: null, y: null },
+	date: null,
+	data: {
+		hours: null,
+		minutes: null,
+		day: null,
+		month: null,
+		year: null,
+	},
+};
+export const statusModalTemplate = {
+	isOpen: false,
+	position: {
+		x: null,
+		y: null,
+	},
+};
