@@ -1,7 +1,7 @@
 import { useTask } from "./TaskContext";
 
 export function useNewTask() {
-	const { newTask, dateInput, timeInput, dispatch } = useTask();
+	const { newTask, dispatch } = useTask();
 
 	const typeText = (text) => dispatch({ type: "TYPE_TEXT", text });
 	const clear = () => dispatch({ type: "CLEAR_TEXT", text: "" });
@@ -13,7 +13,5 @@ export function useNewTask() {
 			value: newTask.text,
 			clear,
 		},
-		dateInput,
-		timeInput,
 	};
 }

@@ -1,15 +1,14 @@
 import { useDateModal } from "../../features/dateModal/useDateModal";
 import ModalSettings from "../ModalSettings";
-import { useTask } from "../../features/newTask/TaskContext";
 import { useAlert } from "../../features/alert/useAlert";
 import ModalAlert from "../ModalAlert";
 
 export default function AppContainer({ children }) {
-	const { dateInput, timeInput } = useTask();
 	const {
 		dateModal,
 		handlers: dateModalHandlers,
-		dateModalDispatch,
+		typeDate,
+		typeTime,
 	} = useDateModal();
 	const { alert } = useAlert();
 	// console.log(`[AppContainer] useDateModal()`, useDateModal())
@@ -25,8 +24,8 @@ export default function AppContainer({ children }) {
 					selectDay={dateModalHandlers.selectDay}
 					prevMonth={dateModalHandlers.prevMonth}
 					nextMonth={dateModalHandlers.nextMonth}
-					dateInput={dateInput}
-					timeInput={timeInput}
+					typeDate={typeDate}
+					typeTime={typeTime}
 					prevYear={dateModalHandlers.prevYear}
 					nextYear={dateModalHandlers.nextYear}
 					saveDate={dateModalHandlers.saveDate}

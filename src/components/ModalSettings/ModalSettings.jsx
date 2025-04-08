@@ -4,8 +4,8 @@ import { Chevron } from "../SVG";
 export default function ModalSettings(props) {
 	const {
 		modal,
-		dateInput,
-		timeInput,
+		typeDate,
+		typeTime,
 		selectDay,
 		prevMonth,
 		nextMonth,
@@ -130,7 +130,8 @@ export default function ModalSettings(props) {
 							id="date"
 							className="data-value"
 							placeholder="__.__.__"
-							{...dateInput.bind}
+							onChange={(e) => typeDate(e.target)}
+							value={modal.dateInput}
 						/>
 					</div>
 					<div className="data-row">
@@ -142,15 +143,14 @@ export default function ModalSettings(props) {
 							id="time"
 							className="data-value"
 							placeholder="--:--"
-							{...timeInput.bind}
+							onChange={(e) => typeTime(e.target)}
+							value={modal.timeInput}
 						/>
 					</div>
 				</div>
 				<button
 					className="btn save-btn"
-					onClick={(e) =>
-						saveDate(e.target, timeInput.value, timeInput.setInput)
-					}
+					onClick={(e) => saveDate(e.target, modal.timeInput)}
 				>
 					Save
 				</button>

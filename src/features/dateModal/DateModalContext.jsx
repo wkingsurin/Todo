@@ -10,6 +10,13 @@ export const DateModalProvider = ({ children }) => {
 		dateModalTemplate
 	);
 
+	const typeDate = (target) => {
+		dateModalDispatch({ type: "TYPE_DATE", target });
+	};
+	const typeTime = (target) => {
+		dateModalDispatch({ type: "TYPE_TIME", target });
+	};
+
 	const showDateModal = (target, setDate) =>
 		dateModalDispatch({ type: "SHOW_DATE_MODAL", target, setDate });
 	const hideDateModal = (target) =>
@@ -37,7 +44,7 @@ export const DateModalProvider = ({ children }) => {
 				dateModal,
 				dateModalDispatch,
 				handlers: {
-          showDateModal,
+					showDateModal,
 					hideDateModal,
 					selectDay,
 					prevMonth,
@@ -46,6 +53,8 @@ export const DateModalProvider = ({ children }) => {
 					nextYear,
 					saveDate,
 				},
+				typeDate,
+				typeTime,
 			}}
 		>
 			{children}

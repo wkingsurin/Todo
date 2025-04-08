@@ -3,15 +3,11 @@ import Button from "../Button";
 import TextInput from "../TextInput";
 import { useNewTask } from "../../features/newTask/useNewTask";
 import { useDateModal } from "../../features/dateModal/useDateModal";
-import { correctDate, validateDate } from "../../utils/utils";
+import { validateDate } from "../../utils/utils";
 
 export default function NewTask({ addTask }) {
-	const { newTask, input, dateInput, timeInput } = useNewTask();
-	const {
-		dateModal,
-		dispatch: dateModalDispatch,
-		handlers: dateModalHandlers,
-	} = useDateModal();
+	const { newTask, input } = useNewTask();
+	const { dateModal, handlers: dateModalHandlers } = useDateModal();
 
 	return (
 		<div className="todo todo-new">
@@ -22,8 +18,8 @@ export default function NewTask({ addTask }) {
 						name="save"
 						disabled={newTask.text ? false : true}
 						onClick={() => {
-							if (!validateDate(dateModal)) return
-							addTask(newTask);
+							if (!validateDate(dateModal)) return;
+							addTask(newTask, dateModal);
 							input.clear();
 						}}
 					>
@@ -32,7 +28,6 @@ export default function NewTask({ addTask }) {
 					<Button
 						name="time"
 						onClick={(e) => {
-							dateInput.setInput(correctDate(new Date()));
 							dateModalHandlers.showDateModal(e.currentTarget);
 						}}
 					>

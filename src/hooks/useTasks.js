@@ -6,11 +6,19 @@ export function useTasks() {
 	const [wastedTasks, setWastedTasks] = useState([]);
 	const [completedTasks, setCompletedTasks] = useState([]);
 
-	const addTask = (task) => {
-		const newTask = { ...objectClone(task), id: counter() };
+	const addTask = (taskTemplate, dateModal) => {
+		const taskClone = objectClone(taskTemplate);
+		const time = dateModal.date - new Date();
+
+		const newTask = {
+			...taskClone,
+			id: counter(),
+			remainingTime: time,
+			totalTime: time,
+		};
 		const newTasks = [...tasks, newTask];
 
-		if (!task.type) {
+		if (!taskTemplate.type) {
 			console.log(`Невозможно сохранить задачу`);
 			return;
 		}

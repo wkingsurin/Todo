@@ -179,8 +179,8 @@ export function hideAlert(setAlert) {
 
 export const taskTemplate = {
 	text: "",
-	remainingTime: 1500000,
-	totalTime: 1500000,
+	remainingTime: null,
+	totalTime: null,
 	creationDate: new Date(),
 	status: { isFinished: false, isCompleted: false },
 	type: "actual",
@@ -194,8 +194,8 @@ export const alertTemplate = {
 	position: { x: null, y: null },
 };
 export const dateModalTemplate = {
-	dateInput: null,
-	timeInput: null,
+	dateInput: "",
+	timeInput: "",
 	isOpen: false,
 	time: null,
 	position: { x: null, y: null },

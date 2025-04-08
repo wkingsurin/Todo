@@ -1,5 +1,11 @@
 export function dateModalReducer(state, action) {
 	switch (action.type) {
+		case "TYPE_DATE":
+			return { ...state, dateInput: action.target.value };
+
+		case "TYPE_TIME":
+			return { ...state, timeInput: action.target.value };
+
 		case "SHOW_DATE_MODAL": {
 			const svg = action.target.querySelector("svg");
 			const coordinates = svg.getBoundingClientRect();
@@ -145,9 +151,9 @@ export function dateModalReducer(state, action) {
 				minutes: Number(action.time.slice(3)) || 0,
 			};
 			const date = new Date(
-				state.data.year,
-				state.data.month,
-				state.data.day,
+				data.year,
+				data.month,
+				data.day,
 				data.hours,
 				data.minutes
 			);
