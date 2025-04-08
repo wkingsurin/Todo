@@ -5,7 +5,8 @@ import { saveTask, removeTask, hoverOnAlert } from "../../utils/utils";
 import { useAlert } from "../../features/alert/useAlert";
 
 export default function Task(props) {
-	const { tasks, task, width, completeTaskListener, deleteTask } = props;
+	const { tasks, task, width, completeTaskListener, deleteTask, updateTask } =
+		props;
 	const { alert, setAlert } = useAlert();
 
 	useEffect(() => {
@@ -50,8 +51,10 @@ export default function Task(props) {
 			});
 
 			if (updatedTask.type == "actual" && updatedTask.remainingTime) {
+				updateTask(updatedTask);
 				saveTask(updatedTask, "actual");
 			} else {
+				updateTask(updatedTask);
 				removeTask(updatedTask, "actual");
 			}
 			if (updatedTask.type == "wasted") {
@@ -67,9 +70,8 @@ export default function Task(props) {
 		};
 	}, []);
 
-	const correctRemainingTime = (remainingTime, totalTime) => {
-		const finishedDate = new Date(Date.now() + remainingTime);
-
+	// Fix it
+	const correctRemainingTime = (remainingTime) => {
 		let string = "";
 
 		let years = Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 / 12);
@@ -94,7 +96,6 @@ export default function Task(props) {
 		if (minutes) string += minutes + "m ";
 		if (seconds) string += seconds + "s ";
 
-		console.log(string);
 		return string;
 	};
 

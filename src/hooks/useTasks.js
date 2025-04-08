@@ -83,6 +83,27 @@ export function useTasks() {
 		localStorage.setItem(`${taskType}Tasks`, JSON.stringify(newTasks));
 	};
 
+	const updateTask = (taskToUpdate) => {
+		const findTask = tasks.find((task) => task.id === taskToUpdate.id);
+		if (!findTask) return;
+
+		const filteredTasks = tasks.filter((task) => task.id !== taskToUpdate.id);
+		const newTasks = [...filteredTasks, taskToUpdate];
+
+		const newWastedTasks = [...wastedTasks, taskToUpdate];
+
+		if (!taskToUpdate.remainingTime) {
+			setTasks(filteredTasks);
+			setWastedTasks(newWastedTasks);
+
+			localStorage.setItem("actualTasks", JSON.stringify(filteredTasks));
+			localStorage.setItem("wastedTasks", JSON.stringify(newWastedTasks));
+		} else {
+			setTasks(newTasks);
+			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+		}
+	};
+
 	useEffect(() => {
 		const savedTasks = JSON.parse(localStorage.getItem("actualTasks")) || [];
 		const savedWastedTasks =
@@ -103,5 +124,6 @@ export function useTasks() {
 		completeTask,
 		wasteTask,
 		deleteTask,
+		updateTask,
 	};
 }

@@ -120,7 +120,10 @@ export function computePercentOfTime(total, remaining, status) {
 	if (status.isFinished && !status.isCompleted) {
 		return 0;
 	}
-	return (remaining * 100) / total;
+	if (remaining < 1000) {
+		return 0
+	}
+	return Number((remaining * 100) / total).toFixed(2);
 }
 
 export function objectClone(object) {

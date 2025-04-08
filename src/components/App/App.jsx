@@ -16,7 +16,6 @@ import NewTask from "../NewTask";
 import Task from "../Task";
 import Empty from "../Empty";
 import Button from "../Button";
-import { useAlert } from "../../features/alert/useAlert";
 
 export default function App() {
 	const {
@@ -27,13 +26,13 @@ export default function App() {
 		completedTasks,
 		completeTask,
 		deleteTask,
+		updateTask,
 	} = useTasks();
 	const [content, setContent] = useState(() => ({
 		isActiveTab: "new",
 		newTask: taskTemplate,
 		notification: { text: "Task saved!" },
 	}));
-	const {alert, setAlert} = useAlert()
 
 	const switchTab = (e) => {
 		setContent((prev) => {
@@ -43,147 +42,6 @@ export default function App() {
 			};
 		});
 	};
-
-	// const completeTask = (e) => {
-	// 	const target = e.target;
-	// 	const currentTarget = e.currentTarget;
-	// 	const taskId = currentTarget.id;
-
-	// 	if (target.closest('[name="complete"]')) {
-	// 		const currentTask = content.actualTasks.filter(
-	// 			(task) => task.id == taskId
-	// 		)[0];
-	// 		currentTask.type = "completed";
-	// 		currentTask.status.isCompleted = true;
-	// 		saveTask(currentTask, "completed");
-	// 		removeTask(currentTarget, "actual");
-
-	// 		setContent((prev) => {
-	// 			return {
-	// 				...prev,
-	// 				actualTasks: prev.actualTasks.filter((task) => task.id != taskId),
-	// 				completedTasks: [
-	// 					...prev.completedTasks,
-	// 					...prev.actualTasks
-	// 						.filter((task) => task.id == taskId)
-	// 						.map((task) => ({
-	// 							...task,
-	// 							type: "completed",
-	// 							status: { ...task.status, isCompleted: true },
-	// 						})),
-	// 				],
-	// 			};
-	// 		});
-	// 	}
-	// };
-
-	// const saveNewTask = (e) => {
-	// 	const target = e.target;
-
-	// 	if (target.closest('[name="save"]')) {
-	// 		if (
-	// 			!content.newTask.text ||
-	// 			!content.newTask.dateModal.data.hours ||
-	// 			!Number.isFinite(content.newTask.dateModal.data.minutes) ||
-	// 			!content.newTask.dateModal.data.day ||
-	// 			!content.newTask.dateModal.data.month ||
-	// 			!content.newTask.dateModal.data.year
-	// 		) {
-	// 			console.log("Невозможно сохранить задачу");
-	// 			return;
-	// 		}
-
-	// 		const newTask = {
-	// 			...content.newTask,
-	// 			id: counter(setContent),
-	// 			type: "actual",
-	// 			creationDate: new Date(),
-	// 		};
-
-	// 		const newContent = {
-	// 			...content,
-	// 			actualTasks: [...content.actualTasks, newTask],
-	// 			newTask: { ...taskTemplate },
-	// 		};
-
-	// 		setContent(() => {
-	// 			return newContent;
-	// 		});
-	// 		saveTask(newTask, "actual");
-	// 		showModal(e);
-	// 		setTimeout(() => hideModal(), 1500);
-
-	// 		return true;
-	// 	}
-
-	// 	console.log("Cannot save this Todo");
-	// 	return false;
-	// };
-
-	// const deleteTask = (e) => {
-	// 	const target = e.target;
-	// 	const taskTarget = target.closest(".todo");
-	// 	const taskId = target.closest(".todo").id;
-	// 	const targetType = getTypeFromClassName(taskTarget);
-
-	// 	if (targetType == "new") return;
-
-	// 	const currentTask = content[targetType + "Tasks"].filter(
-	// 		(task) => task.id == taskId
-	// 	)[0];
-	// 	removeTask(currentTask, targetType);
-
-	// 	setContent((prev) => {
-	// 		return {
-	// 			...prev,
-	// 			actualTasks: prev.actualTasks.filter((task) => task.id != taskId),
-	// 			wastedTasks: prev.wastedTasks.filter((task) => task.id != taskId),
-	// 			completedTasks: prev.completedTasks.filter((task) => task.id != taskId),
-	// 		};
-	// 	});
-	// };
-
-	// function interactOnTodo(e) {
-	// 	const target = e.target;
-	// 	const targetBtn = target.closest("button");
-
-	// 	if (targetBtn) {
-	// 		switch (targetBtn.name) {
-	// 			case "save":
-	// 				saveNewTask(e);
-	// 				break;
-
-	// 			case "time":
-	// 				showDateModal(e);
-	// 				break;
-
-	// 			case "complete":
-	// 				completeTask(e);
-	// 				break;
-
-	// 			case "remove":
-	// 				deleteTask(e);
-	// 				break;
-
-	// 			default:
-	// 				console.log("There is no such action");
-	// 		}
-	// 	}
-	// }
-
-	// function showDateModal(e) {
-	// 	const target = e.target;
-	// 	const targetBtn = target.closest("button");
-	// 	const targetSvg = targetBtn.querySelector("svg");
-
-	// 	const coordinates = targetSvg.getBoundingClientRect();
-	// 	console.log(`coordinates`, coordinates);
-	// 	const position = { x: coordinates.right - 254, y: coordinates.bottom + 30 };
-
-	// 	content.newTask.dateModal.isOpen
-	// 		? closeDateModal()
-	// 		: openDateModal(position);
-	// }
 
 	const actualTasksList = tasks.map((task) => {
 		const width = computePercentOfTime(
@@ -199,6 +57,7 @@ export default function App() {
 				width={width}
 				completeTaskListener={completeTask}
 				deleteTask={deleteTask}
+				updateTask={updateTask}
 				key={task.id}
 				content={content}
 				setContent={setContent}
@@ -241,77 +100,6 @@ export default function App() {
 			></Task>
 		);
 	});
-
-	function setCurrentDate() {
-		const currentDate = new Date();
-		const currentDay = currentDate.getDate();
-		const currentMonth = currentDate.getMonth();
-		const currentYear = currentDate.getFullYear();
-
-		setContent((prev) => {
-			return {
-				...prev,
-				newTask: {
-					...prev.newTask,
-					dateModal: {
-						...prev.newTask.dateModal,
-						dateInput: correctDate(currentDate),
-						date: currentDate,
-						data: {
-							...prev.newTask.dateModal.data,
-							year: currentYear,
-							month: currentMonth,
-							day: currentDay,
-						},
-					},
-				},
-			};
-		});
-	}
-
-	// function showModal(e) {
-	// 	setContent((prev) => ({
-	// 		...prev,
-	// 		newTask: {
-	// 			...prev.newTask,
-	// 			statusModal: {
-	// 				...prev.newTask.statusModal,
-	// 				isOpen: true,
-	// 				position: {
-	// 					x: window.innerWidth / 2 - 180 / 2,
-	// 					y: window.innerHeight / 2 - 80 / 2,
-	// 				},
-	// 			},
-	// 		},
-	// 	}));
-	// }
-
-	// function hideModal() {
-	// 	setContent((prev) => ({
-	// 		...prev,
-	// 		newTask: {
-	// 			...prev.newTask,
-	// 			statusModal: { ...prev.newTask.statusModal, isOpen: false },
-	// 		},
-	// 	}));
-	// }
-
-	// useEffect(() => {
-	// 	const savedTasks = JSON.parse(localStorage.getItem("actualTasks")) || [];
-	// 	const savedWastedTasks =
-	// 		JSON.parse(localStorage.getItem("wastedTasks")) || [];
-	// 	const savedCompletedTasks =
-	// 		JSON.parse(localStorage.getItem("completedTasks")) || [];
-
-	// 	setContent((prev) => {
-	// 		return {
-	// 			...prev,
-	// 			actualTasks: savedTasks,
-	// 			wastedTasks: savedWastedTasks,
-	// 			completedTasks: savedCompletedTasks,
-	// 		};
-	// 	});
-	// }, []);
 
 	return (
 		<Providers>
@@ -373,12 +161,6 @@ export default function App() {
 							))}
 						{content.isActiveTab == "empty" && <Empty>Empty</Empty>}
 					</div>
-					{/* {tasks[0].isOpen && (
-					<ModalAlert newTask={content.newTask}></ModalAlert>
-				)} */}
-					{/* {content.newTask.statusModal.isOpen && (
-					<Modal position={content.newTask.statusModal.position}></Modal>
-				)} */}
 				</AppContainer>
 			</div>
 		</Providers>
