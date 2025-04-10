@@ -112,14 +112,14 @@ export function useTasks() {
 			case "actual": {
 				setTasks(tasks);
 				saveTasks(tasks, type);
+
 				break;
 			}
 
 			case "wasted": {
-				if (tasks.length < 1) return;
-
 				setWastedTasks(tasks);
 				saveTasks(tasks, type);
+
 				break;
 			}
 

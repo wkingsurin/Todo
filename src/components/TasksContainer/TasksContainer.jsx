@@ -116,6 +116,8 @@ export default function TasksContainer({ content, setContent }) {
 			);
 
 			updateTasks(toActive, "actual");
+
+			if (toWasted.length < 1) return;
 			updateTasks([...wastedTasks, ...toWasted], "wasted");
 		}, 1000);
 
