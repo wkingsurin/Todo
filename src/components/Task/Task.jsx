@@ -1,50 +1,43 @@
 import "./Task.scss";
 import { Checkmark, Time, Close, Alert } from "../SVG";
-import { hoverOnAlert } from "../../utils/utils";
+import { hoverOnAlert, changeAlertMessage } from "../../utils/utils";
 import { useAlert } from "../../features/alert/useAlert";
+import { useEffect } from "react";
 
 export default function Task(props) {
 	const { tasks, task, width, completeTaskListener, deleteTask } = props;
 	const { alert, setAlert } = useAlert();
 
-	// Fix it
-	const correctRemainingTime = (remainingTime) => {
-		let string = "";
+	useEffect(() => {
+		if (alert.hoveredTaskId != task.id) return;
 
-		let years = Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 / 12);
-		let months =
-			Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30) ||
-			Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 - years * 12);
-		let days =
-			Math.trunc(remainingTime / 1000 / 60 / 60 / 24) ||
-			Math.trunc(remainingTime / 1000 / 60 / 60 / 24 - months * 30);
-		let hours =
-			Math.trunc(remainingTime / 1000 / 60 / 60) ||
-			Math.trunc(remainingTime / 1000 / 60 / 60 - days * 24);
-		let minutes =
-			Math.trunc(remainingTime / 1000 / 60) ||
-			Math.trunc(remainingTime / 1000 / 60 - hours * 60);
-		let seconds = Math.trunc(remainingTime / 1000 - minutes * 60);
+		const timer = setInterval(() => {
+			changeAlertMessage(task.remainingTime, setAlert);
+		}, 1000);
 
-		if (years) string += years + "y ";
-		if (months) string += months + "m ";
-		if (days) string += days + "d ";
-		if (hours) string += hours + "h ";
-		if (minutes) string += minutes + "m ";
-		if (seconds) string += seconds + "s ";
-
-		return string;
-	};
-
-	// useEffect(() => {
-	// }, []);
+		return () => clearInterval(timer);
+	}, [task]);
 
 	return (
 		<div className={`todo todo-${task.type}`} id={task.id}>
 			{task.type == "actual" && (
 				<div
 					className="notification"
-					onMouseOver={(e) => hoverOnAlert(e, alert, setAlert)}
+					tabIndex={0}
+					onMouseOver={(e) => {
+						hoverOnAlert(e, alert, setAlert, task.remainingTime);
+					}}
+					onMouseEnter={(e) => {
+						changeAlertMessage(task.remainingTime, setAlert);
+						setAlert((prev) => {
+							return { ...prev, hoveredTaskId: task.id };
+						});
+					}}
+					onMouseLeave={(e) => {
+						setAlert((prev) => {
+							return { ...prev, hoveredTaskId: null };
+						});
+					}}
 				>
 					<Alert></Alert>
 				</div>

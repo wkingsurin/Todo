@@ -121,7 +121,7 @@ export function computePercentOfTime(total, remaining, status) {
 		return 0;
 	}
 	if (remaining < 1000) {
-		return 0
+		return 0;
 	}
 	return Number((remaining * 100) / total).toFixed(2);
 }
@@ -148,6 +148,35 @@ export function validateDate(object) {
 	return false;
 }
 
+// Fix it
+export function correctRemainingTime(remainingTime) {
+	let string = "";
+
+	let years = Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 / 12);
+	let months =
+		Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30) ||
+		Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 - years * 12);
+	let days =
+		Math.trunc(remainingTime / 1000 / 60 / 60 / 24) ||
+		Math.trunc(remainingTime / 1000 / 60 / 60 / 24 - months * 30);
+	let hours =
+		Math.trunc(remainingTime / 1000 / 60 / 60) ||
+		Math.trunc(remainingTime / 1000 / 60 / 60 - days * 24);
+	let minutes =
+		Math.trunc(remainingTime / 1000 / 60) ||
+		Math.trunc(remainingTime / 1000 / 60 - hours * 60);
+	let seconds = Math.trunc(remainingTime / 1000 - minutes * 60);
+
+	if (years) string += years + "y ";
+	if (months) string += months + "m ";
+	if (days) string += days + "d ";
+	if (hours) string += hours + "h ";
+	if (minutes) string += minutes + "m ";
+	if (seconds) string += seconds + "s ";
+
+	return string;
+}
+
 export function hoverOnAlert(e, alert, setAlert) {
 	const target = e.target;
 
@@ -157,11 +186,18 @@ export function hoverOnAlert(e, alert, setAlert) {
 		if (alert.isCooldown) {
 			return;
 		} else {
+			setAlert((prev) => {
+				return { ...prev, isHovered: true };
+			});
 			showAlert(coordinates, setAlert);
 		}
 	} else {
 		hideAlert(setAlert);
 	}
+}
+
+export function mouseOnAlert(e, setAlert, remainingTime) {
+	changeAlertMessage(remainingTime, setAlert);
 }
 
 export function showAlert(position, setAlert) {
@@ -180,6 +216,16 @@ export function hideAlert(setAlert) {
 	});
 }
 
+export function changeAlertMessage(remainingTime, setAlert) {
+	setAlert((prev) => {
+		return {
+			...prev,
+			text: `Time remaining to complete
+				the project: ${correctRemainingTime(remainingTime)}`,
+		};
+	});
+}
+
 export const taskTemplate = {
 	text: "",
 	remainingTime: null,
@@ -195,6 +241,7 @@ export const alertTemplate = {
 	isOpen: false,
 	isCooldown: false,
 	position: { x: null, y: null },
+	hoverdTaskId: null
 };
 export const dateModalTemplate = {
 	dateInput: "",
