@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { counter, objectClone } from "../utils/utils";
+import { counter, objectClone, saveTasks } from "../utils/utils";
 
 export function useTasks() {
 	const [tasks, setTasks] = useState([]);
@@ -15,6 +15,7 @@ export function useTasks() {
 			id: counter(),
 			remainingTime: time,
 			totalTime: time,
+			creationDate: new Date(),
 		};
 		const newTasks = [...tasks, newTask];
 
@@ -86,21 +87,44 @@ export function useTasks() {
 	const updateTask = (taskToUpdate) => {
 		const findTask = tasks.find((task) => task.id === taskToUpdate.id);
 		if (!findTask) return;
+		const taskToUpdateClone = objectClone(taskToUpdate);
 
 		const filteredTasks = tasks.filter((task) => task.id !== taskToUpdate.id);
-		const newTasks = [...filteredTasks, taskToUpdate];
-
-		const newWastedTasks = [...wastedTasks, taskToUpdate];
 
 		if (!taskToUpdate.remainingTime) {
+			const newWastedTasks = [...wastedTasks, taskToUpdateClone];
+
 			setTasks(filteredTasks);
 			setWastedTasks(newWastedTasks);
 
 			localStorage.setItem("actualTasks", JSON.stringify(filteredTasks));
 			localStorage.setItem("wastedTasks", JSON.stringify(newWastedTasks));
 		} else {
+			const newTasks = [...filteredTasks, taskToUpdateClone];
+
 			setTasks(newTasks);
+
 			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+		}
+	};
+	const updateTasks = (tasks, type) => {
+		switch (type) {
+			case "actual": {
+				setTasks(tasks);
+				saveTasks(tasks, type);
+				break;
+			}
+
+			case "wasted": {
+				if (tasks.length < 1) return;
+
+				setWastedTasks(tasks);
+				saveTasks(tasks, type);
+				break;
+			}
+
+			default:
+				break;
 		}
 	};
 
@@ -125,5 +149,9 @@ export function useTasks() {
 		wasteTask,
 		deleteTask,
 		updateTask,
+		updateTasks,
+		setTasks,
+		setWastedTasks,
+		setCompletedTasks,
 	};
 }

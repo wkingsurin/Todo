@@ -1,74 +1,11 @@
 import "./Task.scss";
-import { useEffect } from "react";
 import { Checkmark, Time, Close, Alert } from "../SVG";
-import { saveTask, removeTask, hoverOnAlert } from "../../utils/utils";
+import { hoverOnAlert } from "../../utils/utils";
 import { useAlert } from "../../features/alert/useAlert";
 
 export default function Task(props) {
-	const { tasks, task, width, completeTaskListener, deleteTask, updateTask } =
-		props;
+	const { tasks, task, width, completeTaskListener, deleteTask } = props;
 	const { alert, setAlert } = useAlert();
-
-	useEffect(() => {
-		const taskUpdateInterval = setInterval(() => {
-			if (task.type !== "actual") return;
-
-			const updatedTasks = tasks.map((currentTask) => {
-				const finishedTIme = new Date(
-					new Date(task.creationDate).getTime() + task.totalTime
-				);
-				const remainingTime =
-					finishedTIme - new Date() > 0 ? finishedTIme - new Date() : null;
-
-				const status = {
-					...task.status,
-					isFinished: remainingTime == null ? true : false,
-				};
-
-				const type =
-					status.isFinished && !status.isCompleted
-						? "wasted"
-						: status.isCompleted
-						? "completed"
-						: "actual";
-
-				return { ...currentTask, remainingTime, status, type };
-			});
-
-			const updatedTask = updatedTasks.find(
-				(currentTask) => currentTask.id == task.id
-			);
-
-			setAlert((prev) => {
-				return {
-					...prev,
-					text: `Time remaining to complete
-					the project: ${correctRemainingTime(
-						updatedTask.remainingTime,
-						updatedTask.totalTime
-					)}`,
-				};
-			});
-
-			if (updatedTask.type == "actual" && updatedTask.remainingTime) {
-				updateTask(updatedTask);
-				saveTask(updatedTask, "actual");
-			} else {
-				updateTask(updatedTask);
-				removeTask(updatedTask, "actual");
-			}
-			if (updatedTask.type == "wasted") {
-				saveTask(updatedTask, "wasted");
-			}
-			if (updatedTask.type == "completed") {
-				saveTask(updatedTask, "completed");
-			}
-		}, 1000);
-
-		return () => {
-			clearInterval(taskUpdateInterval);
-		};
-	}, []);
 
 	// Fix it
 	const correctRemainingTime = (remainingTime) => {
@@ -98,6 +35,9 @@ export default function Task(props) {
 
 		return string;
 	};
+
+	// useEffect(() => {
+	// }, []);
 
 	return (
 		<div className={`todo todo-${task.type}`} id={task.id}>
