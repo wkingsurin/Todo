@@ -33,7 +33,11 @@ export function useTasks() {
 		const findTask = tasks.find((task) => task.id === taskId);
 		if (!findTask) return;
 
-		const taskToComplete = { ...findTask, type: "completed" };
+		const taskToComplete = {
+			...findTask,
+			type: "completed",
+			status: { ...findTask.status, isCompleted: true },
+		};
 
 		const newTasks = tasks.filter((task) => task.id !== taskId);
 		const newCompletedTasks = [...completedTasks, taskToComplete];

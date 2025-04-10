@@ -78,8 +78,7 @@ export default function Task(props) {
 					className="time-bar"
 					style={{
 						width: width + "%",
-						// background:
-						//   width > 50 ? "#95FF8F" : width > 25 ? "#F2FF8F" : "#F9C68F",
+						background: task.type == "wasted" ? "#ff8f8f" : "#95ff8f",
 						animation:
 							width == 100
 								? ""
