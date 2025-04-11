@@ -1,10 +1,27 @@
 export function dateModalReducer(state, action) {
 	switch (action.type) {
 		case "TYPE_DATE":
-			return { ...state, dateInput: action.target.value };
+			return {
+				...state,
+				dateInput: action.target.value,
+				data: {
+					...state.data,
+					day: Number(action.target.value.slice(0, 2)),
+					month: Number(action.target.value.slice(3, 5)) - 1,
+					year: Number(action.target.value.slice(6, 10)),
+				},
+			};
 
 		case "TYPE_TIME":
-			return { ...state, timeInput: action.target.value };
+			return {
+				...state,
+				timeInput: action.target.value,
+				data: {
+					...state.data,
+					hours: Number(action.target.value.slice(0, 2)),
+					minutes: Number(action.target.value.slice(3, 5)),
+				},
+			};
 
 		case "SHOW_DATE_MODAL": {
 			const svg = action.target.querySelector("svg");
@@ -168,6 +185,9 @@ export function dateModalReducer(state, action) {
 				console.log(`Невозможно сохранить, вы указали не все данные!`);
 				return state;
 			}
+
+			const modal = { ...state, isOpen: false, data, date };
+			console.log(`modal`, modal);
 
 			return {
 				...state,
