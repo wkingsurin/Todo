@@ -8,6 +8,16 @@ export default function Task(props) {
 	const { tasks, task, width, completeTaskListener, deleteTask } = props;
 	const { alert, setAlert } = useAlert();
 
+	const handleMouseEnter = () => {
+		setAlert((prev) => {
+			if (prev.hoveredTaskId === task.id) return prev;
+
+			changeAlertMessage(task.remainingTime, setAlert);
+
+			return { ...prev, hoveredTaskId: task.id };
+		});
+	};
+
 	useEffect(() => {
 		if (alert.hoveredTaskId != task.id) return;
 
@@ -16,7 +26,7 @@ export default function Task(props) {
 		}, 1000);
 
 		return () => clearInterval(timer);
-	}, [task]);
+	}, [task, alert.hoveredTaskId]);
 
 	return (
 		<div className={`todo todo-${task.type}`} id={task.id}>
@@ -28,10 +38,7 @@ export default function Task(props) {
 						hoverOnAlert(e, alert, setAlert, task.remainingTime);
 					}}
 					onMouseEnter={(e) => {
-						changeAlertMessage(task.remainingTime, setAlert);
-						setAlert((prev) => {
-							return { ...prev, hoveredTaskId: task.id };
-						});
+						handleMouseEnter();
 					}}
 					onMouseLeave={(e) => {
 						setAlert((prev) => {
@@ -56,9 +63,6 @@ export default function Task(props) {
 							<Checkmark></Checkmark>
 						</button>
 					)}
-					{/* <button className="btn">
-                <Time fill={"#95FF8F"}></Time>
-              </button> */}
 					<button
 						className="btn"
 						name="remove"
