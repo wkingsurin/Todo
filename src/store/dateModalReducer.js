@@ -65,9 +65,18 @@ export function dateModalReducer(state, action) {
 		case "SELECT_DAY": {
 			if (!action.target.closest("td")) return state;
 
+			const date = state.date || new Date();
 			const day = Number(action.target.closest("td").textContent);
 
-			const date = state.date || new Date();
+			if (
+				day < new Date().getDate() &&
+				date.getMonth() <= new Date().getMonth() &&
+				date.getFullYear() <= new Date().getFullYear()
+			) {
+				console.log("Невозможно установить прошедшее число");
+				return state;
+			}
+
 			date.setDate(day);
 
 			return {
@@ -79,14 +88,24 @@ export function dateModalReducer(state, action) {
 
 		case "PREV_MONTH": {
 			const date = new Date(state.date);
-			const now = Date.now();
+			const now = new Date();
 
-			if (date < now) {
+			if (
+				date.getMonth() <= now.getMonth() &&
+				date.getFullYear() === now.getFullYear()
+			) {
 				console.log(`Невозможно установить прошедшую дату`);
-				return state;
+				return { ...state, date, dateInput: correctDate(date) };
 			}
 
 			date.setMonth(date.getMonth() - 1);
+
+			if (
+				date.getMonth() === now.getMonth() &&
+				date.getDate() < now.getDate()
+			) {
+				date.setDate(now.getDate());
+			}
 
 			return {
 				...state,
@@ -130,8 +149,12 @@ export function dateModalReducer(state, action) {
 				return state;
 			}
 
-			if (date.getMonth() < monthNow) {
+			if (date.getMonth() < monthNow && date.getFullYear() === yearNow) {
 				date.setMonth(monthNow);
+			}
+
+			if (date.getDate() < dateNow.getDate()) {
+				date.setDate(dateNow.getDate());
 			}
 
 			return {
