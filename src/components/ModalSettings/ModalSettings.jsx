@@ -1,18 +1,15 @@
 import { months } from "../../utils/utils";
 import { Chevron } from "../SVG";
+import { useDateModal } from "../../features/dateModal/useDateModal";
 
-export default function ModalSettings(props) {
+export default function ModalSettings() {
 	const {
-		modal,
+		dateModal: modal,
+		dateModalDispatch,
+		handlers,
 		typeDate,
 		typeTime,
-		selectDay,
-		prevMonth,
-		nextMonth,
-		prevYear,
-		nextYear,
-		saveDate,
-	} = props;
+	} = useDateModal();
 	const dateData = modal.data;
 
 	return (
@@ -31,14 +28,16 @@ export default function ModalSettings(props) {
 					<div className="period">
 						<button
 							className="btn"
-							onClick={(e) => prevMonth(e.target, dateInput.setInput)}
+							onClick={(e) => {
+								handlers.prevMonth(e.target)
+							}}
 						>
 							<Chevron rotate={-90}></Chevron>
 						</button>
 						<p className="text">{months[dateData.month]}</p>
 						<button
 							className="btn"
-							onClick={(e) => nextMonth(e.target, dateInput.setInput)}
+							onClick={(e) => handlers.nextMonth(e.target)}
 						>
 							<Chevron rotate={90}></Chevron>
 						</button>
@@ -46,21 +45,21 @@ export default function ModalSettings(props) {
 					<div className="period">
 						<button
 							className="btn"
-							onClick={(e) => prevYear(e.target, dateInput.setInput)}
+							onClick={(e) => handlers.prevYear(e.target)}
 						>
 							<Chevron rotate={-90}></Chevron>
 						</button>
 						<p className="text">{dateData.year}</p>
 						<button
 							className="btn"
-							onClick={(e) => nextYear(e.target, dateInput.setInput)}
+							onClick={(e) => handlers.nextYear(e.target)}
 						>
 							<Chevron rotate={90}></Chevron>
 						</button>
 					</div>
 					<table
 						className="calendar-table"
-						onClick={(e) => selectDay(e.target, dateInput.setInput)}
+						onClick={(e) => handlers.selectDay(e.target)}
 					>
 						<tbody>
 							<tr className="table-row">
@@ -150,7 +149,7 @@ export default function ModalSettings(props) {
 				</div>
 				<button
 					className="btn save-btn"
-					onClick={(e) => saveDate(e.target, modal.timeInput)}
+					onClick={(e) => handlers.saveDate(e.target, modal.timeInput)}
 				>
 					Save
 				</button>

@@ -1,3 +1,5 @@
+import { correctDate } from "../utils/utils";
+
 export function dateModalReducer(state, action) {
 	switch (action.type) {
 		case "TYPE_DATE":
@@ -50,6 +52,7 @@ export function dateModalReducer(state, action) {
 				data,
 				isOpen: true,
 				position,
+				dateInput: correctDate(new Date()),
 			};
 			// action.setDate(correctDate(date));
 
@@ -70,6 +73,7 @@ export function dateModalReducer(state, action) {
 			return {
 				...state,
 				data: { ...state.data, day },
+				dateInput: correctDate(date),
 			};
 		}
 
@@ -92,6 +96,7 @@ export function dateModalReducer(state, action) {
 					month: date.getMonth(),
 					year: date.getFullYear(),
 				},
+				dateInput: correctDate(date),
 			};
 		}
 
@@ -108,6 +113,7 @@ export function dateModalReducer(state, action) {
 					month: date.getMonth(),
 					year: date.getFullYear(),
 				},
+				dateInput: correctDate(date),
 			};
 		}
 
@@ -136,6 +142,7 @@ export function dateModalReducer(state, action) {
 					year: date.getFullYear(),
 					month: date.getMonth(),
 				},
+				dateInput: correctDate(date),
 			};
 		}
 
@@ -153,6 +160,7 @@ export function dateModalReducer(state, action) {
 					...state.data,
 					year: date.getFullYear(),
 				},
+				dateInput: correctDate(date),
 			};
 		}
 
@@ -185,9 +193,6 @@ export function dateModalReducer(state, action) {
 				console.log(`Невозможно сохранить, вы указали не все данные!`);
 				return state;
 			}
-
-			const modal = { ...state, isOpen: false, data, date };
-			console.log(`modal`, modal);
 
 			return {
 				...state,
