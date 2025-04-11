@@ -148,31 +148,25 @@ export function validateDate(object) {
 	return false;
 }
 
-// Fix it
 export function correctRemainingTime(remainingTime) {
 	let string = "";
 
-	let years = Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 / 12);
-	let months =
-		Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30) ||
-		Math.trunc(remainingTime / 1000 / 60 / 60 / 24 / 30 - years * 12);
-	let days =
-		Math.trunc(remainingTime / 1000 / 60 / 60 / 24) ||
-		Math.trunc(remainingTime / 1000 / 60 / 60 / 24 - months * 30);
-	let hours =
-		Math.trunc(remainingTime / 1000 / 60 / 60) ||
-		Math.trunc(remainingTime / 1000 / 60 / 60 - days * 24);
-	let minutes =
-		Math.trunc(remainingTime / 1000 / 60) ||
-		Math.trunc(remainingTime / 1000 / 60 - hours * 60);
-	let seconds = Math.trunc(remainingTime / 1000 - minutes * 60);
+	let totalSeconds = Math.floor(remainingTime / 1000);
 
-	if (years) string += years + "y ";
-	if (months) string += months + "m ";
-	if (days) string += days + "d ";
-	if (hours) string += hours + "h ";
-	if (minutes) string += minutes + "m ";
-	if (seconds) string += seconds + "s ";
+	let seconds = totalSeconds % 60;
+	let totalMinutes = Math.floor(totalSeconds / 60);
+	let minutes = totalMinutes % 60;
+	let totalHours = Math.floor(totalMinutes / 60);
+	let hours = totalHours % 24;
+	let totalDays = Math.floor(totalHours / 24);
+	let days = totalDays % 30;
+	let months = Math.floor(totalDays / 30);
+
+	if (months > 0) string += `${months}m `;
+	if (days > 0) string += `${days}d `;
+	if (hours > 0) string += `${hours}h `;
+	if (minutes > 0) string += `${minutes}m `;
+	if (seconds > 0) string += `${seconds}s`;
 
 	return string;
 }
@@ -241,7 +235,7 @@ export const alertTemplate = {
 	isOpen: false,
 	isCooldown: false,
 	position: { x: null, y: null },
-	hoverdTaskId: null
+	hoverdTaskId: null,
 };
 export const dateModalTemplate = {
 	dateInput: "",
