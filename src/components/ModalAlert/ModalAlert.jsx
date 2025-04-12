@@ -13,7 +13,6 @@ export default function ModalAlert() {
 				left: `${alert.position.x}px`,
 				top: `${alert.position.y}px`,
 				zIndex: 2,
-				border: "1px solid black",
 			}}
 		>
 			<div className="content">

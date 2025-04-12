@@ -20,7 +20,6 @@ export default function ModalSettings() {
 				left: `${modal.position.x}px`,
 				top: `${modal.position.y}px`,
 				zIndex: 2,
-				border: "1px solid #e2e2e2",
 			}}
 		>
 			<div className="content">
