@@ -1,12 +1,15 @@
 import { useAlert } from "../../features/alert/useAlert";
 import { useDateModal } from "../../features/dateModal/useDateModal";
+import { useModal } from "../../features/modal/useModal";
 
 import ModalAlert from "../ModalAlert";
 import ModalSettings from "../ModalSettings";
+import Modal from "../Modal";
 
 export default function AppContainer({ content, setContent, children }) {
 	const { dateModal, handlers } = useDateModal();
 	const { alert } = useAlert();
+	const { notification } = useModal();
 
 	const switchTab = (e) => {
 		setContent((prev) => {
@@ -15,7 +18,7 @@ export default function AppContainer({ content, setContent, children }) {
 				isActiveTab: e.target.name,
 			};
 		});
-		handlers.hideDateModal()
+		handlers.hideDateModal();
 	};
 
 	return (
@@ -27,13 +30,6 @@ export default function AppContainer({ content, setContent, children }) {
 					onClick={(e) => switchTab(e)}
 				>
 					New
-				</button>
-				<button
-					className={`btn ${content.isActiveTab == "actual" ? "active" : ""}`}
-					name="actual"
-					onClick={(e) => switchTab(e)}
-				>
-					Actual
 				</button>
 				<button
 					className={`btn ${content.isActiveTab == "wasted" ? "active" : ""}`}
@@ -55,6 +51,7 @@ export default function AppContainer({ content, setContent, children }) {
 			{children}
 			{dateModal.isOpen && <ModalSettings></ModalSettings>}
 			{alert.isOpen && <ModalAlert></ModalAlert>}
+			{notification.isOpen && <Modal></Modal>}
 		</div>
 	);
 }

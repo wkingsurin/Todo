@@ -4,10 +4,12 @@ import TextInput from "../TextInput";
 import { useNewTask } from "../../features/newTask/useNewTask";
 import { useDateModal } from "../../features/dateModal/useDateModal";
 import { validateDate } from "../../utils/utils";
+import { useModal } from "../../features/modal/useModal";
 
 export default function NewTask({ addTask }) {
 	const { newTask, input } = useNewTask();
 	const { dateModal, handlers: dateModalHandlers } = useDateModal();
+	const { showModal } = useModal();
 
 	return (
 		<div className="todo todo-new">
@@ -20,6 +22,9 @@ export default function NewTask({ addTask }) {
 						onClick={() => {
 							if (!validateDate(dateModal)) return;
 							addTask(newTask, dateModal);
+
+							showModal();
+
 							input.clear();
 						}}
 					>

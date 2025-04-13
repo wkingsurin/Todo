@@ -129,14 +129,15 @@ export default function TasksContainer({ content, setContent }) {
 	return (
 		<div className="tasks-container">
 			{content.isActiveTab == "new" && (
-				<NewTask
-					addTask={addTask}
-					setContent={setContent}
-					content={content}
-				></NewTask>
+				<>
+					<NewTask
+						addTask={addTask}
+						setContent={setContent}
+						content={content}
+					></NewTask>
+					{tasks.length > 0 ? actualTasksList : <Empty>Empty</Empty>}
+				</>
 			)}
-			{content.isActiveTab == "actual" &&
-				(tasks.length > 0 ? actualTasksList : <Empty>Empty</Empty>)}
 			{content.isActiveTab == "wasted" &&
 				(wastedTasks.length > 0 ? wastedTasksList : <Empty>Empty</Empty>)}
 			{content.isActiveTab == "completed" &&

@@ -337,3 +337,11 @@ export const statusModalTemplate = {
 		y: null,
 	},
 };
+export const notificationTemplate = {
+	text: "",
+	isOpen: false,
+	position: {
+		x: null,
+		y: null,
+	},
+};
