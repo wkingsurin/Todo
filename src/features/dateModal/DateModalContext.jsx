@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import { dateModalTemplate } from "../../utils/utils";
 import { dateModalReducer } from "../../store/dateModalReducer";
 
@@ -52,9 +52,9 @@ export const DateModalProvider = ({ children }) => {
 					prevYear,
 					nextYear,
 					saveDate,
+					typeDate,
+					typeTime,
 				},
-				typeDate,
-				typeTime,
 			}}
 		>
 			{children}

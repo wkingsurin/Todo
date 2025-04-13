@@ -36,6 +36,15 @@ export function correctDate(date) {
 	return `${day}.${month}.${date.getFullYear()}`;
 }
 
+export function correctTime(time) {
+	let [hours, minutes] = time.split(":");
+
+	hours = Number(hours) < 10 ? "0" + hours : hours;
+	minutes = Number(minutes) < 10 ? "0" + Number(minutes) : minutes;
+
+	return hours + ":" + minutes;
+}
+
 export const months = {
 	0: "Январь",
 	1: "Февраль",
@@ -148,6 +157,52 @@ export function validateDate(object) {
 	return false;
 }
 
+export function validationDate(value) {
+	let string = value.split(".").reverse();
+	const [year, month, day] = string;
+
+	if (year.length < 4) {
+		return value;
+	}
+
+	let date = new Date(year, month, day);
+	date.setMonth(date.getMonth() - 1);
+
+	if (
+		date.getDate() < new Date().getDate() &&
+		date.getMonth() <= new Date().getMonth() &&
+		date.getFullYear() <= new Date().getFullYear()
+	) {
+		return correctDate(new Date());
+	}
+}
+
+export function validationTime(value) {
+	let string = value.split(":");
+	let [hours, minutes] = string;
+	let timeNow = new Date();
+
+	if (hours && hours.length < 2) return value;
+	if (minutes && minutes.length < 2) return value;
+
+	if (hours && timeNow.getHours() > hours) {
+		hours = timeNow.getHours();
+	}
+
+	if (
+		minutes &&
+		hours <= timeNow.getHours() &&
+		timeNow.getMinutes() >= minutes
+	) {
+		hours = Number(hours) + 1;
+		minutes = "00";
+	}
+
+	let result = correctTime(hours + ":" + minutes);
+
+	return result;
+}
+
 export function correctRemainingTime(remainingTime) {
 	let string = "";
 
@@ -218,6 +273,30 @@ export function changeAlertMessage(remainingTime, setAlert) {
 				the project: ${correctRemainingTime(remainingTime)}`,
 		};
 	});
+}
+
+export function dateMask(value) {
+	const digits = value.replace(/\D/g, "").slice(0, 8);
+	let result = "";
+
+	if (digits.length > 0) result += digits.substring(0, 2);
+	if (digits.length >= 3) result += "." + digits.substring(2, 4);
+	else if (digits.length > 2) result += ".";
+
+	if (digits.length >= 5) result += "." + digits.substring(4, 8);
+	else if (digits.length > 4) result += ".";
+
+	return result;
+}
+
+export function timeMask(value) {
+	const digits = value.replace(/\D/g, "").slice(0, 4);
+	let result = "";
+
+	if (digits.length > 0) result += digits.substring(0, 2);
+	if (digits.length >= 3) result += ":" + digits.substring(2, 4);
+
+	return result;
 }
 
 export const taskTemplate = {

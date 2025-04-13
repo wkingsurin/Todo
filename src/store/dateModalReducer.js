@@ -1,11 +1,27 @@
-import { correctDate } from "../utils/utils";
+import {
+	correctDate,
+	dateMask,
+	validationDate,
+	timeMask,
+	validationTime,
+} from "../utils/utils";
 
 export function dateModalReducer(state, action) {
 	switch (action.type) {
-		case "TYPE_DATE":
+		case "TYPE_DATE": {
+			const maskedDate = dateMask(action.target.value);
+			const validDate = validationDate(maskedDate);
+
+			if (action.target.value.length < 8) {
+				return {
+					...state,
+					dateInput: maskedDate,
+				};
+			}
+
 			return {
 				...state,
-				dateInput: action.target.value,
+				dateInput: validDate ? validDate : maskedDate,
 				data: {
 					...state.data,
 					day: Number(action.target.value.slice(0, 2)),
@@ -13,17 +29,26 @@ export function dateModalReducer(state, action) {
 					year: Number(action.target.value.slice(6, 10)),
 				},
 			};
+		}
 
-		case "TYPE_TIME":
+		case "TYPE_TIME": {
+			const maskedTime = timeMask(action.target.value);
+			const validTime = validationTime(maskedTime);
+
+			if (action.target.value.length < 4) {
+				return { ...state, timeInput: maskedTime };
+			}
+
 			return {
 				...state,
-				timeInput: action.target.value,
+				timeInput: validTime ? validTime : maskedTime,
 				data: {
 					...state.data,
 					hours: Number(action.target.value.slice(0, 2)),
 					minutes: Number(action.target.value.slice(3, 5)),
 				},
 			};
+		}
 
 		case "SHOW_DATE_MODAL": {
 			const svg = action.target.querySelector("svg");

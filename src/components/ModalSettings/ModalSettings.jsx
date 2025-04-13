@@ -3,14 +3,22 @@ import { Chevron } from "../SVG";
 import { useDateModal } from "../../features/dateModal/useDateModal";
 
 export default function ModalSettings() {
-	const {
-		dateModal: modal,
-		dateModalDispatch,
-		handlers,
-		typeDate,
-		typeTime,
-	} = useDateModal();
+	const { dateModal: modal, handlers } = useDateModal();
 	const dateData = modal.data;
+
+	const handleKeyDown = (e) => {
+		const allowedKeys = [
+			"Backspace",
+			"Delete",
+			"ArrowLeft",
+			"ArrowRight",
+			"Tab",
+		];
+
+		if (!/^\d$/.test(e.key) && !allowedKeys.includes(e.key)) {
+			e.preventDefault();
+		}
+	};
 
 	return (
 		<div
@@ -28,7 +36,7 @@ export default function ModalSettings() {
 						<button
 							className="btn"
 							onClick={(e) => {
-								handlers.prevMonth(e.target)
+								handlers.prevMonth(e.target);
 							}}
 						>
 							<Chevron rotate={-90}></Chevron>
@@ -128,7 +136,11 @@ export default function ModalSettings() {
 							id="date"
 							className="data-value"
 							placeholder="__.__.__"
-							onChange={(e) => typeDate(e.target)}
+							maxLength={10}
+							onKeyDown={(e) => handleKeyDown(e)}
+							onChange={(e) => {
+								handlers.typeDate(e.target);
+							}}
 							value={modal.dateInput}
 						/>
 					</div>
@@ -141,7 +153,7 @@ export default function ModalSettings() {
 							id="time"
 							className="data-value"
 							placeholder="--:--"
-							onChange={(e) => typeTime(e.target)}
+							onChange={(e) => handlers.typeTime(e.target)}
 							value={modal.timeInput}
 						/>
 					</div>
