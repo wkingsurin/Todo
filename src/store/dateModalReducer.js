@@ -11,6 +11,7 @@ export function dateModalReducer(state, action) {
 		case "TYPE_DATE": {
 			const maskedDate = dateMask(action.target.value);
 			const validDate = validationDate(maskedDate);
+			let result;
 
 			if (action.target.value.length < 8) {
 				return {
@@ -19,16 +20,30 @@ export function dateModalReducer(state, action) {
 				};
 			}
 
-			return {
-				...state,
-				dateInput: validDate ? validDate : maskedDate,
-				data: {
-					...state.data,
-					day: Number(action.target.value.slice(0, 2)),
-					month: Number(action.target.value.slice(3, 5)) - 1,
-					year: Number(action.target.value.slice(6, 10)),
-				},
-			};
+			if (validDate.length === 10) {
+				result = {
+					...state,
+					dateInput: validDate,
+					date: new Date(
+						validDate.slice(6, 10),
+						validDate.slice(3, 5) - 1,
+						validDate.slice(0, 2)
+					),
+					data: {
+						...state.data,
+						day: Number(validDate.slice(0, 2)),
+						month: Number(validDate.slice(3, 5)) - 1,
+						year: Number(validDate.slice(6, 10)),
+					},
+				};
+			} else {
+				result = {
+					...state,
+					dateInput: maskedDate,
+				};
+			}
+
+			return result;
 		}
 
 		case "TYPE_TIME": {

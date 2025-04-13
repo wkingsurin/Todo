@@ -161,12 +161,9 @@ export function validationDate(value) {
 	let string = value.split(".").reverse();
 	const [year, month, day] = string;
 
-	if (year.length < 4) {
-		return value;
-	}
+	if (year.length < 4) return value;
 
-	let date = new Date(year, month, day);
-	date.setMonth(date.getMonth() - 1);
+	let date = new Date(year, month - 1, day);
 
 	if (
 		date.getDate() < new Date().getDate() &&
@@ -175,6 +172,8 @@ export function validationDate(value) {
 	) {
 		return correctDate(new Date());
 	}
+
+	return value;
 }
 
 export function validationTime(value) {
