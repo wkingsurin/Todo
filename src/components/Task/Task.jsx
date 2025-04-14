@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export default function Task(props) {
 	const { tasks, task, width, completeTaskListener, deleteTask } = props;
-	const { alert, setAlert } = useAlert();
+	const { alert, setAlert, hideAlert } = useAlert();
 
 	const handleMouseEnter = () => {
 		setAlert((prev) => {
@@ -41,9 +41,7 @@ export default function Task(props) {
 						handleMouseEnter();
 					}}
 					onMouseLeave={(e) => {
-						setAlert((prev) => {
-							return { ...prev, hoveredTaskId: null };
-						});
+						hideAlert();
 					}}
 				>
 					<Alert></Alert>

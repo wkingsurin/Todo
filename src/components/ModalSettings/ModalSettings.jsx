@@ -2,7 +2,7 @@ import { months } from "../../utils/utils";
 import { Chevron } from "../SVG";
 import { useDateModal } from "../../features/dateModal/useDateModal";
 
-export default function ModalSettings() {
+export default function ModalSettings({ className, ref }) {
 	const { dateModal: modal, handlers } = useDateModal();
 	const dateData = modal.data;
 
@@ -22,13 +22,14 @@ export default function ModalSettings() {
 
 	return (
 		<div
-			className="modal settings extended-modal"
+			className={className}
 			style={{
 				position: "absolute",
 				left: `${modal.position.x}px`,
 				top: `${modal.position.y}px`,
 				zIndex: 2,
 			}}
+			ref={ref}
 		>
 			<div className="content">
 				<div className="block calendar">

@@ -14,18 +14,18 @@ export function ModalProvider({ children }) {
 				position: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
 			};
 		});
+	};
 
-		setTimeout(
-			() =>
-				setNotification((prev) => {
-					return { ...prev, isOpen: false };
-				}),
-			1000
-		);
+	const hideModal = () => {
+		setNotification((prev) => {
+			return { ...prev, isOpen: false };
+		});
 	};
 
 	return (
-		<ModalContext.Provider value={{ notification, setNotification, showModal }}>
+		<ModalContext.Provider
+			value={{ notification, setNotification, showModal, hideModal }}
+		>
 			{children}
 		</ModalContext.Provider>
 	);

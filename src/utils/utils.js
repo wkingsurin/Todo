@@ -239,8 +239,6 @@ export function hoverOnAlert(e, alert, setAlert) {
 			});
 			showAlert(coordinates, setAlert);
 		}
-	} else {
-		hideAlert(setAlert);
 	}
 }
 

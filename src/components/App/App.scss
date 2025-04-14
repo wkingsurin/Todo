@@ -99,6 +99,7 @@ $green: #4fe681;
 
 	font-size: 16px;
 
+	transition: 0.3s ease-in-out;
 	p {
 		font-size: 16px;
 	}
@@ -250,5 +251,38 @@ $green: #4fe681;
 			background: $dark-purple;
 			border: 1px solid transparent;
 		}
+	}
+}
+
+.modal.entering {
+	animation: showModal 0.5s forwards;
+}
+.modal.entered {
+}
+.modal.exiting {
+	animation: hideModal 0.5s forwards;
+}
+.modal.exited {
+}
+
+@keyframes showModal {
+	0% {
+		opacity: 0;
+		transform: translateX(-150px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes hideModal {
+	0% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(150px);
 	}
 }

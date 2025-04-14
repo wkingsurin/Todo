@@ -2,14 +2,21 @@ import { useAlert } from "../../features/alert/useAlert";
 import { useDateModal } from "../../features/dateModal/useDateModal";
 import { useModal } from "../../features/modal/useModal";
 
+import { Transition } from "react-transition-group";
+
 import ModalAlert from "../ModalAlert";
 import ModalSettings from "../ModalSettings";
 import Modal from "../Modal";
+import { useRef } from "react";
 
 export default function AppContainer({ content, setContent, children }) {
 	const { dateModal, handlers } = useDateModal();
 	const { alert } = useAlert();
 	const { notification } = useModal();
+
+	const notificationRef = useRef(null);
+	const alertRef = useRef(null);
+	const dateModalRef = useRef(null);
 
 	const switchTab = (e) => {
 		setContent((prev) => {
@@ -49,9 +56,48 @@ export default function AppContainer({ content, setContent, children }) {
 				</button>
 			</div>
 			{children}
-			{dateModal.isOpen && <ModalSettings></ModalSettings>}
-			{alert.isOpen && <ModalAlert></ModalAlert>}
-			{notification.isOpen && <Modal></Modal>}
+			<Transition
+				in={dateModal.isOpen}
+				timeout={500}
+				mountOnEnter
+				unmountOnExit
+				nodeRef={dateModalRef}
+			>
+				{(state) => (
+					<ModalSettings
+						className={`modal settings extended-modal ${state}`}
+						ref={dateModalRef}
+					></ModalSettings>
+				)}
+			</Transition>
+			<Transition
+				in={alert.isOpen}
+				timeout={500}
+				mountOnEnter
+				unmountOnExit
+				nodeRef={alertRef}
+			>
+				{(state) => (
+					<ModalAlert
+						className={`modal notification ${state}`}
+						ref={alertRef}
+					></ModalAlert>
+				)}
+			</Transition>
+			<Transition
+				in={notification.isOpen}
+				timeout={500}
+				mountOnEnter
+				unmountOnExit
+				nodeRef={notificationRef}
+			>
+				{(state) => (
+					<Modal
+						className={`modal notification ${state}`}
+						ref={notificationRef}
+					></Modal>
+				)}
+			</Transition>
 		</div>
 	);
 }
