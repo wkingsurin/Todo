@@ -2,7 +2,7 @@ $dark-purple: #1a0c2d;
 $dark-purple-05: rgba(26, 12, 45, 0.05);
 $dark-purple-15: rgba(26, 12, 45, 0.15);
 $green: #4fe681;
-$red: #E64F4F;
+$red: #e64f4f;
 
 .todo {
 	// position: relative;
@@ -98,4 +98,19 @@ $red: #E64F4F;
 	to {
 		background: $red;
 	}
+}
+
+.todo-enter {
+	opacity: 0;
+}
+.todo-enter-active {
+	opacity: 1;
+	transition: 0.5s ease-in-out;
+}
+.todo-exit {
+	opacity: 1;
+}
+.todo-exit-active {
+	opacity: 0;
+	transition: 0.5s ease-in-out;
 }

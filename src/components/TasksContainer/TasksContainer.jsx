@@ -1,5 +1,11 @@
-import { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useTasks } from "../../hooks/useTasks";
+
+import {
+	CSSTransition,
+	Transition,
+	TransitionGroup,
+} from "react-transition-group";
 
 import { computePercentOfTime } from "../../utils/utils";
 
@@ -19,68 +25,31 @@ export default function TasksContainer({ content, setContent }) {
 		updateTasks,
 	} = useTasks();
 
-	const actualTasksList = tasks.map((task) => {
-		const width = computePercentOfTime(
-			new Date(task.totalTime),
-			new Date(task.remainingTime),
-			task.status
-		);
-
-		return (
-			<Task
-				tasks={tasks}
-				task={task}
-				width={width}
-				completeTaskListener={completeTask}
-				deleteTask={deleteTask}
-				updateTask={updateTask}
-				updateTasks={updateTasks}
-				key={task.id}
-				content={content}
-				setContent={setContent}
-			></Task>
-		);
+	const tasksRefs = useRef(new Map());
+	tasks.forEach((task) => {
+		if (!tasksRefs.current.has(task.id)) {
+			tasksRefs.current.set(task.id, React.createRef());
+		}
 	});
 
-	const wastedTasksList = wastedTasks.map((task) => {
-		return (
-			<Task
-				tasks={wastedTasks}
-				task={task}
-				width={100}
-				completeTaskListener={completeTask}
-				updateTask={updateTask}
-				updateTasks={updateTasks}
-				deleteTask={deleteTask}
-				key={task.id}
-				content={content}
-				setContent={setContent}
-			></Task>
-		);
+	const wastedTasksRefs = useRef(new Map());
+	wastedTasks.forEach((task) => {
+		if (!wastedTasksRefs.current.has(task.id)) {
+			wastedTasksRefs.current.set(task.id, React.createRef());
+		}
 	});
 
-	const completedTasksList = completedTasks.map((task) => {
-		const width = computePercentOfTime(
-			task.totalTime,
-			task.remainingTime,
-			task.status
-		);
-
-		return (
-			<Task
-				tasks={completedTasks}
-				task={task}
-				width={width}
-				completeTaskListener={completeTask}
-				updateTask={updateTask}
-				updateTasks={updateTasks}
-				deleteTask={deleteTask}
-				key={task.id}
-				content={content}
-				setContent={setContent}
-			></Task>
-		);
+	const completedTasksRefs = useRef(new Map());
+	completedTasks.forEach((task) => {
+		if (!completedTasksRefs.current.has(task.id)) {
+			completedTasksRefs.current.set(task.id, React.createRef());
+		}
 	});
+
+	const activeTasksListRef = useRef(null);
+	const wastedTasksListRef = useRef(null);
+	const completedTasksListRef = useRef(null);
+	const emptyRef = useRef(null);
 
 	useEffect(() => {
 		const taskUpdateInterval = setInterval(() => {
@@ -130,19 +99,198 @@ export default function TasksContainer({ content, setContent }) {
 		<div className="tasks-container">
 			{content.isActiveTab == "new" && (
 				<>
-					<NewTask
-						addTask={addTask}
-						setContent={setContent}
-						content={content}
-					></NewTask>
-					{tasks.length > 0 ? actualTasksList : <Empty>Empty</Empty>}
+					<div className="tasks-block">
+						<NewTask
+							addTask={addTask}
+							setContent={setContent}
+							content={content}
+						></NewTask>
+						<Transition
+							in={tasks.length > 0}
+							timeout={500}
+							nodeRef={activeTasksListRef}
+							unmountOnExit
+							mountOnEnter
+						>
+							{(state) => (
+								<div
+									className={`tasks-container ${state}`}
+									ref={activeTasksListRef}
+								>
+									<TransitionGroup component={null}>
+										{tasks.map((task) => {
+											const width = computePercentOfTime(
+												new Date(task.totalTime),
+												new Date(task.remainingTime),
+												task.status
+											);
+
+											return (
+												<CSSTransition
+													key={task.id}
+													timeout={500}
+													classNames="todo"
+													unmountOnExit
+													mountOnEnter
+													nodeRef={tasksRefs.current.get(task.id)}
+												>
+													<Task
+														tasks={tasks}
+														task={task}
+														width={width}
+														completeTaskListener={completeTask}
+														deleteTask={deleteTask}
+														updateTask={updateTask}
+														updateTasks={updateTasks}
+														content={content}
+														setContent={setContent}
+														ref={tasksRefs.current.get(task.id)}
+													></Task>
+												</CSSTransition>
+											);
+										})}
+									</TransitionGroup>
+								</div>
+							)}
+						</Transition>
+					</div>
+					<Transition
+						in={tasks.length === 0}
+						timeout={500}
+						nodeRef={emptyRef}
+						unmountOnExit
+						mountOnEnter
+					>
+						{(state) => (
+							<Empty className={`empty ${state}`} ref={emptyRef}>
+								Empty
+							</Empty>
+						)}
+					</Transition>
 				</>
 			)}
-			{content.isActiveTab == "wasted" &&
-				(wastedTasks.length > 0 ? wastedTasksList : <Empty>Empty</Empty>)}
-			{content.isActiveTab == "completed" &&
-				(completedTasks.length > 0 ? completedTasksList : <Empty>Empty</Empty>)}
-			{content.isActiveTab == "empty" && <Empty>Empty</Empty>}
+			{content.isActiveTab == "wasted" && (
+				<>
+					<div className="tasks-block">
+						<Transition
+							in={wastedTasks.length > 0}
+							timeout={500}
+							nodeRef={wastedTasksListRef}
+							unmountOnExit
+							mountOnEnter
+						>
+							{(state) => (
+								<div
+									className={`tasks-container ${state}`}
+									ref={wastedTasksListRef}
+								>
+									<TransitionGroup component={null}>
+										{wastedTasks.map((task) => {
+											return (
+												<CSSTransition
+													key={task.id}
+													timeout={500}
+													classNames="todo"
+													unmountOnExit
+													mountOnEnter
+													nodeRef={wastedTasksRefs.current.get(task.id)}
+												>
+													<Task
+														tasks={wastedTasks}
+														task={task}
+														width={100}
+														completeTaskListener={completeTask}
+														deleteTask={deleteTask}
+														updateTask={updateTask}
+														updateTasks={updateTasks}
+														content={content}
+														setContent={setContent}
+														ref={wastedTasksRefs.current.get(task.id)}
+													></Task>
+												</CSSTransition>
+											);
+										})}
+									</TransitionGroup>
+								</div>
+							)}
+						</Transition>
+					</div>
+					<Transition
+						in={wastedTasks.length === 0}
+						timeout={500}
+						nodeRef={emptyRef}
+						unmountOnExit
+						mountOnEnter
+					>
+						{(state) => (
+							<Empty className={`empty ${state}`} ref={emptyRef}>
+								Empty
+							</Empty>
+						)}
+					</Transition>
+				</>
+			)}
+			{content.isActiveTab == "completed" && (
+				<>
+					<div className="tasks-block">
+						<Transition
+							in={completedTasks.length > 0}
+							timeout={500}
+							nodeRef={completedTasksListRef}
+							unmountOnExit
+							mountOnEnter
+						>
+							{(state) => (
+								<div
+									className={`tasks-container ${state}`}
+									ref={completedTasksListRef}
+								>
+									<TransitionGroup component={null}>
+										{completedTasks.map((task) => {
+											return (
+												<CSSTransition
+													key={task.id}
+													timeout={500}
+													classNames="todo"
+													unmountOnExit
+													mountOnEnter
+													nodeRef={completedTasksRefs.current.get(task.id)}
+												>
+													<Task
+														tasks={completedTasks}
+														task={task}
+														width={100}
+														completeTaskListener={completeTask}
+														deleteTask={deleteTask}
+														updateTask={updateTask}
+														updateTasks={updateTasks}
+														content={content}
+														setContent={setContent}
+														ref={completedTasksRefs.current.get(task.id)}
+													></Task>
+												</CSSTransition>
+											);
+										})}
+									</TransitionGroup>
+								</div>
+							)}
+						</Transition>
+					</div>
+					<Transition
+						in={completedTasks.length === 0}
+						timeout={500}
+						nodeRef={emptyRef}
+						unmountOnExit
+						mountOnEnter
+					>
+						{(state) => (
+							<Empty className={`empty ${state}`} ref={emptyRef}>
+								Empty
+							</Empty>
+						)}
+					</Transition>
+				</>
+			)}
 		</div>
 	);
 }

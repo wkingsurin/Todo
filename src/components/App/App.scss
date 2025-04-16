@@ -46,6 +46,8 @@ $green: #4fe681;
 	}
 }
 .tasks-container {
+	position: relative;
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -53,9 +55,24 @@ $green: #4fe681;
 	flex-direction: column;
 
 	width: 100%;
-	gap: 25px;
 
 	color: $dark-purple;
+
+	.tasks-block {
+		display: flex;
+		flex-direction: column;
+
+		width: 100%;
+		gap: 25px;
+
+		.tasks-container {
+			display: flex;
+			flex-direction: column;
+
+			width: 100%;
+			gap: 25px;
+		}
+	}
 
 	.notification {
 		position: absolute;
@@ -69,12 +86,27 @@ $green: #4fe681;
 		height: 28px;
 
 		opacity: 0;
-		transition: 0.2s ease-in-out;
+		transition: 0.5s ease-in-out;
 	}
 	.notification svg {
 		width: 16px;
 		height: 16px;
 	}
+}
+
+.tasks-container.entering {
+	opacity: 0;
+}
+.tasks-container.entered {
+	opacity: 1;
+	transition: 0.2s ease-in-out;
+}
+.tasks-container.exiting {
+	opacity: 1;
+}
+.tasks-container.exited {
+	opacity: 0;
+	transition: 0.2s ease-in-out;
 }
 
 .modal {

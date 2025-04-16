@@ -5,7 +5,7 @@ import { useAlert } from "../../features/alert/useAlert";
 import { useEffect } from "react";
 
 export default function Task(props) {
-	const { tasks, task, width, completeTaskListener, deleteTask } = props;
+	const { tasks, task, width, completeTaskListener, deleteTask, ref } = props;
 	const { alert, setAlert, hideAlert } = useAlert();
 
 	const handleMouseEnter = () => {
@@ -29,7 +29,7 @@ export default function Task(props) {
 	}, [task, alert.hoveredTaskId]);
 
 	return (
-		<div className={`todo todo-${task.type}`} id={task.id}>
+		<div className={`todo todo-${task.type}`} id={task.id} ref={ref}>
 			{task.type == "actual" && (
 				<div
 					className="notification"
