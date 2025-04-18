@@ -4,6 +4,7 @@ import {
 	validationDate,
 	timeMask,
 	validationTime,
+	updateDays,
 } from "../utils/utils";
 
 export function dateModalReducer(state, action) {
@@ -263,6 +264,10 @@ export function dateModalReducer(state, action) {
 				data,
 				date,
 			};
+		}
+
+		case "UPDATE_DAYS": {
+			return { ...state, days: updateDays(state.days) };
 		}
 
 		default:

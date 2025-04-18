@@ -1,9 +1,10 @@
-import { months } from "../../utils/utils";
+import { months, initDays, updateDays, counter } from "../../utils/utils";
 import { Chevron } from "../SVG";
 import { useDateModal } from "../../features/dateModal/useDateModal";
+import { useEffect } from "react";
 
 export default function ModalSettings({ className, ref }) {
-	const { dateModal: modal, handlers } = useDateModal();
+	const { dateModal: modal, handlers, dateModalDispatch } = useDateModal();
 	const dateData = modal.data;
 
 	const handleKeyDown = (e) => {
@@ -19,6 +20,10 @@ export default function ModalSettings({ className, ref }) {
 			e.preventDefault();
 		}
 	};
+
+	useEffect(() => {
+		dateModalDispatch({ type: "UPDATE_DAYS" });
+	}, []);
 
 	return (
 		<div
@@ -79,51 +84,23 @@ export default function ModalSettings({ className, ref }) {
 								<th className="table-heading">Сб</th>
 								<th className="table-heading">Вс</th>
 							</tr>
-							<tr className="table-row">
-								<td className="table-data">1</td>
-								<td className="table-data">2</td>
-								<td className="table-data">3</td>
-								<td className="table-data">4</td>
-								<td className="table-data">5</td>
-								<td className="table-data">6</td>
-								<td className="table-data">7</td>
-							</tr>
-							<tr className="table-row">
-								<td className="table-data">8</td>
-								<td className="table-data">9</td>
-								<td className="table-data">10</td>
-								<td className="table-data">11</td>
-								<td className="table-data">12</td>
-								<td className="table-data">13</td>
-								<td className="table-data">14</td>
-							</tr>
-							<tr className="table-row">
-								<td className="table-data">15</td>
-								<td className="table-data">16</td>
-								<td className="table-data">17</td>
-								<td className="table-data">18</td>
-								<td className="table-data">19</td>
-								<td className="table-data">20</td>
-								<td className="table-data">21</td>
-							</tr>
-							<tr className="table-row">
-								<td className="table-data">22</td>
-								<td className="table-data">23</td>
-								<td className="table-data">24</td>
-								<td className="table-data">25</td>
-								<td className="table-data">26</td>
-								<td className="table-data">27</td>
-								<td className="table-data">28</td>
-							</tr>
-							<tr className="table-row">
-								<td className="table-data">29</td>
-								<td className="table-data">30</td>
-								<td className="table-data">31</td>
-								<td className="table-data">1</td>
-								<td className="table-data">2</td>
-								<td className="table-data">3</td>
-								<td className="table-data">4</td>
-							</tr>
+							{modal.days.map((week, index) => {
+								return (
+									<tr className="table-row" key={index}>
+										{week.map((elem) => {
+											return (
+												<td
+													className="table-data"
+													key={elem.id}
+													aria-disabled={!elem.open}
+												>
+													{elem.day}
+												</td>
+											);
+										})}
+									</tr>
+								);
+							})}
 						</tbody>
 					</table>
 				</div>

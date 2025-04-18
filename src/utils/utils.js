@@ -296,6 +296,124 @@ export function timeMask(value) {
 	return result;
 }
 
+export const splitDaysToWeeks = (days) => {
+	const weeks = [];
+	let week = [];
+	let i = 0;
+
+	while (i !== days.length) {
+		week.push(days[i]);
+		i++;
+
+		if (week.length === 7) {
+			weeks.push(week);
+			week = [];
+		}
+	}
+
+	return weeks;
+};
+export const collectArr = (arr) => {
+	const collectedArr = [];
+
+	for (let i = 0; i < arr.length; i++) {
+		for (let k = 0; k < arr[i].length; k++) {
+			collectedArr.push(arr[i][k]);
+		}
+	}
+	return collectedArr;
+};
+export const updateDays = (arr) => {
+	let collectedArr = collectArr(arr);
+
+	for (let i = 0; i < collectedArr.length; i++) {
+		if (i < 7 && collectedArr[i].day > collectedArr[i + 1].day) {
+			collectedArr[i].open = false;
+		}
+		if (collectedArr[i].day < new Date().getDate()) {
+			collectedArr[i].open = false;
+		}
+		if (i > 28 && collectedArr[i].day < collectedArr[28].day) {
+			collectedArr[i].open = true;
+		}
+	}
+
+	return splitDaysToWeeks(collectedArr);
+};
+export const getFirstWeekDayOfMonth = (month) => {
+	const date = new Date();
+	date.setMonth(month);
+	date.setDate(1);
+	return date.getDay();
+};
+export const getLastWeekDayOfMonth = (month) => {
+	const date = new Date();
+	date.setMonth(month + 1);
+	date.setDate(0);
+	return date.getDay();
+};
+export const getLastDayOfMonth = (month) => {
+	const date = new Date();
+	date.setMonth(month + 1);
+	date.setDate(0);
+	return date.getDate();
+};
+
+export const initDays = () => {
+	const firstDayOfWeek = getFirstWeekDayOfMonth(new Date().getMonth());
+	const lastDayOfWeek = getLastWeekDayOfMonth(new Date().getMonth());
+	const lastDayOfMonth = getLastDayOfMonth(new Date().getMonth());
+	const lastDayOfPrevMonth = getLastDayOfMonth(new Date().getMonth() - 1);
+
+	const days = [];
+
+	for (let i = 1; i <= lastDayOfMonth; i++) {
+		days.push({
+			day: i,
+			open: true,
+			dayOfWeek: new Date(
+				new Date().getFullYear(),
+				new Date().getMonth(),
+				i
+			).getDay(),
+		});
+	}
+
+	for (
+		let i = lastDayOfPrevMonth;
+		i > lastDayOfPrevMonth - (firstDayOfWeek - 1);
+		i--
+	) {
+		days.unshift({
+			day: i,
+			open: false,
+			dayOfWeek: new Date(
+				new Date().getFullYear(),
+				new Date().getMonth() - 1,
+				i
+			).getDay(),
+		});
+	}
+
+	for (
+		let i = lastDayOfMonth + 1;
+		i <= lastDayOfMonth + lastDayOfWeek + 1;
+		i++
+	) {
+		days.push({
+			day: new Date(new Date().setDate(i)).getDate(),
+			open: false,
+			dayOfWeek: new Date(
+				new Date().getFullYear(),
+				new Date().getMonth(),
+				i
+			).getDay(),
+		});
+	}
+
+	return days.map((day, index) => ({ ...day, id: index }));
+};
+
 export const taskTemplate = {
 	text: "",
 	remainingTime: null,
@@ -327,6 +445,7 @@ export const dateModalTemplate = {
 		month: null,
 		year: null,
 	},
+	days: splitDaysToWeeks(initDays()),
 };
 export const statusModalTemplate = {
 	isOpen: false,

@@ -227,6 +227,11 @@ $green: #4fe681;
 					.table-data:hover {
 						background: #f5f5f5;
 					}
+					[aria-disabled="true"] {
+						pointer-events: none;
+						user-select: none;
+						opacity: .35;
+					}
 				}
 			}
 		}
