@@ -96,8 +96,9 @@ export function dateModalReducer(state, action) {
 				isOpen: true,
 				position,
 				dateInput: correctDate(new Date()),
+				days: splitDaysToWeeks(initDays(date.getFullYear(), date.getMonth())),
+				timeInput: "",
 			};
-			// action.setDate(correctDate(date));
 
 			return modal;
 		}
@@ -108,24 +109,39 @@ export function dateModalReducer(state, action) {
 		case "SELECT_DAY": {
 			if (!action.target.closest("td")) return state;
 
-			const date = state.date || new Date();
-			const day = Number(action.target.closest("td").textContent);
+			const cell = action.target.closest("td");
+			const date = state.date;
+			let day;
+
+			state.days.forEach((week) => {
+				const find = week.find((day) => {
+					return day.id === Number(cell.id);
+				});
+
+				if (find) {
+					day = find.date;
+				}
+			});
 
 			if (
-				day < new Date().getDate() &&
-				date.getMonth() <= new Date().getMonth() &&
-				date.getFullYear() <= new Date().getFullYear()
+				new Date(day.getFullYear(), day.getMonth(), day.getDate()) <
+				new Date(
+					new Date().getFullYear(),
+					new Date().getMonth(),
+					new Date().getDate()
+				)
 			) {
 				console.log("Невозможно установить прошедшее число");
 				return state;
 			}
 
-			date.setDate(day);
+			date.setDate(day.getDate());
 
 			return {
 				...state,
-				data: { ...state.data, day },
-				dateInput: correctDate(date),
+				data: { ...state.data, day: day.getDate() },
+				dateInput: correctDate(day),
+				date,
 			};
 		}
 
@@ -223,7 +239,6 @@ export function dateModalReducer(state, action) {
 
 		case "NEXT_YEAR": {
 			const date = new Date(state.date);
-
 			const nextYear = date.getFullYear() + 1;
 
 			date.setFullYear(nextYear);

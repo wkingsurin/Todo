@@ -93,6 +93,7 @@ export default function ModalSettings({ className, ref }) {
 													className="table-data"
 													key={elem.id}
 													aria-disabled={!elem.open}
+													id={elem.id}
 												>
 													{elem.date.getDate()}
 												</td>
