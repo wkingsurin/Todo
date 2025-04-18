@@ -327,13 +327,30 @@ export const updateDays = (arr) => {
 	let collectedArr = collectArr(arr);
 
 	for (let i = 0; i < collectedArr.length; i++) {
-		if (i < 7 && collectedArr[i].day > collectedArr[i + 1].day) {
+		if (
+			collectedArr[i].date < new Date() &&
+			collectedArr[i].date.getDate() != new Date().getDate()
+		) {
 			collectedArr[i].open = false;
 		}
-		if (collectedArr[i].day < new Date().getDate()) {
-			collectedArr[i].open = false;
+		if (
+			i > 28 &&
+			collectedArr[i].date.getDate() < collectedArr[28].date.getDate()
+		) {
+			collectedArr[i].open = true;
 		}
-		if (i > 28 && collectedArr[i].day < collectedArr[28].day) {
+		if (
+			collectedArr[i].date.getDate(
+				collectedArr[i].date.getFullYear(),
+				collectedArr[i].date.getMonth(),
+				collectedArr[i].date.getDate()
+			) ===
+			new Date(
+				new Date().getFullYear(),
+				new Date().getMonth(),
+				new Date().getDate()
+			).getTime()
+		) {
 			collectedArr[i].open = true;
 		}
 	}
@@ -359,55 +376,41 @@ export const getLastDayOfMonth = (month) => {
 	return date.getDate();
 };
 
-export const initDays = () => {
-	const firstDayOfWeek = getFirstWeekDayOfMonth(new Date().getMonth());
-	const lastDayOfWeek = getLastWeekDayOfMonth(new Date().getMonth());
-	const lastDayOfMonth = getLastDayOfMonth(new Date().getMonth());
-	const lastDayOfPrevMonth = getLastDayOfMonth(new Date().getMonth() - 1);
+export const initDays = (year, month) => {
+	const firstDayOfWeek = getFirstWeekDayOfMonth(month);
+	const lastDayOfWeek = getLastWeekDayOfMonth(month);
+	const lastDayOfMonth = getLastDayOfMonth(month);
+	const lastDayOfPrevMonth = getLastDayOfMonth(month - 1);
 
 	const days = [];
 
-	for (let i = 1; i <= lastDayOfMonth; i++) {
-		days.push({
-			day: i,
+	let daysToAdd = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+
+	for (let i = lastDayOfPrevMonth; i > lastDayOfPrevMonth - daysToAdd; i--) {
+		days.unshift({
 			open: true,
-			dayOfWeek: new Date(
-				new Date().getFullYear(),
-				new Date().getMonth(),
-				i
-			).getDay(),
+			date: new Date(year, month - 1, i),
 		});
 	}
 
-	for (
-		let i = lastDayOfPrevMonth;
-		i > lastDayOfPrevMonth - (firstDayOfWeek - 1);
-		i--
-	) {
-		days.unshift({
-			day: i,
-			open: false,
-			dayOfWeek: new Date(
-				new Date().getFullYear(),
-				new Date().getMonth() - 1,
-				i
-			).getDay(),
+	for (let i = 1; i <= lastDayOfMonth; i++) {
+		days.push({
+			open: true,
+			date: new Date(year, month, i),
 		});
 	}
+
+	if (lastDayOfWeek === 0)
+		return days.map((day, index) => ({ ...day, id: index }));
 
 	for (
 		let i = lastDayOfMonth + 1;
-		i <= lastDayOfMonth + lastDayOfWeek + 1;
+		i <= lastDayOfMonth + 6 - lastDayOfWeek + 1;
 		i++
 	) {
 		days.push({
-			day: new Date(new Date().setDate(i)).getDate(),
-			open: false,
-			dayOfWeek: new Date(
-				new Date().getFullYear(),
-				new Date().getMonth(),
-				i
-			).getDay(),
+			open: true,
+			date: new Date(year, month, i),
 		});
 	}
 
@@ -445,7 +448,9 @@ export const dateModalTemplate = {
 		month: null,
 		year: null,
 	},
-	days: splitDaysToWeeks(initDays()),
+	days: splitDaysToWeeks(
+		initDays(new Date().getFullYear(), new Date().getMonth())
+	),
 };
 export const statusModalTemplate = {
 	isOpen: false,

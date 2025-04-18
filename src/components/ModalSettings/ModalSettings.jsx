@@ -94,7 +94,7 @@ export default function ModalSettings({ className, ref }) {
 													key={elem.id}
 													aria-disabled={!elem.open}
 												>
-													{elem.day}
+													{elem.date.getDate()}
 												</td>
 											);
 										})}

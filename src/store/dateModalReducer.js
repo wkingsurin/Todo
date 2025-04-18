@@ -5,6 +5,8 @@ import {
 	timeMask,
 	validationTime,
 	updateDays,
+	initDays,
+	splitDaysToWeeks,
 } from "../utils/utils";
 
 export function dateModalReducer(state, action) {
@@ -157,6 +159,9 @@ export function dateModalReducer(state, action) {
 					year: date.getFullYear(),
 				},
 				dateInput: correctDate(date),
+				days: updateDays(
+					splitDaysToWeeks(initDays(date.getFullYear(), date.getMonth()))
+				),
 			};
 		}
 
@@ -174,6 +179,9 @@ export function dateModalReducer(state, action) {
 					year: date.getFullYear(),
 				},
 				dateInput: correctDate(date),
+				days: updateDays(
+					splitDaysToWeeks(initDays(date.getFullYear(), date.getMonth()))
+				),
 			};
 		}
 
@@ -207,6 +215,9 @@ export function dateModalReducer(state, action) {
 					month: date.getMonth(),
 				},
 				dateInput: correctDate(date),
+				days: updateDays(
+					splitDaysToWeeks(initDays(date.getFullYear(), date.getMonth()))
+				),
 			};
 		}
 
@@ -225,6 +236,9 @@ export function dateModalReducer(state, action) {
 					year: date.getFullYear(),
 				},
 				dateInput: correctDate(date),
+				days: updateDays(
+					splitDaysToWeeks(initDays(date.getFullYear(), date.getMonth()))
+				),
 			};
 		}
 
@@ -267,7 +281,10 @@ export function dateModalReducer(state, action) {
 		}
 
 		case "UPDATE_DAYS": {
-			return { ...state, days: updateDays(state.days) };
+			return {
+				...state,
+				days: updateDays(state.days),
+			};
 		}
 
 		default:
