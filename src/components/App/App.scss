@@ -264,6 +264,8 @@ $green: #4fe681;
 					border-radius: 7px;
 					border: 1px solid $dark-purple-05;
 					background: #f5f5f5;
+
+					transition: 0.4s ease-in-out;
 				}
 				.data-value:focus {
 					background: #e2e2e2;
@@ -272,6 +274,9 @@ $green: #4fe681;
 				.data-value {
 					width: 112px;
 					font-size: 16px;
+				}
+				.invalid-value {
+					border: 1px solid #d70004;
 				}
 			}
 		}
@@ -285,7 +290,7 @@ $green: #4fe681;
 			height: 36px;
 
 			font-size: 16px;
-			
+
 			border-radius: 7px;
 			color: $dark-purple;
 			background: transparent;
@@ -297,6 +302,14 @@ $green: #4fe681;
 			color: white;
 			background: $dark-purple;
 			border: 1px solid transparent;
+		}
+		.save-btn:disabled {
+			color: $dark-purple;
+			background: #f5f5f5;
+			border: 1px solid $dark-purple-05;
+
+			user-select: none;
+			pointer-events: none;
 		}
 	}
 }
