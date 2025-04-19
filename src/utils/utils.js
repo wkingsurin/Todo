@@ -314,6 +314,19 @@ export function timeMask(value) {
 	return result;
 }
 
+export function checkDate(data) {
+	if (
+		!Number.isFinite(data.minutes) ||
+		!Number.isFinite(data.hours) ||
+		!Number.isFinite(data.day) ||
+		!Number.isFinite(data.month) ||
+		!Number.isFinite(data.year)
+	) {
+		return false;
+	}
+	return true;
+}
+
 export const splitDaysToWeeks = (days) => {
 	const weeks = [];
 	let week = [];
@@ -433,6 +446,19 @@ export const initDays = (year, month) => {
 	}
 
 	return days.map((day, index) => ({ ...day, id: index }));
+};
+
+export const highlightInvalidField = (inputRef) => {
+	const target = inputRef.current;
+
+	if (target.value.length < target.max) {
+		inputRef.current.classList.add("invalid-value");
+
+		let timer = setTimeout(() => {
+			inputRef.current.classList.remove("invalid-value");
+			clearTimeout(timer);
+		}, 1500);
+	}
 };
 
 export const taskTemplate = {
