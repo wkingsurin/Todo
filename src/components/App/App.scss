@@ -257,7 +257,8 @@ $green: #4fe681;
 				.data-name {
 				}
 				.data-value {
-					width: 100px;
+					width: 112px;
+
 					padding: 0 12px;
 
 					text-align: center;
@@ -272,7 +273,6 @@ $green: #4fe681;
 				}
 				.data-name,
 				.data-value {
-					width: 112px;
 					font-size: 16px;
 				}
 				.invalid-value {
@@ -304,7 +304,7 @@ $green: #4fe681;
 			border: 1px solid transparent;
 		}
 		.save-btn:disabled {
-			color: $dark-purple;
+			color: rgba(26, 12, 45, 0.5);
 			background: #f5f5f5;
 			border: 1px solid $dark-purple-05;
 
