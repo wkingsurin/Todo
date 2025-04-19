@@ -51,7 +51,7 @@ export function dateModalReducer(state, action) {
 
 		case "TYPE_TIME": {
 			const maskedTime = timeMask(action.target.value);
-			const validTime = validationTime(maskedTime);
+			const validTime = validationTime(maskedTime, state.date);
 
 			if (action.target.value.length < 4) {
 				return { ...state, timeInput: maskedTime };

@@ -176,13 +176,19 @@ export function validationDate(value) {
 	return value;
 }
 
-export function validationTime(value) {
+export function validationTime(value, date) {
 	let string = value.split(":");
 	let [hours, minutes] = string;
 	let timeNow = new Date();
 
 	if (hours && hours.length < 2) return value;
 	if (minutes && minutes.length < 2) return value;
+
+	let result = correctTime(Number(hours) + ":" + Number(minutes));
+
+	if (date > new Date()) {
+		return result;
+	}
 
 	if (hours && timeNow.getHours() > hours) {
 		hours = timeNow.getHours();
@@ -197,7 +203,7 @@ export function validationTime(value) {
 		minutes = "00";
 	}
 
-	let result = correctTime(hours + ":" + minutes);
+	result = correctTime(hours + ":" + minutes);
 
 	return result;
 }
