@@ -21,6 +21,8 @@ export default function ModalSettings({ className, ref }) {
 		}
 	};
 
+	console.log(`modal`, modal);
+
 	useEffect(() => {
 		dateModalDispatch({ type: "UPDATE_DAYS" });
 	}, []);
@@ -41,6 +43,10 @@ export default function ModalSettings({ className, ref }) {
 					<div className="period">
 						<button
 							className="btn"
+							disabled={
+								modal.data.month === new Date().getMonth() &&
+								modal.data.year === new Date().getFullYear()
+							}
 							onClick={(e) => {
 								handlers.prevMonth(e.target);
 							}}
@@ -58,6 +64,7 @@ export default function ModalSettings({ className, ref }) {
 					<div className="period">
 						<button
 							className="btn"
+							disabled={modal.data.year === new Date().getFullYear()}
 							onClick={(e) => handlers.prevYear(e.target)}
 						>
 							<Chevron rotate={-90}></Chevron>

@@ -187,10 +187,17 @@ $green: #4fe681;
 
 					transition: 0.2s ease-in-out;
 				}
+				.btn:disabled {
+					opacity: 0.6;
+					pointer-events: none;
+					border-color: transparent;
+				}
 				.btn:hover {
 					background: #e2e2e2;
 				}
 				.text {
+					width: 55px;
+					text-align: center;
 				}
 			}
 			.calendar-table {
@@ -230,7 +237,7 @@ $green: #4fe681;
 					[aria-disabled="true"] {
 						pointer-events: none;
 						user-select: none;
-						opacity: .35;
+						opacity: 0.35;
 					}
 				}
 			}
@@ -263,6 +270,7 @@ $green: #4fe681;
 				}
 				.data-name,
 				.data-value {
+					width: 112px;
 					font-size: 16px;
 				}
 			}
@@ -276,6 +284,8 @@ $green: #4fe681;
 			width: 100%;
 			height: 36px;
 
+			font-size: 16px;
+			
 			border-radius: 7px;
 			color: $dark-purple;
 			background: transparent;
