@@ -1,11 +1,14 @@
-import { months, initDays, updateDays, counter } from "../../utils/utils";
+import { months, highlightInvalidField } from "../../utils/utils";
 import { Chevron } from "../SVG";
 import { useDateModal } from "../../features/dateModal/useDateModal";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function ModalSettings({ className, ref }) {
 	const { dateModal: modal, handlers, dateModalDispatch } = useDateModal();
 	const dateData = modal.data;
+
+	const dateInputRef = useRef(null);
+	const timeInputRef = useRef(null);
 
 	const handleKeyDown = (e) => {
 		const allowedKeys = [
@@ -51,7 +54,11 @@ export default function ModalSettings({ className, ref }) {
 						>
 							<Chevron rotate={-90}></Chevron>
 						</button>
-						<p className="text">{months[dateData.month]}</p>
+						<p className="text">
+							{months[dateData.month] !== undefined
+								? months[dateData.month]
+								: months[new Date().getMonth()]}
+						</p>
 						<button
 							className="btn"
 							onClick={(e) => handlers.nextMonth(e.target)}
@@ -67,7 +74,11 @@ export default function ModalSettings({ className, ref }) {
 						>
 							<Chevron rotate={-90}></Chevron>
 						</button>
-						<p className="text">{dateData.year}</p>
+						<p className="text">
+							{dateData.year !== null
+								? dateData.year
+								: new Date().getFullYear()}
+						</p>
 						<button
 							className="btn"
 							onClick={(e) => handlers.nextYear(e.target)}
@@ -118,7 +129,7 @@ export default function ModalSettings({ className, ref }) {
 						<input
 							type="text"
 							id="date"
-							className="data-value"
+							className={`data-value`}
 							placeholder="__.__.__"
 							maxLength={10}
 							onKeyDown={(e) => handleKeyDown(e)}
@@ -126,6 +137,8 @@ export default function ModalSettings({ className, ref }) {
 								handlers.typeDate(e.target);
 							}}
 							value={modal.dateInput}
+							max={10}
+							ref={dateInputRef}
 						/>
 					</div>
 					<div className="data-row">
@@ -135,16 +148,23 @@ export default function ModalSettings({ className, ref }) {
 						<input
 							type="text"
 							id="time"
-							className="data-value"
+							className={`data-value`}
 							placeholder="--:--"
 							onChange={(e) => handlers.typeTime(e.target)}
 							value={modal.timeInput}
+							max={5}
+							ref={timeInputRef}
 						/>
 					</div>
 				</div>
 				<button
 					className="btn save-btn"
-					onClick={(e) => handlers.saveDate(e.target, modal.timeInput)}
+					disabled={!modal.dateInput || !modal.timeInput}
+					onClick={(e) => {
+						highlightInvalidField(dateInputRef);
+						highlightInvalidField(timeInputRef);
+						handlers.saveDate(e.target, modal.timeInput);
+					}}
 				>
 					Save
 				</button>

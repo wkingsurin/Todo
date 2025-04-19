@@ -7,6 +7,7 @@ import {
 	updateDays,
 	initDays,
 	splitDaysToWeeks,
+	checkDate,
 } from "../utils/utils";
 
 export function dateModalReducer(state, action) {
@@ -26,14 +27,14 @@ export function dateModalReducer(state, action) {
 					dateInput: maskedDate,
 					data: {
 						...state.data,
-						day: day > 0 ? day : new Date().getDate(),
+						day: day > 0 ? day : null,
 						month:
 							month >= 0 && month < 12
 								? month
 								: month >= 12
 								? month % 12
-								: new Date().getMonth(),
-						year: year === 4 ? year : new Date().getFullYear(),
+								: null,
+						year: year === 4 ? year : null,
 					},
 				};
 			}
@@ -49,9 +50,9 @@ export function dateModalReducer(state, action) {
 					),
 					data: {
 						...state.data,
-						day: Number(validDate.slice(0, 2)),
-						month: Number(validDate.slice(3, 5)) - 1,
-						year: Number(validDate.slice(6, 10)),
+						day,
+						month,
+						year,
 					},
 				};
 			} else {
@@ -68,18 +69,26 @@ export function dateModalReducer(state, action) {
 			const maskedTime = timeMask(action.target.value);
 			const validTime = validationTime(maskedTime, state.date);
 
-			if (action.target.value.length < 4) {
-				return { ...state, timeInput: maskedTime };
-			}
+			let hours = action.target.value.slice(0, 2);
+			let minutes = action.target.value.slice(3, 5);
 
+			let data = {
+				...state.data,
+				hours: hours.length > 0 ? Number(hours) : null,
+				minutes: minutes.length > 0 ? Number(minutes) : null,
+			};
+
+			if (action.target.value.length < 4) {
+				return {
+					...state,
+					timeInput: maskedTime,
+					data,
+				};
+			}
 			return {
 				...state,
 				timeInput: validTime ? validTime : maskedTime,
-				data: {
-					...state.data,
-					hours: Number(action.target.value.slice(0, 2)),
-					minutes: Number(action.target.value.slice(3, 5)),
-				},
+				data,
 			};
 		}
 
@@ -274,7 +283,6 @@ export function dateModalReducer(state, action) {
 
 		case "SAVE_DATE": {
 			if (action.time.length < 5) {
-				console.log(`Выбрано некорректное время`);
 				return state;
 			}
 
@@ -291,14 +299,7 @@ export function dateModalReducer(state, action) {
 				data.minutes
 			);
 
-			if (
-				!Number.isFinite(data.minutes) ||
-				!Number.isFinite(data.hours) ||
-				!Number.isFinite(data.day) ||
-				!Number.isFinite(data.month) ||
-				!Number.isFinite(data.year)
-			) {
-				console.log(`Невозможно сохранить, вы указали не все данные!`);
+			if (!checkDate(data)) {
 				return state;
 			}
 
