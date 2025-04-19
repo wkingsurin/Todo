@@ -21,8 +21,6 @@ export default function ModalSettings({ className, ref }) {
 		}
 	};
 
-	console.log(`modal`, modal);
-
 	useEffect(() => {
 		dateModalDispatch({ type: "UPDATE_DAYS" });
 	}, []);

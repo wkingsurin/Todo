@@ -16,10 +16,25 @@ export function dateModalReducer(state, action) {
 			const validDate = validationDate(maskedDate);
 			let result;
 
+			const day = Number(validDate.slice(0, 2));
+			const month = Number(validDate.slice(3, 5)) - 1;
+			const year = Number(validDate.slice(6, 10));
+
 			if (action.target.value.length < 8) {
 				return {
 					...state,
 					dateInput: maskedDate,
+					data: {
+						...state.data,
+						day: day > 0 ? day : new Date().getDate(),
+						month:
+							month >= 0 && month < 12
+								? month
+								: month >= 12
+								? month % 12
+								: new Date().getMonth(),
+						year: year === 4 ? year : new Date().getFullYear(),
+					},
 				};
 			}
 

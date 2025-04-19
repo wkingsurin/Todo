@@ -159,9 +159,14 @@ export function validateDate(object) {
 
 export function validationDate(value) {
 	let string = value.split(".").reverse();
-	const [year, month, day] = string;
+	let [year, month, day] = string;
 
 	if (year.length < 4) return value;
+
+	if (month > 11) {
+		year = Number(year) + Math.floor(month / 12);
+		month = month % 12;
+	}
 
 	let date = new Date(year, month - 1, day);
 
@@ -172,8 +177,15 @@ export function validationDate(value) {
 	) {
 		return correctDate(new Date());
 	}
+	if (
+		(date.getMonth() < new Date().getMonth() &&
+			date.getFullYear() <= new Date().getFullYear()) ||
+		date.getFullYear() < new Date().getFullYear()
+	) {
+		return correctDate(new Date());
+	}
 
-	return value;
+	return correctDate(date);
 }
 
 export function validationTime(value, date) {
