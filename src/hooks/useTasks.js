@@ -26,7 +26,11 @@ export function useTasks() {
 
 		setTasks(newTasks);
 
-		localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+		try {
+			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+		} catch (e) {
+			console.log(e.message);
+		}
 	};
 
 	const completeTask = (taskId) => {
@@ -45,8 +49,12 @@ export function useTasks() {
 		setTasks(newTasks);
 		setCompletedTasks(newCompletedTasks);
 
-		localStorage.setItem("actualTasks", JSON.stringify(newTasks));
-		localStorage.setItem("completedTasks", JSON.stringify(newCompletedTasks));
+		try {
+			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+			localStorage.setItem("completedTasks", JSON.stringify(newCompletedTasks));
+		} catch (e) {
+			console.log(e.message);
+		}
 	};
 
 	const wasteTask = (taskId) => {
@@ -61,8 +69,12 @@ export function useTasks() {
 		setTasks(newTasks);
 		setWastedTasks(newWastedTasks);
 
-		localStorage.setItem("actualTasks", JSON.stringify(newTasks));
-		localStorage.setItem("wastedTasks", JSON.stringify(newWastedTasks));
+		try {
+			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+			localStorage.setItem("wastedTasks", JSON.stringify(newWastedTasks));
+		} catch (e) {
+			console.log(e.message);
+		}
 	};
 
 	const deleteTask = (tasks, taskType, taskId) => {
@@ -85,7 +97,11 @@ export function useTasks() {
 				break;
 		}
 
-		localStorage.setItem(`${taskType}Tasks`, JSON.stringify(newTasks));
+		try {
+			localStorage.setItem(`${taskType}Tasks`, JSON.stringify(newTasks));
+		} catch (e) {
+			console.log(e.message);
+		}
 	};
 
 	const updateTask = (taskToUpdate) => {
@@ -101,14 +117,22 @@ export function useTasks() {
 			setTasks(filteredTasks);
 			setWastedTasks(newWastedTasks);
 
-			localStorage.setItem("actualTasks", JSON.stringify(filteredTasks));
-			localStorage.setItem("wastedTasks", JSON.stringify(newWastedTasks));
+			try {
+				localStorage.setItem("actualTasks", JSON.stringify(filteredTasks));
+				localStorage.setItem("wastedTasks", JSON.stringify(newWastedTasks));
+			} catch (e) {
+				console.log(e.message);
+			}
 		} else {
 			const newTasks = [...filteredTasks, taskToUpdateClone];
 
 			setTasks(newTasks);
 
-			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+			try {
+				localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+			} catch (e) {
+				console.log(e.message);
+			}
 		}
 	};
 	const updateTasks = (tasks, type) => {

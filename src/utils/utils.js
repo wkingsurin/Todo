@@ -93,10 +93,6 @@ export function getTasks(type) {
 	return [];
 }
 
-// export function isExistsTasks(type) {
-// 	return localStorage.getItem(type) ? true : false;
-// }
-
 export function saveTask(task, type) {
 	const tasksList = getTasks(type);
 	const hasTask = getTasks(type).filter(
