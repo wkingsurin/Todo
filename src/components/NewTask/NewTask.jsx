@@ -1,20 +1,30 @@
+import { validateDate } from "../../utils/utils";
+
 import { Checkmark, Time, Close } from "../SVG";
+
 import Button from "../Button";
 import TextInput from "../TextInput";
+
 import { useNewTask } from "../../features/newTask/useNewTask";
 import { useDateModal } from "../../features/dateModal/useDateModal";
-import { validateDate } from "../../utils/utils";
 import { useModal } from "../../features/modal/useModal";
+import { useRef } from "react";
 
 export default function NewTask({ addTask }) {
-	const { newTask, input } = useNewTask();
+	const { newTask, input, handleFocus } = useNewTask();
 	const { dateModal, handlers: dateModalHandlers } = useDateModal();
 	const { showModal } = useModal();
 
+	const inputFieldRef = useRef(null);
+
 	return (
-		<div className="todo todo-new">
+		<div className="todo todo-new" onClick={handleFocus}>
 			<div className="todo-content">
-				<TextInput {...input.bind}></TextInput>
+				<TextInput
+					value={input.bind.value}
+					onChange={input.bind.onChange}
+					ref={inputFieldRef}
+				></TextInput>
 				<div className="todo-settings">
 					<Button
 						name="save"

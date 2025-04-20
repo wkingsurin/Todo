@@ -5,6 +5,7 @@ export function useNewTask() {
 
 	const typeText = (text) => dispatch({ type: "TYPE_TEXT", text });
 	const clear = () => dispatch({ type: "CLEAR_TEXT", text: "" });
+	const handleFocus = (inputRef) => ({ type: "FOCUS", inputRef });
 
 	return {
 		newTask,
@@ -13,5 +14,6 @@ export function useNewTask() {
 			value: newTask.text,
 			clear,
 		},
+		handleFocus,
 	};
 }

@@ -66,6 +66,11 @@ $red: #e64f4f;
 	opacity: 1;
 }
 .todo-new {
+	border: 1px solid $dark-purple-05;
+	transition: 0.3s ease-in-out;
+}
+.todo-new:has(input:focus) {
+	border: 1px solid $dark-purple-15;
 }
 .todo-actual {
 }
