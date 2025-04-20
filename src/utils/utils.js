@@ -79,15 +79,23 @@ export function jsonStringify(json) {
 
 export function getTasks(type) {
 	const correctType = type + "Tasks";
-	if (isExistsTasks(correctType)) {
-		return jsonParse(localStorage.getItem(correctType));
+	if (hasValueInLocalStorage(correctType)) {
+		let result = [];
+
+		try {
+			result = jsonParse(localStorage.getItem(correctType));
+		} catch (e) {
+			console.log(e.message);
+		}
+
+		return result;
 	}
 	return [];
 }
 
-export function isExistsTasks(type) {
-	return localStorage.getItem(type) ? true : false;
-}
+// export function isExistsTasks(type) {
+// 	return localStorage.getItem(type) ? true : false;
+// }
 
 export function saveTask(task, type) {
 	const tasksList = getTasks(type);
@@ -96,6 +104,7 @@ export function saveTask(task, type) {
 	)[0]
 		? true
 		: false;
+
 	const updatedTask = getTasks(type).filter((currentTask) =>
 		currentTask.remainingTime == task.remainingTime ? false : true
 	);
@@ -111,8 +120,11 @@ export function saveTask(task, type) {
 		newTasksList.push(task);
 	}
 
-	localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
-	// console.log(`tasksList:`, newTasksList);
+	try {
+		localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
+	} catch (e) {
+		console.log(e.message);
+	}
 }
 
 export function removeTask(task, type) {
@@ -121,11 +133,19 @@ export function removeTask(task, type) {
 		(currentTask) => currentTask.id != task.id
 	);
 
-	localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
+	try {
+		localStorage.setItem(type + "Tasks", jsonStringify(newTasksList));
+	} catch (e) {
+		console.log(e.message);
+	}
 }
 
 export function saveTasks(tasks, type) {
-	localStorage.setItem(`${type}Tasks`, jsonStringify(tasks));
+	try {
+		localStorage.setItem(`${type}Tasks`, jsonStringify(tasks));
+	} catch (e) {
+		console.log(e.message);
+	}
 }
 
 export function getTypeFromClassName(elem) {
