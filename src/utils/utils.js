@@ -1,6 +1,6 @@
 export function counter() {
-	if (!isExistsCount()) {
-		localStorage.setItem("count", 0);
+	if (!hasValueInLocalStorage("count")) {
+		saveCount(0);
 		return getCount();
 	}
 
@@ -10,22 +10,32 @@ export function counter() {
 	return getCount();
 }
 
-function isExistsCount() {
-	return !localStorage.getItem("count") ? false : true;
-}
-
 function getCount() {
-	if (!isExistsCount()) {
+	if (!hasValueInLocalStorage("count")) {
 		return 0;
 	}
-	return Number(localStorage.getItem("count"));
+
+	let result = null;
+
+	try {
+		result = Number(localStorage.getItem("count"));
+	} catch (e) {
+		console.log(e.message);
+	}
+
+	return result;
 }
 
 function saveCount(count) {
-	if (count) {
+	try {
 		localStorage.setItem("count", count);
+	} catch (e) {
+		console.log(e.message);
 	}
-	return false;
+}
+
+function hasValueInLocalStorage(key) {
+	return !localStorage.getItem(key) ? false : true;
 }
 
 export function correctDate(date) {
