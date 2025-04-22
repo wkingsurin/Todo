@@ -474,14 +474,18 @@ export const initDays = (year, month) => {
 	return days.map((day, index) => ({ ...day, id: index }));
 };
 
-export const highlightInvalidField = (inputRef) => {
+export const highlightInvalidField = (inputRef, parentElemClass) => {
 	const target = inputRef.current;
+	let parent = target.closest(parentElemClass);
 
-	if (target.value.length < target.max) {
-		inputRef.current.classList.add("invalid-value");
+	if (target.value.length < target.minLength) {
+		if (parent) parent.classList.add("invalid-value");
+		else inputRef.current.classList.add("invalid-value");
 
 		let timer = setTimeout(() => {
-			inputRef.current.classList.remove("invalid-value");
+			if (parent) parent.classList.remove("invalid-value");
+			else inputRef.current.classList.remove("invalid-value");
+
 			clearTimeout(timer);
 		}, 1500);
 	}

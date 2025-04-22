@@ -131,6 +131,7 @@ export default function ModalSettings({ className, ref }) {
 							id="date"
 							className={`data-value`}
 							placeholder="__.__.__"
+							minLength={10}
 							maxLength={10}
 							onKeyDown={(e) => handleKeyDown(e)}
 							onChange={(e) => {
@@ -152,7 +153,8 @@ export default function ModalSettings({ className, ref }) {
 							placeholder="--:--"
 							onChange={(e) => handlers.typeTime(e.target)}
 							value={modal.timeInput}
-							max={5}
+							minLength={5}
+							maxLength={5}
 							ref={timeInputRef}
 						/>
 					</div>

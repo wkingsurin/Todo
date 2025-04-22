@@ -11,7 +11,7 @@ export function ModalProvider({ children }) {
 			return {
 				...prev,
 				isOpen: true,
-				position: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+				position: { x: window.innerWidth / 2, y: 60 },
 			};
 		});
 	};

@@ -1,4 +1,4 @@
-export default function TextInput({ value, onChange, ref }) {
+export default function TextInput({ value, onChange, ref, minLength = 1 }) {
 	return (
 		<input
 			type="text"
@@ -6,6 +6,7 @@ export default function TextInput({ value, onChange, ref }) {
 			value={value != null ? value : ""}
 			onChange={(e) => onChange(e.target.value)}
 			ref={ref}
+			minLength={minLength}
 		/>
 	);
 }
