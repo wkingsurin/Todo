@@ -8,7 +8,7 @@ export const AlertProvider = ({ children }) => {
 
 	const hideAlert = () => {
 		setAlert((prev) => {
-			return { ...prev, isOpen: false, hoverdTaskId: null };
+			return { ...prev, isOpen: false, hoveredTaskId: null, hovered: false };
 		});
 	};
 

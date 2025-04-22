@@ -8,13 +8,14 @@ export default function Task(props) {
 	const { tasks, task, width, completeTaskListener, deleteTask, ref } = props;
 	const { alert, setAlert, hideAlert } = useAlert();
 
-	const handleMouseEnter = () => {
+	const handleMouseEnter = (e) => {
+		hoverOnAlert(e.currentTarget, alert, setAlert);
 		setAlert((prev) => {
 			if (prev.hoveredTaskId === task.id) return prev;
 
 			changeAlertMessage(task.remainingTime, setAlert);
 
-			return { ...prev, hoveredTaskId: task.id };
+			return { ...prev, hoveredTaskId: task.id, hovered: true };
 		});
 	};
 
@@ -34,13 +35,12 @@ export default function Task(props) {
 				<div
 					className="notification"
 					tabIndex={0}
-					onMouseOver={(e) => {
-						hoverOnAlert(e, alert, setAlert, task.remainingTime);
-					}}
 					onMouseEnter={(e) => {
-						handleMouseEnter();
+						if (!alert.hovered) {
+							handleMouseEnter(e);
+						}
 					}}
-					onMouseLeave={(e) => {
+					onMouseLeave={() => {
 						hideAlert();
 					}}
 				>

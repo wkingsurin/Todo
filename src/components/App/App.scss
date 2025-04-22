@@ -371,11 +371,13 @@ $green: #4fe681;
 }
 
 .modal.entering {
+	pointer-events: none;
 	animation: showModal 0.5s forwards;
 }
 .modal.entered {
 }
 .modal.exiting {
+	pointer-events: none;
 	animation: hideModal 0.5s forwards;
 }
 .modal.exited {

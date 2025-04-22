@@ -269,25 +269,14 @@ export function correctRemainingTime(remainingTime) {
 	return string;
 }
 
-export function hoverOnAlert(e, alert, setAlert) {
-	const target = e.target;
+export function hoverOnAlert(target, alert, setAlert) {
+	const iconTarget = target.querySelector("svg");
 
-	if (target.closest("svg")) {
-		const coordinates = target.closest("svg").getBoundingClientRect();
+	let coordinates = iconTarget.getBoundingClientRect();
 
-		if (alert.isCooldown) {
-			return;
-		} else {
-			setAlert((prev) => {
-				return { ...prev, isHovered: true };
-			});
-			showAlert(coordinates, setAlert);
-		}
+	if (!alert.isOpen) {
+		showAlert(coordinates, setAlert);
 	}
-}
-
-export function mouseOnAlert(e, setAlert, remainingTime) {
-	changeAlertMessage(remainingTime, setAlert);
 }
 
 export function showAlert(position, setAlert) {
@@ -296,6 +285,7 @@ export function showAlert(position, setAlert) {
 			...prev,
 			position: { x: position.x - 30, y: position.y + 31 },
 			isOpen: true,
+			hovered: true,
 		};
 	});
 }
@@ -504,9 +494,9 @@ export const alertTemplate = {
 	text: `Time remaining to complete
 	the project: 5h 1m 32s`,
 	isOpen: false,
-	isCooldown: false,
 	position: { x: null, y: null },
-	hoverdTaskId: null,
+	hoveredTaskId: null,
+	hovered: false,
 };
 export const dateModalTemplate = {
 	dateInput: "",
