@@ -25,6 +25,9 @@ $green: #4fe681;
 	padding: 175px 0;
 }
 .tabs {
+	position: relative;
+	z-index: 2;
+
 	display: flex;
 
 	.btn {
@@ -58,20 +61,43 @@ $green: #4fe681;
 
 	color: $dark-purple;
 
+	.tabs-wrapper {
+		position: relative;
+		width: 100%;
+	}
+
 	.tasks-block {
+		position: absolute;
+		top: 0;
+		left: 0;
+
 		display: flex;
 		flex-direction: column;
 
 		width: 100%;
 		gap: 25px;
 
+		opacity: 0;
+
 		.tasks-container {
+			position: relative;
+			z-index: 1;
+
 			display: flex;
 			flex-direction: column;
 
 			width: 100%;
 			gap: 25px;
 		}
+	}
+
+	.tasks-block.visible {
+		opacity: 1;
+		z-index: 1;
+	}
+	.tasks-block.hidden {
+		pointer-events: none;
+		z-index: 0;
 	}
 
 	.notification {
@@ -99,14 +125,48 @@ $green: #4fe681;
 }
 .tasks-container.entered {
 	opacity: 1;
-	transition: 0.2s ease-in-out;
+	transition: 0.5s ease-in-out;
 }
 .tasks-container.exiting {
 	opacity: 1;
 }
 .tasks-container.exited {
 	opacity: 0;
-	transition: 0.2s ease-in-out;
+	transition: 0.5s ease-in-out;
+}
+
+.tasks-block.entering {
+	opacity: 0;
+	transform: translateX(-120px);
+}
+.tasks-block.entered {
+	opacity: 1;
+	transform: translateX(0);
+	transition: 0.5s ease-in-out;
+}
+.tasks-block.exiting {
+	opacity: 1;
+}
+.tasks-block.exited {
+	opacity: 0;
+	transition: 0.5s ease-in-out;
+}
+
+.fade-enter {
+	opacity: 0;
+	transform: translateX(-80px);
+}
+.fade-exit {
+	opacity: 1;
+}
+.fade-enter-active {
+	opacity: 1;
+	transform: translateX(0px);
+	transition: 0.3s ease-in-out;
+}
+.fade-exit-active {
+	opacity: 0;
+	transition: 0.3s ease-in-out;
 }
 
 .modal {
@@ -121,7 +181,6 @@ $green: #4fe681;
 
 	min-width: 180px;
 	min-height: 80px;
-	// max-width: 280px;
 
 	padding: 20px 30px;
 	background: white;
@@ -275,9 +334,6 @@ $green: #4fe681;
 				.data-value {
 					font-size: 16px;
 				}
-				.invalid-value {
-					border: 1px solid #d70004;
-				}
 			}
 		}
 
@@ -324,11 +380,25 @@ $green: #4fe681;
 }
 .modal.exited {
 }
+.extended-modal.entering {
+	animation: showDateModal 0.5s forwards;
+}
+.extended-modal.entered {
+}
+.extended-modal.exiting {
+	animation: hideDateModal 0.5s forwards;
+}
+.extended-modal.exited {
+}
+
+.invalid-value {
+	border: 1px solid #d70004;
+}
 
 @keyframes showModal {
 	0% {
 		opacity: 0;
-		transform: translateX(-150px);
+		transform: translateY(-30px);
 	}
 	100% {
 		opacity: 1;
@@ -343,6 +413,27 @@ $green: #4fe681;
 	}
 	100% {
 		opacity: 0;
-		transform: translateX(150px);
+		transform: translateY(-20px);
+	}
+}
+@keyframes showDateModal {
+	0% {
+		opacity: 0;
+		transform: translateY(-15px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes hideDateModal {
+	0% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-15px);
 	}
 }

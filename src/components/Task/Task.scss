@@ -72,6 +72,9 @@ $red: #e64f4f;
 .todo-new:has(input:focus) {
 	border: 1px solid $dark-purple-15;
 }
+.todo-new.invalid-value {
+	border: 1px solid #d70004;
+}
 .todo-actual {
 }
 .todo-wasted {
@@ -83,13 +86,11 @@ $red: #e64f4f;
 }
 .time-bar {
 	position: absolute;
-	// top: 0;
 	left: 0;
 	bottom: 0;
 	z-index: 1;
 
 	width: 100%;
-	// height: 100%;
 	height: 5px;
 	background: $dark-purple;
 
