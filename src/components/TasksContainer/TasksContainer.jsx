@@ -107,231 +107,235 @@ export default function TasksContainer({ content, setContent }) {
 
 	return (
 		<div className="tasks-container">
-			<SwitchTransition mode="out-in">
-				<CSSTransition
-					key={content.isActiveTab}
-					timeout={300}
-					classNames="fade"
-					nodeRef={tabContentRef}
-					appear={hasMounted}
-					mountOnEnter
-					unmountOnExit
-				>
-					<div className="tabs-wrapper" ref={tabContentRef}>
-						{content.isActiveTab === "new" && (
-							<>
-								<div
-									className={`tasks-block ${
-										content.isActiveTab === "new" ? "visible" : "hidden"
-									}`}
-									ref={newTabContentRef}
-								>
-									<NewTask
-										addTask={addTask}
-										setContent={setContent}
-										content={content}
-									></NewTask>
-									<Transition
-										in={hasMounted && tasks.length > 0}
-										timeout={500}
-										nodeRef={activeTasksListRef}
-										unmountOnExit
-										mountOnEnter
+			{hasMounted && (
+				<SwitchTransition mode="out-in">
+					<CSSTransition
+						key={content.isActiveTab}
+						timeout={300}
+						classNames="fade"
+						nodeRef={tabContentRef}
+						mountOnEnter
+						unmountOnExit
+					>
+						<div className="tabs-wrapper" ref={tabContentRef}>
+							{content.isActiveTab === "new" && (
+								<>
+									<div
+										className={`tasks-block ${
+											content.isActiveTab === "new" ? "visible" : "hidden"
+										}`}
+										ref={newTabContentRef}
 									>
-										{(state) => (
-											<div
-												className={`tasks-container ${state}`}
-												ref={activeTasksListRef}
-											>
-												<TransitionGroup component={null}>
-													{tasks.map((task) => {
-														const width = computePercentOfTime(
-															new Date(task.totalTime),
-															new Date(task.remainingTime),
-															task.status
-														);
+										<NewTask
+											addTask={addTask}
+											setContent={setContent}
+											content={content}
+										></NewTask>
+										<Transition
+											in={tasks.length > 0}
+											timeout={500}
+											nodeRef={activeTasksListRef}
+											unmountOnExit
+											mountOnEnter
+										>
+											{(state) => (
+												<div
+													className={`tasks-container ${state}`}
+													ref={activeTasksListRef}
+												>
+													<TransitionGroup component={null}>
+														{tasks.map((task) => {
+															const width = computePercentOfTime(
+																new Date(task.totalTime),
+																new Date(task.remainingTime),
+																task.status
+															);
 
-														return (
-															<CSSTransition
-																key={task.id}
-																timeout={500}
-																classNames="todo"
-																unmountOnExit
-																mountOnEnter
-																nodeRef={tasksRefs.current.get(task.id)}
-															>
-																<Task
-																	tasks={tasks}
-																	task={task}
-																	width={width}
-																	completeTaskListener={completeTask}
-																	deleteTask={deleteTask}
-																	updateTask={updateTask}
-																	updateTasks={updateTasks}
-																	content={content}
-																	setContent={setContent}
-																	ref={tasksRefs.current.get(task.id)}
-																></Task>
-															</CSSTransition>
-														);
-													})}
-												</TransitionGroup>
-											</div>
-										)}
-									</Transition>
-								</div>
-								<Transition
-									in={hasMounted && tasks.length === 0}
-									timeout={500}
-									nodeRef={emptyRef}
-									unmountOnExit
-									mountOnEnter
-								>
-									{(state) => (
-										<Empty className={`empty ${state}`} ref={emptyRef}>
-											Empty
-										</Empty>
-									)}
-								</Transition>
-							</>
-						)}
-						{content.isActiveTab === "wasted" && (
-							<>
-								<div
-									className={`tasks-block ${
-										content.isActiveTab === "wasted" ? "visible" : "hidden"
-									}`}
-									ref={wastedTabContentRef}
-								>
+															return (
+																<CSSTransition
+																	key={task.id}
+																	timeout={500}
+																	classNames="todo"
+																	nodeRef={tasksRefs.current.get(task.id)}
+																	appear={hasMounted}
+																	unmountOnExit
+																	mountOnEnter
+																>
+																	<Task
+																		tasks={tasks}
+																		task={task}
+																		width={width}
+																		completeTaskListener={completeTask}
+																		deleteTask={deleteTask}
+																		updateTask={updateTask}
+																		updateTasks={updateTasks}
+																		content={content}
+																		setContent={setContent}
+																		ref={tasksRefs.current.get(task.id)}
+																	></Task>
+																</CSSTransition>
+															);
+														})}
+													</TransitionGroup>
+												</div>
+											)}
+										</Transition>
+									</div>
 									<Transition
-										in={hasMounted && wastedTasks.length > 0}
+										in={tasks.length === 0}
 										timeout={500}
-										nodeRef={wastedTasksListRef}
+										nodeRef={emptyRef}
 										unmountOnExit
 										mountOnEnter
 									>
 										{(state) => (
-											<div
-												className={`tasks-container ${state}`}
-												ref={wastedTasksListRef}
-											>
-												<TransitionGroup component={null}>
-													{wastedTasks.map((task) => {
-														return (
-															<CSSTransition
-																key={task.id}
-																timeout={500}
-																classNames="todo"
-																unmountOnExit
-																mountOnEnter
-																nodeRef={wastedTasksRefs.current.get(task.id)}
-															>
-																<Task
-																	tasks={wastedTasks}
-																	task={task}
-																	width={100}
-																	completeTaskListener={completeTask}
-																	deleteTask={deleteTask}
-																	updateTask={updateTask}
-																	updateTasks={updateTasks}
-																	content={content}
-																	setContent={setContent}
-																	ref={wastedTasksRefs.current.get(task.id)}
-																></Task>
-															</CSSTransition>
-														);
-													})}
-												</TransitionGroup>
-											</div>
+											<Empty className={`empty ${state}`} ref={emptyRef}>
+												Empty
+											</Empty>
 										)}
 									</Transition>
-								</div>
-								<Transition
-									in={hasMounted && wastedTasks.length === 0}
-									timeout={500}
-									nodeRef={emptyRef}
-									unmountOnExit
-									mountOnEnter
-								>
-									{(state) => (
-										<Empty className={`empty ${state}`} ref={emptyRef}>
-											Empty
-										</Empty>
-									)}
-								</Transition>
-							</>
-						)}
-						{content.isActiveTab === "completed" && (
-							<>
-								<div
-									className={`tasks-block ${
-										content.isActiveTab === "completed" ? "visible" : "hidden"
-									}`}
-									ref={completedTabContentRef}
-								>
+								</>
+							)}
+							{content.isActiveTab === "wasted" && (
+								<>
+									<div
+										className={`tasks-block ${
+											content.isActiveTab === "wasted" ? "visible" : "hidden"
+										}`}
+										ref={wastedTabContentRef}
+									>
+										<Transition
+											in={wastedTasks.length > 0}
+											timeout={500}
+											nodeRef={wastedTasksListRef}
+											unmountOnExit
+											mountOnEnter
+										>
+											{(state) => (
+												<div
+													className={`tasks-container ${state}`}
+													ref={wastedTasksListRef}
+												>
+													<TransitionGroup component={null}>
+														{wastedTasks.map((task) => {
+															return (
+																<CSSTransition
+																	key={task.id}
+																	timeout={500}
+																	classNames="todo"
+																	unmountOnExit
+																	mountOnEnter
+																	nodeRef={wastedTasksRefs.current.get(task.id)}
+																>
+																	<Task
+																		tasks={wastedTasks}
+																		task={task}
+																		width={100}
+																		completeTaskListener={completeTask}
+																		deleteTask={deleteTask}
+																		updateTask={updateTask}
+																		updateTasks={updateTasks}
+																		content={content}
+																		setContent={setContent}
+																		ref={wastedTasksRefs.current.get(task.id)}
+																	></Task>
+																</CSSTransition>
+															);
+														})}
+													</TransitionGroup>
+												</div>
+											)}
+										</Transition>
+									</div>
 									<Transition
-										in={hasMounted && completedTasks.length > 0}
+										in={wastedTasks.length === 0}
 										timeout={500}
-										nodeRef={completedTasksListRef}
+										nodeRef={emptyRef}
 										unmountOnExit
 										mountOnEnter
 									>
 										{(state) => (
-											<div
-												className={`tasks-container ${state}`}
-												ref={completedTasksListRef}
-											>
-												<TransitionGroup component={null}>
-													{completedTasks.map((task) => {
-														return (
-															<CSSTransition
-																key={task.id}
-																timeout={500}
-																classNames="todo"
-																unmountOnExit
-																mountOnEnter
-																nodeRef={completedTasksRefs.current.get(
-																	task.id
-																)}
-															>
-																<Task
-																	tasks={completedTasks}
-																	task={task}
-																	width={100}
-																	completeTaskListener={completeTask}
-																	deleteTask={deleteTask}
-																	updateTask={updateTask}
-																	updateTasks={updateTasks}
-																	content={content}
-																	setContent={setContent}
-																	ref={completedTasksRefs.current.get(task.id)}
-																></Task>
-															</CSSTransition>
-														);
-													})}
-												</TransitionGroup>
-											</div>
+											<Empty className={`empty ${state}`} ref={emptyRef}>
+												Empty
+											</Empty>
 										)}
 									</Transition>
-								</div>
-								<Transition
-									in={hasMounted && completedTasks.length === 0}
-									timeout={500}
-									nodeRef={emptyRef}
-									unmountOnExit
-									mountOnEnter
-								>
-									{(state) => (
-										<Empty className={`empty ${state}`} ref={emptyRef}>
-											Empty
-										</Empty>
-									)}
-								</Transition>
-							</>
-						)}
-					</div>
-				</CSSTransition>
-			</SwitchTransition>
+								</>
+							)}
+							{content.isActiveTab === "completed" && (
+								<>
+									<div
+										className={`tasks-block ${
+											content.isActiveTab === "completed" ? "visible" : "hidden"
+										}`}
+										ref={completedTabContentRef}
+									>
+										<Transition
+											in={completedTasks.length > 0}
+											timeout={500}
+											nodeRef={completedTasksListRef}
+											unmountOnExit
+											mountOnEnter
+										>
+											{(state) => (
+												<div
+													className={`tasks-container ${state}`}
+													ref={completedTasksListRef}
+												>
+													<TransitionGroup component={null}>
+														{completedTasks.map((task) => {
+															return (
+																<CSSTransition
+																	key={task.id}
+																	timeout={500}
+																	classNames="todo"
+																	unmountOnExit
+																	mountOnEnter
+																	nodeRef={completedTasksRefs.current.get(
+																		task.id
+																	)}
+																>
+																	<Task
+																		tasks={completedTasks}
+																		task={task}
+																		width={100}
+																		completeTaskListener={completeTask}
+																		deleteTask={deleteTask}
+																		updateTask={updateTask}
+																		updateTasks={updateTasks}
+																		content={content}
+																		setContent={setContent}
+																		ref={completedTasksRefs.current.get(
+																			task.id
+																		)}
+																	></Task>
+																</CSSTransition>
+															);
+														})}
+													</TransitionGroup>
+												</div>
+											)}
+										</Transition>
+									</div>
+									<Transition
+										in={completedTasks.length === 0}
+										timeout={500}
+										nodeRef={emptyRef}
+										unmountOnExit
+										mountOnEnter
+									>
+										{(state) => (
+											<Empty className={`empty ${state}`} ref={emptyRef}>
+												Empty
+											</Empty>
+										)}
+									</Transition>
+								</>
+							)}
+						</div>
+					</CSSTransition>
+				</SwitchTransition>
+			)}
 		</div>
 	);
 }
