@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTasks } from "../../hooks/useTasks";
 
 import {
@@ -25,6 +25,8 @@ export default function TasksContainer({ content, setContent }) {
 		updateTask,
 		updateTasks,
 	} = useTasks();
+
+	const [hasMounted, setHasMounted] = useState(false);
 
 	const tasksRefs = useRef(new Map());
 	tasks.forEach((task) => {
@@ -96,6 +98,8 @@ export default function TasksContainer({ content, setContent }) {
 			updateTasks([...wastedTasks, ...toWasted], "wasted");
 		}, 1000);
 
+		setHasMounted(true);
+
 		return () => {
 			clearInterval(taskUpdateInterval);
 		};
@@ -109,6 +113,9 @@ export default function TasksContainer({ content, setContent }) {
 					timeout={300}
 					classNames="fade"
 					nodeRef={tabContentRef}
+					appear={hasMounted}
+					mountOnEnter
+					unmountOnExit
 				>
 					<div className="tabs-wrapper" ref={tabContentRef}>
 						{content.isActiveTab === "new" && (
@@ -125,7 +132,7 @@ export default function TasksContainer({ content, setContent }) {
 										content={content}
 									></NewTask>
 									<Transition
-										in={tasks.length > 0}
+										in={hasMounted && tasks.length > 0}
 										timeout={500}
 										nodeRef={activeTasksListRef}
 										unmountOnExit
@@ -174,7 +181,7 @@ export default function TasksContainer({ content, setContent }) {
 									</Transition>
 								</div>
 								<Transition
-									in={tasks.length === 0}
+									in={hasMounted && tasks.length === 0}
 									timeout={500}
 									nodeRef={emptyRef}
 									unmountOnExit
@@ -197,7 +204,7 @@ export default function TasksContainer({ content, setContent }) {
 									ref={wastedTabContentRef}
 								>
 									<Transition
-										in={wastedTasks.length > 0}
+										in={hasMounted && wastedTasks.length > 0}
 										timeout={500}
 										nodeRef={wastedTasksListRef}
 										unmountOnExit
@@ -240,7 +247,7 @@ export default function TasksContainer({ content, setContent }) {
 									</Transition>
 								</div>
 								<Transition
-									in={wastedTasks.length === 0}
+									in={hasMounted && wastedTasks.length === 0}
 									timeout={500}
 									nodeRef={emptyRef}
 									unmountOnExit
@@ -263,7 +270,7 @@ export default function TasksContainer({ content, setContent }) {
 									ref={completedTabContentRef}
 								>
 									<Transition
-										in={completedTasks.length > 0}
+										in={hasMounted && completedTasks.length > 0}
 										timeout={500}
 										nodeRef={completedTasksListRef}
 										unmountOnExit
@@ -308,7 +315,7 @@ export default function TasksContainer({ content, setContent }) {
 									</Transition>
 								</div>
 								<Transition
-									in={completedTasks.length === 0}
+									in={hasMounted && completedTasks.length === 0}
 									timeout={500}
 									nodeRef={emptyRef}
 									unmountOnExit
