@@ -59,6 +59,9 @@ $red: #e64f4f;
 		opacity: 0;
 		transition: 0.2s ease-in-out;
 	}
+	.todo-settings.visible {
+		opacity: 1;
+	}
 }
 .todo:hover .notification {
 	opacity: 1;

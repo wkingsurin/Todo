@@ -7,8 +7,13 @@ export function taskReducer(state, action) {
 			return { ...state, text: "" };
 
 		case "FOCUS": {
-			action.inputRef.focus();
-			return state;
+			action.inputRef.current.querySelector("input").focus();
+			return { ...state, isFocused: true };
+		}
+		case "BLUR": {
+			if (!action.open) {
+				return { ...state, isFocused: false };
+			} else return state;
 		}
 
 		default:

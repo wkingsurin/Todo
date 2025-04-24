@@ -1,6 +1,6 @@
 import { highlightInvalidField, validateDate } from "../../utils/utils";
 
-import { Checkmark, Time, Close } from "../SVG";
+import { CheckmarkSVG, CalendarSVG, ClearSVG } from "../SVG";
 
 import Button from "../Button";
 import TextInput from "../TextInput";
@@ -11,22 +11,31 @@ import { useModal } from "../../features/modal/useModal";
 import { useRef } from "react";
 
 export default function NewTask({ addTask }) {
-	const { newTask, input, handleFocus } = useNewTask();
+	const { newTask, input, handleFocus, handleBlur } = useNewTask();
 	const { dateModal, handlers: dateModalHandlers } = useDateModal();
 	const { showModal } = useModal();
 
+	const newTaskRef = useRef(null);
 	const inputFieldRef = useRef(null);
 
 	return (
-		<div className="todo todo-new" onClick={handleFocus}>
+		<div
+			className="todo todo-new"
+			onClick={() => {
+				handleFocus(newTaskRef);
+			}}
+			ref={newTaskRef}
+		>
 			<div className="todo-content">
 				<TextInput
 					value={input.bind.value}
 					onChange={input.bind.onChange}
+					onFocus={() => handleFocus(newTaskRef, dateModal.isOpen)}
+					onBlur={() => handleBlur(dateModal.isOpen)}
 					ref={inputFieldRef}
 					minLength={1}
 				></TextInput>
-				<div className="todo-settings">
+				<div className={`todo-settings ${newTask.isFocused ? "visible" : ""}`}>
 					<Button
 						name="save"
 						onClick={() => {
@@ -41,18 +50,19 @@ export default function NewTask({ addTask }) {
 							input.clear();
 						}}
 					>
-						<Checkmark></Checkmark>
+						<CheckmarkSVG></CheckmarkSVG>
 					</Button>
 					<Button
 						name="time"
+						className={dateModal.isOpen ? "open" : ""}
 						onClick={(e) => {
 							dateModalHandlers.showDateModal(e.currentTarget);
 						}}
 					>
-						<Time></Time>
+						<CalendarSVG></CalendarSVG>
 					</Button>
 					<Button name="remove" onClick={input.clear}>
-						<Close></Close>
+						<ClearSVG></ClearSVG>
 					</Button>
 				</div>
 			</div>

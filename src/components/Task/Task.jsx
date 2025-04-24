@@ -1,5 +1,5 @@
 import "./Task.scss";
-import { Checkmark, Time, Close, Alert } from "../SVG";
+import { CheckmarkSVG, RemoveSVG, AlertSVG } from "../SVG";
 import { hoverOnAlert, changeAlertMessage } from "../../utils/utils";
 import { useAlert } from "../../features/alert/useAlert";
 import { useEffect } from "react";
@@ -44,7 +44,7 @@ export default function Task(props) {
 						hideAlert();
 					}}
 				>
-					<Alert></Alert>
+					<AlertSVG></AlertSVG>
 				</div>
 			)}
 			<div className="todo-content">
@@ -58,7 +58,7 @@ export default function Task(props) {
 								completeTaskListener(task.id);
 							}}
 						>
-							<Checkmark></Checkmark>
+							<CheckmarkSVG></CheckmarkSVG>
 						</button>
 					)}
 					<button
@@ -66,7 +66,7 @@ export default function Task(props) {
 						name="remove"
 						onClick={() => deleteTask(tasks, task.type, task.id)}
 					>
-						<Close></Close>
+						<RemoveSVG></RemoveSVG>
 					</button>
 				</div>
 				<div

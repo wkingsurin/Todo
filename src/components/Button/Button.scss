@@ -5,10 +5,26 @@
 
 	width: 18px;
 	height: 18px;
-	
+
 	padding: 0;
 }
 .btn svg {
 	width: 18px;
 	height: 18px;
+}
+.btn path {
+	transition: 0.2s ease-in-out;
+}
+.todo-new .btn.open path {
+	fill: #4fe681;
+}
+.todo-new .btn:hover path {
+	fill: #4fe681;
+}
+.todo-new .btn[name="remove"]:hover path {
+	fill: #e64f4f;
+}
+
+.btn path {
+	fill: #000;
 }
