@@ -96,8 +96,10 @@ export function dateModalReducer(state, action) {
 			const svg = action.target.querySelector("svg");
 			const coordinates = svg.getBoundingClientRect();
 
+			console.log(`x`, coordinates.right);
+
 			const position = {
-				x: coordinates.right - 254,
+				x: coordinates.right - (330 - 54),
 				y: coordinates.bottom + 30,
 			};
 
