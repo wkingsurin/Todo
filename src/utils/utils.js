@@ -465,16 +465,16 @@ export const initDays = (year, month) => {
 };
 
 export const highlightInvalidField = (inputRef, parentElemClass) => {
-	const target = inputRef.current;
+	let target = inputRef.current;
 	let parent = target.closest(parentElemClass);
 
 	if (target.value.length < target.minLength) {
 		if (parent) parent.classList.add("invalid-value");
-		else inputRef.current.classList.add("invalid-value");
+		else target.classList.add("invalid-value");
 
 		let timer = setTimeout(() => {
 			if (parent) parent.classList.remove("invalid-value");
-			else inputRef.current.classList.remove("invalid-value");
+			else target.classList.remove("invalid-value");
 
 			clearTimeout(timer);
 		}, 1500);

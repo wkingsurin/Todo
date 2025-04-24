@@ -394,7 +394,7 @@ $green: #4fe681;
 }
 
 .invalid-value {
-	border: 1px solid #d70004;
+	border: 1px solid #d70004 !important;
 }
 
 @keyframes showModal {
