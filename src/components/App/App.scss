@@ -23,7 +23,22 @@ $green: #4fe681;
 
 	gap: 20px;
 	padding: 175px 0;
+
+	transition: 0.5s ease-in-out;
 }
+.app-container.entering {
+	opacity: 0;
+}
+.app-container.entered {
+	opacity: 1;
+}
+.app-container.exiting {
+	opacity: 0;
+}
+.app-container.exited {
+	opacity: 0;
+}
+
 .tabs {
 	position: relative;
 	z-index: 2;

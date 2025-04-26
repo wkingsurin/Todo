@@ -9,7 +9,13 @@ import ModalSettings from "../ModalSettings";
 import Modal from "../Modal";
 import { useRef } from "react";
 
-export default function AppContainer({ content, setContent, children }) {
+export default function AppContainer({
+	content,
+	setContent,
+	children,
+	ref,
+	className,
+}) {
 	const { dateModal, handlers } = useDateModal();
 	const { alert } = useAlert();
 	const { notification } = useModal();
@@ -29,7 +35,7 @@ export default function AppContainer({ content, setContent, children }) {
 	};
 
 	return (
-		<div className="app-container">
+		<div className={className} ref={ref}>
 			<div className="tabs">
 				<button
 					className={`btn ${content.isActiveTab == "new" ? "active" : ""}`}
