@@ -18,6 +18,8 @@ export default function NewTask({ addTask }) {
 	const newTaskRef = useRef(null);
 	const inputFieldRef = useRef(null);
 
+	console.log(dateModal.isOpen)
+
 	return (
 		<div
 			className="todo todo-new"
@@ -25,6 +27,7 @@ export default function NewTask({ addTask }) {
 				handleFocus(newTaskRef);
 			}}
 			ref={newTaskRef}
+			style={{border: dateModal.isOpen ? '1px solid rgba(26, 12, 45, 0.15)': ""}}
 		>
 			<div className="todo-content">
 				<TextInput
