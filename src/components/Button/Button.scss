@@ -15,13 +15,13 @@
 .btn path {
 	transition: 0.2s ease-in-out;
 }
-.todo-new .btn.open path {
+[class^="todo-"] .btn.open path {
 	fill: #4fe681;
 }
-.todo-new .btn:hover path {
+[class^="todo-"] .btn:hover path {
 	fill: #4fe681;
 }
-.todo-new .btn[name="remove"]:hover path {
+[class^="todo-"] .btn[name="remove"]:hover path {
 	fill: #e64f4f;
 }
 
