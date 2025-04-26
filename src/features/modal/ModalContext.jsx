@@ -6,12 +6,12 @@ export const ModalContext = createContext(notificationTemplate);
 export function ModalProvider({ children }) {
 	const [notification, setNotification] = useState(notificationTemplate);
 
-	const showModal = () => {
+	const showModal = (position = { x: window.innerWidth / 2, y: 60 }) => {
 		setNotification((prev) => {
 			return {
 				...prev,
 				isOpen: true,
-				position: { x: window.innerWidth / 2, y: 60 },
+				position: position,
 			};
 		});
 	};

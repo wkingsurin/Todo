@@ -95,6 +95,7 @@ export default function AppContainer({ content, setContent, children }) {
 					<Modal
 						className={`modal notification ${state}`}
 						ref={notificationRef}
+						position={{ x: window.innerWidth / 2 - 180 / 2, y: 60 }}
 					></Modal>
 				)}
 			</Transition>

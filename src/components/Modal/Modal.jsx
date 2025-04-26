@@ -1,8 +1,8 @@
 import { useModal } from "../../features/modal/useModal";
 import { useEffect } from "react";
 
-export default function Modal({ className, ref }) {
-	const { notification, hideModal } = useModal();
+export default function Modal({ className, ref, position }) {
+	const { hideModal } = useModal();
 
 	useEffect(() => {
 		const timer = setTimeout(() => hideModal(), 1000);
@@ -15,8 +15,8 @@ export default function Modal({ className, ref }) {
 			className={className}
 			style={{
 				position: "absolute",
-				left: `${notification.position.x}px`,
-				top: `${notification.position.y}px`,
+				left: `${position.x}px`,
+				top: `${position.y}px`,
 			}}
 			ref={ref}
 		>
