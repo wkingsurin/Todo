@@ -51,6 +51,7 @@ export default function NewTask({ addTask }) {
 							showModal();
 
 							input.clear();
+							dateModalHandlers.resetDate();
 						}}
 					>
 						<CheckmarkSVG></CheckmarkSVG>

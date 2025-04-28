@@ -8,6 +8,7 @@ import {
 	initDays,
 	splitDaysToWeeks,
 	checkDate,
+	dateModalTemplate,
 } from "../utils/utils";
 
 export function dateModalReducer(state, action) {
@@ -316,6 +317,15 @@ export function dateModalReducer(state, action) {
 			return {
 				...state,
 				days: updateDays(state.days),
+			};
+		}
+
+		case "RESET": {
+			return {
+				...dateModalTemplate,
+				days: splitDaysToWeeks(
+					initDays(new Date().getFullYear(), new Date().getMonth())
+				),
 			};
 		}
 

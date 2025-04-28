@@ -37,6 +37,9 @@ export const DateModalProvider = ({ children }) => {
 
 	const saveDate = (target, time, setTime) =>
 		dateModalDispatch({ type: "SAVE_DATE", target, time, setTime });
+	const resetDate = () => {
+		dateModalDispatch({ type: "RESET" });
+	};
 
 	return (
 		<DateModalContext.Provider
@@ -54,6 +57,7 @@ export const DateModalProvider = ({ children }) => {
 					saveDate,
 					typeDate,
 					typeTime,
+					resetDate,
 				},
 			}}
 		>
