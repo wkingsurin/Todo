@@ -1,6 +1,6 @@
-$dark-purple: #1a0c2d;
-$dark-purple-05: rgba(26, 12, 45, 0.05);
-$dark-purple-15: rgba(26, 12, 45, 0.15);
+$main-blue: #0a414b;
+$main-blue-05: rgba(10, 65, 75, 0.05);
+$main-blue-15: rgba(10, 65, 75, 0.15);
 $green: #4fe681;
 
 .modal {
@@ -19,9 +19,9 @@ $green: #4fe681;
 	padding: 20px 30px;
 	background: white;
 	border-radius: 15px;
-	border: 1px solid $dark-purple-15;
+	border: 1px solid $main-blue-15;
 
-	color: $dark-purple;
+	color: $main-blue;
 
 	.content {
 		display: flex;

@@ -1,3 +1,5 @@
+$main-blue: #0a414b;
+
 .btn {
 	display: flex;
 	align-items: center;
@@ -26,5 +28,5 @@
 }
 
 .btn path {
-	fill: #000;
+	fill: $main-blue;
 }

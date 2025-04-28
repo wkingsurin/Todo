@@ -26,7 +26,7 @@ export default function NewTask({ addTask }) {
 			}}
 			ref={newTaskRef}
 			style={{
-				border: dateModal.isOpen ? "1px solid rgba(26, 12, 45, 0.15)" : "",
+				border: dateModal.isOpen ? "1px solid rgba(10, 65, 75, 0.15)" : "",
 			}}
 		>
 			<div className="todo-content">

@@ -131,6 +131,7 @@ export default function TasksContainer({ content, setContent }) {
 											setContent={setContent}
 											content={content}
 										></NewTask>
+										<div className="separator"></div>
 										<Transition
 											in={tasks.length > 0}
 											timeout={500}

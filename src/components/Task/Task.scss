@@ -1,6 +1,6 @@
-$dark-purple: #1a0c2d;
-$dark-purple-05: rgba(26, 12, 45, 0.05);
-$dark-purple-15: rgba(26, 12, 45, 0.15);
+$main-blue: #0a414b;
+$main-blue-05: rgba(10, 65, 75, 0.05);
+$main-blue-15: rgba(10, 65, 75, 0.15);
 $green: #4fe681;
 $red: #e64f4f;
 
@@ -12,18 +12,21 @@ $red: #e64f4f;
 	justify-content: space-between;
 
 	width: 820px;
-	height: 60px;
+	height: 54px;
 
 	border-radius: 15px;
 
-	color: $dark-purple;
+	color: $main-blue;
 	background: white;
-	border: 1px solid $dark-purple-05;
+	border: 1px solid $main-blue-05;
+
+	transition: 0.3s ease-in-out;
 
 	.todo-content {
 		position: relative;
 
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
 
 		width: 100%;
@@ -63,6 +66,9 @@ $red: #e64f4f;
 		opacity: 1;
 	}
 }
+.todo:hover {
+	border-color: $main-blue-15;
+}
 .todo:hover .notification {
 	opacity: 1;
 }
@@ -70,11 +76,11 @@ $red: #e64f4f;
 	opacity: 1;
 }
 .todo-new {
-	border: 1px solid $dark-purple-05;
+	border: 1px solid $main-blue-05;
 	transition: 0.3s ease-in-out;
 }
 .todo-new:has(input:focus) {
-	border: 1px solid $dark-purple-15;
+	border: 1px solid $main-blue-15;
 }
 .todo-new.invalid-value {
 	border: 1px solid #d70004;
@@ -96,7 +102,7 @@ $red: #e64f4f;
 
 	width: 100%;
 	height: 5px;
-	background: $dark-purple;
+	background: $main-blue;
 
 	transition: 1s linear;
 }
