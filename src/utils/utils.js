@@ -228,22 +228,29 @@ export function validationTime(value, date) {
 		return result;
 	}
 
-	if (hours && timeNow.getHours() > hours) {
+	if (hours < timeNow.getHours()) {
 		hours = timeNow.getHours();
 	}
 
-	if (
-		minutes &&
-		hours <= timeNow.getHours() &&
-		timeNow.getMinutes() >= minutes
-	) {
+	if (hours <= timeNow.getHours() && minutes <= timeNow.getMinutes()) {
 		hours = Number(hours) + 1;
 		minutes = "00";
 	}
 
-	result = correctTime(hours + ":" + minutes);
+	result = correctTime(Number(hours) + ":" + Number(minutes));
 
 	return result;
+}
+
+export function isValidTime(time) {
+	const [hours, minutes] = time.split(":");
+
+	if (!hours || !minutes) return true;
+
+	if (hours > 23) return false;
+	if (minutes > 59) return false;
+
+	return true;
 }
 
 export function correctRemainingTime(remainingTime) {
@@ -468,7 +475,7 @@ export const highlightInvalidField = (inputRef, parentElemClass) => {
 	let target = inputRef.current;
 	let parent = target.closest(parentElemClass);
 
-	if (target.value.length < target.minLength) {
+	if (target.value.length < target.minLength || !isValidTime(target.value)) {
 		if (parent) parent.classList.add("invalid-value");
 		else target.classList.add("invalid-value");
 

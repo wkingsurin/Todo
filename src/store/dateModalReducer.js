@@ -85,6 +85,7 @@ export function dateModalReducer(state, action) {
 					data,
 				};
 			}
+
 			return {
 				...state,
 				timeInput: validTime ? validTime : maskedTime,

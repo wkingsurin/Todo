@@ -1,4 +1,4 @@
-import { months, highlightInvalidField } from "../../utils/utils";
+import { months, highlightInvalidField, isValidTime } from "../../utils/utils";
 import { Chevron } from "../SVG";
 import { useDateModal } from "../../features/dateModal/useDateModal";
 import { useEffect, useRef } from "react";
@@ -151,7 +151,9 @@ export default function ModalSettings({ className, ref }) {
 							id="time"
 							className={`data-value`}
 							placeholder="--:--"
-							onChange={(e) => handlers.typeTime(e.target)}
+							onChange={(e) => {
+								handlers.typeTime(e.target);
+							}}
 							value={modal.timeInput}
 							minLength={5}
 							maxLength={5}
@@ -165,7 +167,10 @@ export default function ModalSettings({ className, ref }) {
 					onClick={(e) => {
 						highlightInvalidField(dateInputRef);
 						highlightInvalidField(timeInputRef);
-						handlers.saveDate(e.target, modal.timeInput);
+
+						if (isValidTime(timeInputRef.current.value)) {
+							handlers.saveDate(e.target, modal.timeInput);
+						}
 					}}
 				>
 					Save
