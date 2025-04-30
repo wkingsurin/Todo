@@ -488,6 +488,24 @@ export const highlightInvalidField = (inputRef, parentElemClass) => {
 	}
 };
 
+export const colors = [
+	[79, 230, 129],
+	[156, 230, 103],
+	[230, 230, 79],
+	[230, 154, 79],
+	[230, 79, 79],
+];
+
+export const interpolateColor = (startColor, endColor, factor) => {
+	const result = startColor.slice();
+
+	for (let i = 0; i < 3; i++) {
+		result[i] = Math.round(result[i] + factor * (endColor[i] - startColor[i]));
+	}
+
+	return `rgb(${result.join(",")})`;
+};
+
 export const taskTemplate = {
 	text: "",
 	remainingTime: null,

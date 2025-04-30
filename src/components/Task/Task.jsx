@@ -4,6 +4,8 @@ import { hoverOnAlert, changeAlertMessage } from "../../utils/utils";
 import { useAlert } from "../../features/alert/useAlert";
 import { useEffect } from "react";
 
+import ProgressBar from "../ProgressBar";
+
 export default function Task(props) {
 	const { tasks, task, width, completeTaskListener, deleteTask, ref } = props;
 	const { alert, setAlert, hideAlert } = useAlert();
@@ -69,19 +71,7 @@ export default function Task(props) {
 						<RemoveSVG></RemoveSVG>
 					</button>
 				</div>
-				<div
-					className="time-bar"
-					style={{
-						width: width + "%",
-						background: task.type == "wasted" ? "#E64F4F" : "#4FE681",
-						animation:
-							width == 100
-								? ""
-								: `animatedBackground ${Math.floor(
-										task.remainingTime / 1000
-								  )}s linear`,
-					}}
-				></div>
+				<ProgressBar task={task} width={width}></ProgressBar>
 			</div>
 		</div>
 	);

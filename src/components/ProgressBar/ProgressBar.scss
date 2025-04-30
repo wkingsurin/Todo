@@ -1,0 +1,34 @@
+$main-blue: #0a414b;
+$main-blue-05: rgba(10, 65, 75, 0.05);
+$main-blue-15: rgba(10, 65, 75, 0.15);
+$green: #4fe681;
+$red: #e64f4f;
+
+.progress-bar {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	z-index: 1;
+
+	width: 100%;
+	height: 5px;
+	background-color: $main-blue;
+}
+
+@keyframes animatedBackground {
+	0% {
+		background-color: $green;
+	}
+	25% {
+		background-color: #9ce667;
+	}
+	50% {
+		background-color: #e6e64f;
+	}
+	75% {
+		background-color: #e69a4f;
+	}
+	100% {
+		background-color: $red;
+	}
+}

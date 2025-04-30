@@ -94,27 +94,6 @@ $red: #e64f4f;
 [class^="todo"] {
 	position: relative;
 }
-.time-bar {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	z-index: 1;
-
-	width: 100%;
-	height: 5px;
-	background: $main-blue;
-
-	transition: 1s linear;
-}
-
-@keyframes animatedBackground {
-	from {
-		background: $green;
-	}
-	to {
-		background: $red;
-	}
-}
 
 .todo-enter {
 	opacity: 0;
