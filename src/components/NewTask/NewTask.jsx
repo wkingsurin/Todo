@@ -7,13 +7,13 @@ import TextInput from "../TextInput";
 
 import { useNewTask } from "../../features/newTask/useNewTask";
 import { useDateModal } from "../../features/dateModal/useDateModal";
-import { useModal } from "../../features/modal/useModal";
+import { useNotificationModal } from "../../features/notificationModal/useNotificationModal";
 import { useRef } from "react";
 
 export default function NewTask({ addTask }) {
 	const { newTask, input, handleFocus, handleBlur } = useNewTask();
 	const { dateModal, handlers: dateModalHandlers } = useDateModal();
-	const { showModal } = useModal();
+	const { showModal: showNotificationModal } = useNotificationModal();
 
 	const newTaskRef = useRef(null);
 	const inputFieldRef = useRef(null);
@@ -32,11 +32,11 @@ export default function NewTask({ addTask }) {
 			<div className="todo-content">
 				<TextInput
 					value={input.bind.value}
+					minLength={1}
+					ref={inputFieldRef}
 					onChange={input.bind.onChange}
 					onFocus={() => handleFocus(newTaskRef, dateModal.isOpen)}
 					onBlur={() => handleBlur(dateModal.isOpen)}
-					ref={inputFieldRef}
-					minLength={1}
 				></TextInput>
 				<div className={`todo-settings ${newTask.isFocused ? "visible" : ""}`}>
 					<Button
@@ -48,7 +48,7 @@ export default function NewTask({ addTask }) {
 							}
 							addTask(newTask, dateModal);
 
-							showModal();
+							showNotificationModal();
 
 							input.clear();
 							dateModalHandlers.resetDate();

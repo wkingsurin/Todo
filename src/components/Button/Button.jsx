@@ -5,7 +5,7 @@ export default function Button(props) {
 
 	return (
 		<button
-			className={`btn ${className}`}
+			className={`btn ${className || ""}`}
 			name={name}
 			onClick={onClick ? (e) => onClick(e) : null}
 			disabled={disabled}

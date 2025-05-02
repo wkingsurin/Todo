@@ -1,13 +1,15 @@
-import { useAlert } from "../../features/alert/useAlert";
+import { useAlertModal } from "../../features/alertModal/useAlertModal";
 import { useDateModal } from "../../features/dateModal/useDateModal";
-import { useModal } from "../../features/modal/useModal";
+import { useNotificationModal } from "../../features/notificationModal/useNotificationModal";
+
+import { useRef } from "react";
 
 import { Transition } from "react-transition-group";
 
-import ModalAlert from "../ModalAlert";
-import ModalSettings from "../ModalSettings";
-import Modal from "../Modal";
-import { useRef } from "react";
+import Tabs from "../Tabs";
+import AlertModal from "../AlertModal";
+import DateModal from "../DateModal";
+import NotificationModal from "../NotificationModal";
 
 export default function AppContainer({
 	content,
@@ -16,52 +18,29 @@ export default function AppContainer({
 	ref,
 	className,
 }) {
-	const { dateModal, handlers } = useDateModal();
-	const { alert } = useAlert();
-	const { notification } = useModal();
+	const { dateModal, handlers: dateModalHandlers } = useDateModal();
+	const { alertModal } = useAlertModal();
+	const { notificationModal } = useNotificationModal();
 
-	const notificationRef = useRef(null);
-	const alertRef = useRef(null);
+	const notificationModalRef = useRef(null);
+	const alertModalRef = useRef(null);
 	const dateModalRef = useRef(null);
 
-	const switchTab = (e) => {
+	const handleSwitchTab = (e) => {
 		setContent((prev) => {
 			return {
 				...prev,
-				isActiveTab: e.target.name,
+				activeTab: e.target.name,
 			};
 		});
-		handlers.hideDateModal();
+		dateModalHandlers.hideDateModal();
 	};
 
 	return (
 		<div className={className} ref={ref}>
-			<div className="tabs">
-				<button
-					className={`btn ${content.isActiveTab == "new" ? "active" : ""}`}
-					name="new"
-					onClick={(e) => switchTab(e)}
-				>
-					New
-				</button>
-				<button
-					className={`btn ${content.isActiveTab == "wasted" ? "active" : ""}`}
-					name="wasted"
-					onClick={(e) => switchTab(e)}
-				>
-					Wasted
-				</button>
-				<button
-					className={`btn ${
-						content.isActiveTab == "completed" ? "active" : ""
-					}`}
-					name="completed"
-					onClick={(e) => switchTab(e)}
-				>
-					Completed
-				</button>
-			</div>
+			<Tabs content={content} handleSwitch={handleSwitchTab}></Tabs>
 			{children}
+
 			<Transition
 				in={dateModal.isOpen}
 				timeout={500}
@@ -70,39 +49,41 @@ export default function AppContainer({
 				nodeRef={dateModalRef}
 			>
 				{(state) => (
-					<ModalSettings
+					<DateModal
 						className={`modal settings extended-modal ${state}`}
 						ref={dateModalRef}
-					></ModalSettings>
+					></DateModal>
 				)}
 			</Transition>
+
 			<Transition
-				in={alert.isOpen}
+				in={alertModal.isOpen}
 				timeout={500}
 				mountOnEnter
 				unmountOnExit
-				nodeRef={alertRef}
+				nodeRef={alertModalRef}
 			>
 				{(state) => (
-					<ModalAlert
+					<AlertModal
 						className={`modal notification ${state}`}
-						ref={alertRef}
-					></ModalAlert>
+						ref={alertModalRef}
+					></AlertModal>
 				)}
 			</Transition>
+
 			<Transition
-				in={notification.isOpen}
+				in={notificationModal.isOpen}
 				timeout={500}
 				mountOnEnter
 				unmountOnExit
-				nodeRef={notificationRef}
+				nodeRef={notificationModalRef}
 			>
 				{(state) => (
-					<Modal
+					<NotificationModal
 						className={`modal notification ${state}`}
-						ref={notificationRef}
+						ref={notificationModalRef}
 						position={{ x: window.innerWidth / 2 - 180 / 2, y: 60 }}
-					></Modal>
+					></NotificationModal>
 				)}
 			</Transition>
 		</div>

@@ -1,13 +1,14 @@
 import { useState, createContext } from "react";
 import { notificationTemplate } from "../../utils/utils";
 
-export const ModalContext = createContext(notificationTemplate);
+export const NotificationModalContext = createContext(notificationTemplate);
 
 export function ModalProvider({ children }) {
-	const [notification, setNotification] = useState(notificationTemplate);
+	const [notificationModal, setNotificationModal] =
+		useState(notificationTemplate);
 
 	const showModal = (position = { x: window.innerWidth / 2, y: 60 }) => {
-		setNotification((prev) => {
+		setNotificationModal((prev) => {
 			return {
 				...prev,
 				isOpen: true,
@@ -17,16 +18,16 @@ export function ModalProvider({ children }) {
 	};
 
 	const hideModal = () => {
-		setNotification((prev) => {
+		setNotificationModal((prev) => {
 			return { ...prev, isOpen: false };
 		});
 	};
 
 	return (
-		<ModalContext.Provider
-			value={{ notification, setNotification, showModal, hideModal }}
+		<NotificationModalContext.Provider
+			value={{ notificationModal, setNotificationModal, showModal, hideModal }}
 		>
 			{children}
-		</ModalContext.Provider>
+		</NotificationModalContext.Provider>
 	);
 }

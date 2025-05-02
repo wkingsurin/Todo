@@ -1,8 +1,8 @@
-import { useModal } from "../../features/modal/useModal";
+import { useNotificationModal } from "../../features/notificationModal/useNotificationModal";
 import { useEffect } from "react";
 
-export default function Modal({ className, ref, position }) {
-	const { hideModal } = useModal();
+export default function NotificationModal({ className, ref, position }) {
+	const { hideModal } = useNotificationModal();
 
 	useEffect(() => {
 		const timer = setTimeout(() => hideModal(), 1000);

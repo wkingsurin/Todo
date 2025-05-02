@@ -1,10 +1,9 @@
 import "./App.scss";
 import { useEffect, useState, useRef } from "react";
 
-import Providers from "../Providers";
-
-import { taskTemplate } from "../../utils/utils";
 import { Transition } from "react-transition-group";
+
+import Providers from "../Providers";
 
 import AppContainer from "../AppContainer";
 import TasksContainer from "../TasksContainer";
@@ -12,11 +11,10 @@ import Loader from "../Loader";
 
 export default function App() {
 	const [content, setContent] = useState(() => ({
-		isActiveTab: "new",
-		newTask: taskTemplate,
-		notification: { text: "Task saved!" },
+		activeTab: "new",
 	}));
 	const [loading, setLoading] = useState(true);
+
 	const loaderRef = useRef(null);
 	const appContainerRef = useRef(null);
 
@@ -54,7 +52,7 @@ export default function App() {
 					)}
 				</Transition>
 				<Transition
-					in={loading === false}
+					in={!loading}
 					timeout={500}
 					mountOnEnter
 					unmountOnExit
@@ -65,8 +63,8 @@ export default function App() {
 							<AppContainer
 								content={content}
 								setContent={setContent}
-								ref={appContainerRef}
 								className={`app-container ${state}`}
+								ref={appContainerRef}
 							>
 								<TasksContainer
 									content={content}

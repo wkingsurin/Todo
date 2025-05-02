@@ -10,7 +10,7 @@ export default function TextInput({
 		<input
 			type="text"
 			placeholder="Enter the text..."
-			value={value != null ? value : ""}
+			value={value !== null ? value : ""}
 			onFocus={onFocus}
 			onBlur={onBlur}
 			onChange={(e) => onChange(e.target.value)}

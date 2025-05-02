@@ -68,31 +68,21 @@ export default function TasksContainer({ content, setContent }) {
 				const remainingTime =
 					finishedTIme - new Date() > 0 ? finishedTIme - new Date() : null;
 
-				const status = {
-					...currentTask.status,
-					isFinished: remainingTime == null ? true : false,
-				};
+				const type = remainingTime !== null ? "active" : "wasted";
 
-				const type =
-					status.isFinished && !status.isCompleted
-						? "wasted"
-						: status.isCompleted
-						? "completed"
-						: "actual";
-
-				return { ...currentTask, remainingTime, status, type };
+				return { ...currentTask, remainingTime, type };
 			});
 
 			if (updateTasks.length < 1) return;
 
 			const toActive = updatedTasks.filter(
-				(currentTask) => currentTask.type == "actual"
+				(currentTask) => currentTask.type == "active"
 			);
 			const toWasted = updatedTasks.filter(
 				(currentTask) => currentTask.type == "wasted"
 			);
 
-			updateTasks(toActive, "actual");
+			updateTasks(toActive, "active");
 
 			if (toWasted.length < 1) return;
 			updateTasks([...wastedTasks, ...toWasted], "wasted");
@@ -110,7 +100,7 @@ export default function TasksContainer({ content, setContent }) {
 			{hasMounted && (
 				<SwitchTransition mode="out-in">
 					<CSSTransition
-						key={content.isActiveTab}
+						key={content.activeTab}
 						timeout={300}
 						classNames="fade"
 						nodeRef={tabContentRef}
@@ -118,11 +108,11 @@ export default function TasksContainer({ content, setContent }) {
 						unmountOnExit
 					>
 						<div className="tabs-wrapper" ref={tabContentRef}>
-							{content.isActiveTab === "new" && (
+							{content.activeTab === "new" && (
 								<>
 									<div
 										className={`tasks-block ${
-											content.isActiveTab === "new" ? "visible" : "hidden"
+											content.activeTab === "new" ? "visible" : "hidden"
 										}`}
 										ref={newTabContentRef}
 									>
@@ -149,7 +139,7 @@ export default function TasksContainer({ content, setContent }) {
 															const width = computePercentOfTime(
 																new Date(task.totalTime),
 																new Date(task.remainingTime),
-																task.status
+																task.type
 															);
 
 															return (
@@ -197,11 +187,11 @@ export default function TasksContainer({ content, setContent }) {
 									</Transition>
 								</>
 							)}
-							{content.isActiveTab === "wasted" && (
+							{content.activeTab === "wasted" && (
 								<>
 									<div
 										className={`tasks-block ${
-											content.isActiveTab === "wasted" ? "visible" : "hidden"
+											content.activeTab === "wasted" ? "visible" : "hidden"
 										}`}
 										ref={wastedTabContentRef}
 									>
@@ -263,11 +253,11 @@ export default function TasksContainer({ content, setContent }) {
 									</Transition>
 								</>
 							)}
-							{content.isActiveTab === "completed" && (
+							{content.activeTab === "completed" && (
 								<>
 									<div
 										className={`tasks-block ${
-											content.isActiveTab === "completed" ? "visible" : "hidden"
+											content.activeTab === "completed" ? "visible" : "hidden"
 										}`}
 										ref={completedTabContentRef}
 									>

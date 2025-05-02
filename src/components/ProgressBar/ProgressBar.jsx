@@ -1,10 +1,11 @@
 import "./ProgressBar.scss";
 
-import { useState, useRef, useEffect } from "react";
 import { colors, interpolateColor } from "../../utils/utils";
+import { useState, useRef, useEffect } from "react";
 
 export default function ProgressBar({ task, width }) {
 	const [color, setColor] = useState("rgb(79, 230, 129)");
+
 	const startRef = useRef();
 	const frameRef = useRef();
 

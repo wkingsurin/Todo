@@ -1,49 +1,53 @@
 import "./Task.scss";
 import { CheckmarkSVG, RemoveSVG, AlertSVG } from "../SVG";
 import { hoverOnAlert, changeAlertMessage } from "../../utils/utils";
-import { useAlert } from "../../features/alert/useAlert";
+import { useAlertModal } from "../../features/alertModal/useAlertModal";
 import { useEffect } from "react";
 
+import Button from "../Button";
 import ProgressBar from "../ProgressBar";
 
 export default function Task(props) {
 	const { tasks, task, width, completeTaskListener, deleteTask, ref } = props;
-	const { alert, setAlert, hideAlert } = useAlert();
+	const {
+		alertModal,
+		setAlertModal,
+		hideAlert: hideAlertModal,
+	} = useAlertModal();
 
 	const handleMouseEnter = (e) => {
-		hoverOnAlert(e.currentTarget, alert, setAlert);
-		setAlert((prev) => {
+		hoverOnAlert(e.currentTarget, alertModal, setAlertModal);
+		setAlertModal((prev) => {
 			if (prev.hoveredTaskId === task.id) return prev;
 
-			changeAlertMessage(task.remainingTime, setAlert);
+			changeAlertMessage(task.remainingTime, setAlertModal);
 
 			return { ...prev, hoveredTaskId: task.id, hovered: true };
 		});
 	};
 
 	useEffect(() => {
-		if (alert.hoveredTaskId != task.id) return;
+		if (alertModal.hoveredTaskId != task.id) return;
 
 		const timer = setInterval(() => {
-			changeAlertMessage(task.remainingTime, setAlert);
+			changeAlertMessage(task.remainingTime, setAlertModal);
 		}, 1000);
 
 		return () => clearInterval(timer);
-	}, [task, alert.hoveredTaskId]);
+	}, [task, alertModal.hoveredTaskId]);
 
 	return (
 		<div className={`todo todo-${task.type}`} id={task.id} ref={ref}>
-			{task.type == "actual" && (
+			{task.type === "active" && (
 				<div
 					className="notification"
-					tabIndex={0}
 					onMouseEnter={(e) => {
-						if (!alert.hovered) {
+						if (!alertModal.hovered) {
 							handleMouseEnter(e);
 						}
 					}}
 					onMouseLeave={() => {
-						hideAlert();
+						hideAlertModal();
 					}}
 				>
 					<AlertSVG></AlertSVG>
@@ -52,24 +56,22 @@ export default function Task(props) {
 			<div className="todo-content">
 				<div className="text">{task.text}</div>
 				<div className="todo-settings">
-					{task.type == "actual" && (
-						<button
-							className="btn"
+					{task.type === "active" && (
+						<Button
 							name="complete"
 							onClick={() => {
 								completeTaskListener(task.id);
 							}}
 						>
 							<CheckmarkSVG></CheckmarkSVG>
-						</button>
+						</Button>
 					)}
-					<button
-						className="btn"
+					<Button
 						name="remove"
 						onClick={() => deleteTask(tasks, task.type, task.id)}
 					>
 						<RemoveSVG></RemoveSVG>
-					</button>
+					</Button>
 				</div>
 				<ProgressBar task={task} width={width}></ProgressBar>
 			</div>

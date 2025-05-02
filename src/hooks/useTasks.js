@@ -27,7 +27,7 @@ export function useTasks() {
 		setTasks(newTasks);
 
 		try {
-			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+			localStorage.setItem("activeTasks", JSON.stringify(newTasks));
 		} catch (e) {
 			console.log(e.message);
 		}
@@ -40,7 +40,6 @@ export function useTasks() {
 		const taskToComplete = {
 			...findTask,
 			type: "completed",
-			status: { ...findTask.status, isCompleted: true },
 		};
 
 		const newTasks = tasks.filter((task) => task.id !== taskId);
@@ -50,7 +49,7 @@ export function useTasks() {
 		setCompletedTasks(newCompletedTasks);
 
 		try {
-			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+			localStorage.setItem("activeTasks", JSON.stringify(newTasks));
 			localStorage.setItem("completedTasks", JSON.stringify(newCompletedTasks));
 		} catch (e) {
 			console.log(e.message);
@@ -70,7 +69,7 @@ export function useTasks() {
 		setWastedTasks(newWastedTasks);
 
 		try {
-			localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+			localStorage.setItem("activeTasks", JSON.stringify(newTasks));
 			localStorage.setItem("wastedTasks", JSON.stringify(newWastedTasks));
 		} catch (e) {
 			console.log(e.message);
@@ -84,7 +83,7 @@ export function useTasks() {
 		const newTasks = tasks.filter((task) => task.id !== taskId);
 
 		switch (taskType) {
-			case "actual":
+			case "active":
 				setTasks(newTasks);
 				break;
 
@@ -118,7 +117,7 @@ export function useTasks() {
 			setWastedTasks(newWastedTasks);
 
 			try {
-				localStorage.setItem("actualTasks", JSON.stringify(filteredTasks));
+				localStorage.setItem("activeTasks", JSON.stringify(filteredTasks));
 				localStorage.setItem("wastedTasks", JSON.stringify(newWastedTasks));
 			} catch (e) {
 				console.log(e.message);
@@ -129,7 +128,7 @@ export function useTasks() {
 			setTasks(newTasks);
 
 			try {
-				localStorage.setItem("actualTasks", JSON.stringify(newTasks));
+				localStorage.setItem("activeTasks", JSON.stringify(newTasks));
 			} catch (e) {
 				console.log(e.message);
 			}
@@ -137,7 +136,7 @@ export function useTasks() {
 	};
 	const updateTasks = (tasks, type) => {
 		switch (type) {
-			case "actual": {
+			case "active": {
 				setTasks(tasks);
 				saveTasks(tasks, type);
 
@@ -157,7 +156,7 @@ export function useTasks() {
 	};
 
 	useEffect(() => {
-		const savedTasks = JSON.parse(localStorage.getItem("actualTasks")) || [];
+		const savedTasks = JSON.parse(localStorage.getItem("activeTasks")) || [];
 		const savedWastedTasks =
 			JSON.parse(localStorage.getItem("wastedTasks")) || [];
 		const savedCompletedTasks =

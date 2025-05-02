@@ -148,11 +148,11 @@ export function getTypeFromClassName(elem) {
 	return elem.classList[1].split("-")[1];
 }
 
-export function computePercentOfTime(total, remaining, status) {
-	if (status.isCompleted) {
+export function computePercentOfTime(total, remaining, type) {
+	if (type === "completed") {
 		return 100;
 	}
-	if (status.isFinished && !status.isCompleted) {
+	if (remaining <= 0 || remaining === null) {
 		return 0;
 	}
 	if (remaining < 1000) {
@@ -506,13 +506,16 @@ export const interpolateColor = (startColor, endColor, factor) => {
 	return `rgb(${result.join(",")})`;
 };
 
+export const setLinkedClassName = (contentState, tabName) => {
+	return contentState.activeTab === tabName ? "active" : "";
+};
+
 export const taskTemplate = {
 	text: "",
 	remainingTime: null,
 	totalTime: null,
 	creationDate: new Date(),
-	status: { isFinished: false, isCompleted: false },
-	type: "actual",
+	type: "active",
 	id: null,
 };
 export const alertTemplate = {
@@ -527,7 +530,6 @@ export const dateModalTemplate = {
 	dateInput: "",
 	timeInput: "",
 	isOpen: false,
-	time: null,
 	position: { x: null, y: null },
 	date: null,
 	data: {
@@ -540,13 +542,6 @@ export const dateModalTemplate = {
 	days: splitDaysToWeeks(
 		initDays(new Date().getFullYear(), new Date().getMonth())
 	),
-};
-export const statusModalTemplate = {
-	isOpen: false,
-	position: {
-		x: null,
-		y: null,
-	},
 };
 export const notificationTemplate = {
 	text: "",

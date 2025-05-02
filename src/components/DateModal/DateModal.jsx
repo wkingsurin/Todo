@@ -1,11 +1,15 @@
-import { months, highlightInvalidField, isValidTime } from "../../utils/utils";
-import { Chevron } from "../SVG";
-import { useDateModal } from "../../features/dateModal/useDateModal";
 import { useEffect, useRef } from "react";
 
-export default function ModalSettings({ className, ref }) {
-	const { dateModal: modal, handlers, dateModalDispatch } = useDateModal();
-	const dateData = modal.data;
+import { useDateModal } from "../../features/dateModal/useDateModal";
+
+import Button from "../Button";
+import { Chevron } from "../SVG";
+
+import { months, highlightInvalidField, isValidTime } from "../../utils/utils";
+
+export default function DateModal({ className, ref }) {
+	const { dateModal, handlers, dateModalDispatch } = useDateModal();
+	const dateData = dateModal.data;
 
 	const dateInputRef = useRef(null);
 	const timeInputRef = useRef(null);
@@ -33,8 +37,8 @@ export default function ModalSettings({ className, ref }) {
 			className={className}
 			style={{
 				position: "absolute",
-				left: `${modal.position.x}px`,
-				top: `${modal.position.y}px`,
+				left: `${dateModal.position.x}px`,
+				top: `${dateModal.position.y}px`,
 				zIndex: 2,
 			}}
 			ref={ref}
@@ -42,49 +46,44 @@ export default function ModalSettings({ className, ref }) {
 			<div className="content">
 				<div className="block calendar">
 					<div className="period">
-						<button
-							className="btn"
+						<Button
 							disabled={
-								modal.data.month === new Date().getMonth() &&
-								modal.data.year === new Date().getFullYear()
+								dateModal.data.month === new Date().getMonth() &&
+								dateModal.data.year === new Date().getFullYear()
 							}
 							onClick={(e) => {
 								handlers.prevMonth(e.target);
 							}}
 						>
 							<Chevron rotate={-90}></Chevron>
-						</button>
+						</Button>
 						<p className="text">
 							{months[dateData.month] !== undefined
 								? months[dateData.month]
 								: months[new Date().getMonth()]}
 						</p>
-						<button
+						<Button
 							className="btn"
 							onClick={(e) => handlers.nextMonth(e.target)}
 						>
 							<Chevron rotate={90}></Chevron>
-						</button>
+						</Button>
 					</div>
 					<div className="period">
-						<button
-							className="btn"
-							disabled={modal.data.year === new Date().getFullYear()}
+						<Button
+							disabled={dateModal.data.year === new Date().getFullYear()}
 							onClick={(e) => handlers.prevYear(e.target)}
 						>
 							<Chevron rotate={-90}></Chevron>
-						</button>
+						</Button>
 						<p className="text">
 							{dateData.year !== null
 								? dateData.year
 								: new Date().getFullYear()}
 						</p>
-						<button
-							className="btn"
-							onClick={(e) => handlers.nextYear(e.target)}
-						>
+						<Button onClick={(e) => handlers.nextYear(e.target)}>
 							<Chevron rotate={90}></Chevron>
-						</button>
+						</Button>
 					</div>
 					<table
 						className="calendar-table"
@@ -100,16 +99,16 @@ export default function ModalSettings({ className, ref }) {
 								<th className="table-heading">Сб</th>
 								<th className="table-heading">Вс</th>
 							</tr>
-							{modal.days.map((week, index) => {
+							{dateModal.days.map((week, index) => {
 								return (
 									<tr className="table-row" key={index}>
 										{week.map((elem) => {
 											return (
 												<td
 													className="table-data"
+													id={elem.id}
 													key={elem.id}
 													aria-disabled={!elem.open}
-													id={elem.id}
 												>
 													{elem.date.getDate()}
 												</td>
@@ -137,8 +136,7 @@ export default function ModalSettings({ className, ref }) {
 							onChange={(e) => {
 								handlers.typeDate(e.target);
 							}}
-							value={modal.dateInput}
-							max={10}
+							value={dateModal.dateInput}
 							ref={dateInputRef}
 						/>
 					</div>
@@ -151,30 +149,30 @@ export default function ModalSettings({ className, ref }) {
 							id="time"
 							className={`data-value`}
 							placeholder="--:--"
+							minLength={5}
+							maxLength={5}
 							onChange={(e) => {
 								handlers.typeTime(e.target);
 							}}
-							value={modal.timeInput}
-							minLength={5}
-							maxLength={5}
+							value={dateModal.timeInput}
 							ref={timeInputRef}
 						/>
 					</div>
 				</div>
-				<button
-					className="btn save-btn"
-					disabled={!modal.dateInput || !modal.timeInput}
+				<Button
+					className="save-btn"
+					disabled={!dateModal.dateInput || !dateModal.timeInput}
 					onClick={(e) => {
 						highlightInvalidField(dateInputRef);
 						highlightInvalidField(timeInputRef);
 
 						if (isValidTime(timeInputRef.current.value)) {
-							handlers.saveDate(e.target, modal.timeInput);
+							handlers.saveDate(e.target, dateModal.timeInput);
 						}
 					}}
 				>
 					Save
-				</button>
+				</Button>
 			</div>
 		</div>
 	);
