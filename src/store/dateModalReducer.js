@@ -130,7 +130,17 @@ export function dateModalReducer(state, action) {
 		}
 
 		case "HIDE_DATE_MODAL":
-			return { ...dateModalTemplate, isOpen: false };
+			return {
+				...state,
+				data: {
+					hours: null,
+					minutes: null,
+					day: null,
+					month: null,
+					year: null,
+				},
+				isOpen: false,
+			};
 
 		case "SELECT_DAY": {
 			if (!action.target.closest("td")) return state;
