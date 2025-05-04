@@ -16,7 +16,7 @@ export function dateModalReducer(state, action) {
 		case "TYPE_DATE": {
 			const maskedDate = dateMask(action.target.value);
 			const validDate = validationDate(maskedDate);
-			let result;
+			let newState;
 
 			const day = Number(validDate.slice(0, 2));
 			const month = Number(validDate.slice(3, 5)) - 1;
@@ -41,7 +41,7 @@ export function dateModalReducer(state, action) {
 			}
 
 			if (validDate.length === 10) {
-				result = {
+				newState = {
 					...state,
 					dateInput: validDate,
 					date: new Date(
@@ -57,13 +57,13 @@ export function dateModalReducer(state, action) {
 					},
 				};
 			} else {
-				result = {
+				newState = {
 					...state,
 					dateInput: maskedDate,
 				};
 			}
 
-			return result;
+			return newState;
 		}
 
 		case "TYPE_TIME": {
@@ -159,18 +159,6 @@ export function dateModalReducer(state, action) {
 				}
 			});
 
-			if (
-				new Date(day.getFullYear(), day.getMonth(), day.getDate()) <
-				new Date(
-					new Date().getFullYear(),
-					new Date().getMonth(),
-					new Date().getDate()
-				)
-			) {
-				console.log("Невозможно установить прошедшее число");
-				return state;
-			}
-
 			date.setDate(day.getDate());
 
 			return {
@@ -184,14 +172,6 @@ export function dateModalReducer(state, action) {
 		case "PREV_MONTH": {
 			const date = new Date(state.date);
 			const now = new Date();
-
-			if (
-				date.getMonth() <= now.getMonth() &&
-				date.getFullYear() === now.getFullYear()
-			) {
-				console.log(`Невозможно установить прошедшую дату`);
-				return { ...state, date, dateInput: correctDate(date) };
-			}
 
 			date.setMonth(date.getMonth() - 1);
 
@@ -219,7 +199,6 @@ export function dateModalReducer(state, action) {
 
 		case "NEXT_MONTH": {
 			const date = new Date(state.date);
-
 			date.setMonth(date.getMonth() + 1);
 
 			return {
@@ -240,17 +219,14 @@ export function dateModalReducer(state, action) {
 		case "PREV_YEAR": {
 			const date = new Date(state.date);
 			const dateNow = new Date();
-			const yearNow = dateNow.getFullYear();
 			const monthNow = dateNow.getMonth();
 
 			date.setFullYear(date.getFullYear() - 1);
 
-			if (date.getFullYear() < yearNow) {
-				console.log(`Невозможно выбрать предыдущую дату`);
-				return state;
-			}
-
-			if (date.getMonth() < monthNow && date.getFullYear() === yearNow) {
+			if (
+				date.getMonth() < monthNow &&
+				date.getFullYear() === dateNow.getFullYear()
+			) {
 				date.setMonth(monthNow);
 			}
 
