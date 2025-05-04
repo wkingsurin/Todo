@@ -1,3 +1,4 @@
+import { dateModalTemplate } from "../constants/stateTemplates";
 import {
 	correctDate,
 	dateMask,
@@ -8,7 +9,6 @@ import {
 	initDays,
 	splitDaysToWeeks,
 	checkDate,
-	dateModalTemplate,
 } from "../utils/utils";
 
 export function dateModalReducer(state, action) {

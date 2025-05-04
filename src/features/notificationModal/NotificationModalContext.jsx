@@ -1,5 +1,5 @@
 import { useState, createContext } from "react";
-import { notificationTemplate } from "../../utils/utils";
+import { notificationTemplate } from "../../constants/stateTemplates";
 
 export const NotificationModalContext = createContext(notificationTemplate);
 

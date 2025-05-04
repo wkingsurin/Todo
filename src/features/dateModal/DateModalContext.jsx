@@ -1,5 +1,5 @@
 import { createContext, useReducer } from "react";
-import { dateModalTemplate } from "../../utils/utils";
+import { dateModalTemplate } from "../../constants/stateTemplates";
 import { dateModalReducer } from "../../store/dateModalReducer";
 
 export const DateModalContext = createContext(dateModalTemplate);

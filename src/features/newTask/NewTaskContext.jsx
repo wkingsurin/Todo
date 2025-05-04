@@ -1,5 +1,5 @@
 import { createContext, useReducer } from "react";
-import { taskTemplate } from "../../utils/utils";
+import { taskTemplate } from "../../constants/stateTemplates";
 import { taskReducer } from "../../store/taskReducer";
 
 export const NewTaskContext = createContext(taskTemplate);

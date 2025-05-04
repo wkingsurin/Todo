@@ -1,6 +1,7 @@
 import "./ProgressBar.scss";
 
-import { colors, interpolateColor } from "../../utils/utils";
+import { interpolateColor } from "../../utils/utils";
+import { colors } from "../../constants/constants";
 import { useState, useRef, useEffect } from "react";
 
 export default function ProgressBar({ task, width }) {

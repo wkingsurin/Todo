@@ -55,21 +55,6 @@ export function correctTime(time) {
 	return hours + ":" + minutes;
 }
 
-export const months = {
-	0: "Январь",
-	1: "Февраль",
-	2: "Март",
-	3: "Апрель",
-	4: "Май",
-	5: "Июнь",
-	6: "Июль",
-	7: "Август",
-	8: "Сентябрь",
-	9: "Октябрь",
-	10: "Ноябрь",
-	11: "Декабрь",
-};
-
 export function jsonParse(json) {
 	return JSON.parse(json);
 }
@@ -350,7 +335,7 @@ export function checkDate(data) {
 	return true;
 }
 
-export const splitDaysToWeeks = (days) => {
+export function splitDaysToWeeks(days) {
 	const weeks = [];
 	let week = [];
 	let i = 0;
@@ -366,8 +351,8 @@ export const splitDaysToWeeks = (days) => {
 	}
 
 	return weeks;
-};
-export const collectArr = (arr) => {
+}
+export function collectArr(arr) {
 	const collectedArr = [];
 
 	for (let i = 0; i < arr.length; i++) {
@@ -376,8 +361,8 @@ export const collectArr = (arr) => {
 		}
 	}
 	return collectedArr;
-};
-export const updateDays = (arr) => {
+}
+export function updateDays(arr) {
 	let collectedArr = collectArr(arr);
 
 	for (let i = 0; i < collectedArr.length; i++) {
@@ -410,27 +395,27 @@ export const updateDays = (arr) => {
 	}
 
 	return splitDaysToWeeks(collectedArr);
-};
-export const getFirstWeekDayOfMonth = (month) => {
+}
+export function getFirstWeekDayOfMonth(month) {
 	const date = new Date();
 	date.setMonth(month);
 	date.setDate(1);
 	return date.getDay();
-};
-export const getLastWeekDayOfMonth = (month) => {
+}
+export function getLastWeekDayOfMonth(month) {
 	const date = new Date();
 	date.setMonth(month + 1);
 	date.setDate(0);
 	return date.getDay();
-};
-export const getLastDayOfMonth = (month) => {
+}
+export function getLastDayOfMonth(month) {
 	const date = new Date();
 	date.setMonth(month + 1);
 	date.setDate(0);
 	return date.getDate();
-};
+}
 
-export const initDays = (year, month) => {
+export function initDays(year, month) {
 	const firstDayOfWeek = getFirstWeekDayOfMonth(month);
 	const lastDayOfWeek = getLastWeekDayOfMonth(month);
 	const lastDayOfMonth = getLastDayOfMonth(month);
@@ -469,9 +454,9 @@ export const initDays = (year, month) => {
 	}
 
 	return days.map((day, index) => ({ ...day, id: index }));
-};
+}
 
-export const highlightInvalidField = (inputRef, parentElemClass) => {
+export function highlightInvalidField(inputRef, parentElemClass) {
 	let target = inputRef.current;
 	let parent = target.closest(parentElemClass);
 
@@ -486,17 +471,9 @@ export const highlightInvalidField = (inputRef, parentElemClass) => {
 			clearTimeout(timer);
 		}, 1500);
 	}
-};
+}
 
-export const colors = [
-	[79, 230, 129],
-	[156, 230, 103],
-	[230, 230, 79],
-	[230, 154, 79],
-	[230, 79, 79],
-];
-
-export const interpolateColor = (startColor, endColor, factor) => {
+export function interpolateColor(startColor, endColor, factor) {
 	const result = startColor.slice();
 
 	for (let i = 0; i < 3; i++) {
@@ -504,50 +481,8 @@ export const interpolateColor = (startColor, endColor, factor) => {
 	}
 
 	return `rgb(${result.join(",")})`;
-};
+}
 
-export const setLinkedClassName = (contentState, tabName) => {
+export function setLinkedClassName(contentState, tabName) {
 	return contentState.activeTab === tabName ? "active" : "";
-};
-
-export const taskTemplate = {
-	text: "",
-	remainingTime: null,
-	totalTime: null,
-	creationDate: new Date(),
-	type: "active",
-	id: null,
-};
-export const alertTemplate = {
-	text: `Time remaining to complete
-	the project: 5h 1m 32s`,
-	isOpen: false,
-	position: { x: null, y: null },
-	hoveredTaskId: null,
-	hovered: false,
-};
-export const dateModalTemplate = {
-	dateInput: "",
-	timeInput: "",
-	isOpen: false,
-	position: { x: null, y: null },
-	date: null,
-	data: {
-		hours: null,
-		minutes: null,
-		day: null,
-		month: null,
-		year: null,
-	},
-	days: splitDaysToWeeks(
-		initDays(new Date().getFullYear(), new Date().getMonth())
-	),
-};
-export const notificationTemplate = {
-	text: "",
-	isOpen: false,
-	position: {
-		x: null,
-		y: null,
-	},
-};
+}

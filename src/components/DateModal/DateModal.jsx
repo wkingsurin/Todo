@@ -5,7 +5,8 @@ import { useDateModal } from "../../features/dateModal/useDateModal";
 import Button from "../Button";
 import { Chevron } from "../SVG";
 
-import { months, highlightInvalidField, isValidTime } from "../../utils/utils";
+import { highlightInvalidField, isValidTime } from "../../utils/utils";
+import { months } from "../../constants/constants";
 
 export default function DateModal({ className, ref }) {
 	const { dateModal, handlers, dateModalDispatch } = useDateModal();
