@@ -9,11 +9,7 @@ import ProgressBar from "../ProgressBar";
 
 export default function Task(props) {
 	const { tasks, task, width, completeTaskListener, deleteTask, ref } = props;
-	const {
-		alertModal,
-		setAlertModal,
-		hideAlert: hideAlertModal,
-	} = useAlertModal();
+	const { alertModal, setAlertModal, hideAlertModal } = useAlertModal();
 
 	const handleMouseEnter = (e) => {
 		hoverOnAlert(e.currentTarget, alertModal, setAlertModal);

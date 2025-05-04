@@ -6,7 +6,7 @@ export const AlertModalContext = createContext(alertTemplate);
 export const AlertModalProvider = ({ children }) => {
 	const [alertModal, setAlertModal] = useState(alertTemplate);
 
-	const hideAlert = () => {
+	const hideAlertModal = () => {
 		setAlertModal((prev) => {
 			return { ...prev, isOpen: false, hoveredTaskId: null, hovered: false };
 		});
@@ -14,7 +14,7 @@ export const AlertModalProvider = ({ children }) => {
 
 	return (
 		<AlertModalContext.Provider
-			value={{ alertModal, setAlertModal, hideAlert }}
+			value={{ alertModal, setAlertModal, hideAlertModal }}
 		>
 			{children}
 		</AlertModalContext.Provider>

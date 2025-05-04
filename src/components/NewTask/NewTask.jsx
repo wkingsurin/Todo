@@ -50,7 +50,7 @@ export default function NewTask({ addTask }) {
 
 							showNotificationModal();
 
-							input.clear();
+							input.handleClear();
 							dateModalHandlers.resetDate();
 						}}
 					>
@@ -65,7 +65,7 @@ export default function NewTask({ addTask }) {
 					>
 						<CalendarSVG></CalendarSVG>
 					</Button>
-					<Button name="remove" onClick={input.clear}>
+					<Button name="remove" onClick={input.handleClear}>
 						<ClearSVG></ClearSVG>
 					</Button>
 				</div>
