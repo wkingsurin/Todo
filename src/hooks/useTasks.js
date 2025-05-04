@@ -19,11 +19,6 @@ export function useTasks() {
 		};
 		const newTasks = [...tasks, newTask];
 
-		if (!taskTemplate.type) {
-			console.log(`Невозможно сохранить задачу`);
-			return;
-		}
-
 		setTasks(newTasks);
 
 		try {
@@ -106,6 +101,7 @@ export function useTasks() {
 	const updateTask = (taskToUpdate) => {
 		const findTask = tasks.find((task) => task.id === taskToUpdate.id);
 		if (!findTask) return;
+
 		const taskToUpdateClone = objectClone(taskToUpdate);
 
 		const filteredTasks = tasks.filter((task) => task.id !== taskToUpdate.id);
