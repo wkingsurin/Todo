@@ -108,11 +108,11 @@ export default function TasksContainer({ content, setContent }) {
 						unmountOnExit
 					>
 						<div className="tabs-wrapper" ref={tabContentRef}>
-							{content.activeTab === "new" && (
+							{content.activeTab === "active" && (
 								<>
 									<div
 										className={`tasks-block ${
-											content.activeTab === "new" ? "visible" : "hidden"
+											content.activeTab === "active" ? "visible" : "hidden"
 										}`}
 										ref={newTabContentRef}
 									>
@@ -195,6 +195,12 @@ export default function TasksContainer({ content, setContent }) {
 										}`}
 										ref={wastedTabContentRef}
 									>
+										<NewTask
+											addTask={addTask}
+											setContent={setContent}
+											content={content}
+										></NewTask>
+										<div className="separator"></div>
 										<Transition
 											in={wastedTasks.length > 0}
 											timeout={500}
@@ -261,6 +267,12 @@ export default function TasksContainer({ content, setContent }) {
 										}`}
 										ref={completedTabContentRef}
 									>
+										<NewTask
+											addTask={addTask}
+											setContent={setContent}
+											content={content}
+										></NewTask>
+										<div className="separator"></div>
 										<Transition
 											in={completedTasks.length > 0}
 											timeout={500}

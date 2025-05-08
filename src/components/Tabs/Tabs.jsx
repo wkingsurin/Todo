@@ -6,11 +6,11 @@ export default function Tabs({ content, handleSwitch }) {
 	return (
 		<div className="tabs">
 			<Button
-				className={`${setLinkedClassName(content, "new")}`}
-				name="new"
+				className={`${setLinkedClassName(content, "active")}`}
+				name="active"
 				onClick={handleSwitch}
 			>
-				New
+				Active
 			</Button>
 			<Button
 				className={`${setLinkedClassName(content, "wasted")}`}

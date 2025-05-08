@@ -16,12 +16,11 @@ $green: #4fe681;
 }
 .app-container {
 	display: flex;
-	align-items: start;
 	flex-direction: column;
 
 	min-height: 100vh;
 
-	gap: 15px;
+	gap: 30px;
 	padding: 175px 0;
 
 	transition: 0.5s ease-in-out;
@@ -44,6 +43,7 @@ $green: #4fe681;
 	z-index: 2;
 
 	display: flex;
+	justify-content: center;
 	gap: 15px;
 
 	.btn {

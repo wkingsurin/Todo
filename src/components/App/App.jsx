@@ -11,7 +11,7 @@ import Loader from "../Loader";
 
 export default function App() {
 	const [content, setContent] = useState(() => ({
-		activeTab: "new",
+		activeTab: "active",
 	}));
 	const [loading, setLoading] = useState(true);
 
