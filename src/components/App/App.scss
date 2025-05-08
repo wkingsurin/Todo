@@ -112,9 +112,14 @@ $green: #4fe681;
 			z-index: 1;
 
 			display: flex;
+			align-items: start;
 			flex-direction: column;
+			justify-content: start;
 
 			width: 100%;
+			max-height: 450px;
+			overflow-x: hidden;
+
 			gap: 12px;
 		}
 	}
